@@ -12,10 +12,9 @@ import {
   FaTimes,
 } from "react-icons/fa";
 import { TfiLayoutListPost } from "react-icons/tfi";
-import { TUser } from "@/src/redux/features/authentication/authSlice";
 import { useGetSingleUserQuery } from "@/src/redux/features/user/userApi";
 import { useState } from "react";
-import { TPost } from "@/src/types";
+import { TPost, TUser } from "@/src/types";
 import { useCreatePostMutation } from "@/src/redux/features/posts/postApi";
 import { useAppSelector } from "@/src/redux/hooks";
 import TextEditor from "./TextEditor";
