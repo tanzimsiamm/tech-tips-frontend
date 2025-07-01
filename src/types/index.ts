@@ -27,15 +27,15 @@ export type TUser = {
   name: string;
   email: string;
   role: string;
-  image: string;
+  image?: string;
   coverImg?: string;
-  memberShip: null | {
+  memberShip?: null | {
     takenDate: string;
     exp: string;
     package: object;
   };
-  followers: string[];
-  following: string[];
+  followers?: string[];
+  following?: string[];
   iat?: number;
   exp?: number;
   isBlocked?: boolean;
