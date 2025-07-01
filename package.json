@@ -25,6 +25,7 @@
     "@react-aria/ssr": "3.9.9",
     "@react-aria/visually-hidden": "3.8.24",
     "@reduxjs/toolkit": "^2.8.2",
+    "@stripe/react-stripe-js": "^3.7.0",
     "@tinymce/tinymce-react": "^6.2.1",
     "@types/js-cookie": "^3.0.6",
     "axios": "^1.10.0",
