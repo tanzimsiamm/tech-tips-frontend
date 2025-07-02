@@ -81,3 +81,20 @@ export type TPost = {
     createdAt? : string,
     updatedAt? : string,
 };
+
+export type TPayment = {
+  _id: string;
+  email: string;
+  cost: number;
+  membersShip: {
+    package: {
+      name: string;
+      price: number;
+      // Add other package properties if they exist and are relevant for display
+    };
+    takenDate: string;
+    userInfo: TUser;
+    exp: string;
+  };
+  transactionId: string;
+}
