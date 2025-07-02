@@ -1,3 +1,4 @@
+// lib/redux/store.ts
 import { configureStore } from "@reduxjs/toolkit";
 import baseApi from "./api/baseApi";
 import {
@@ -10,8 +11,27 @@ import {
   PURGE,
   REGISTER,
 } from "redux-persist";
-import storage from "redux-persist/lib/storage";
+import createWebStorage from "redux-persist/lib/storage/createWebStorage";
 import authReducer from "./features/authentication/authSlice";
+
+// Create a noop storage for server-side
+const createNoopStorage = () => {
+  return {
+    getItem(_key: string) {
+      return Promise.resolve(null);
+    },
+    setItem(_key: string, value: any) {
+      return Promise.resolve(value);
+    },
+    removeItem(_key: string) {
+      return Promise.resolve();
+    },
+  };
+};
+
+const storage = typeof window !== 'undefined' ? 
+  createWebStorage('local') : 
+  createNoopStorage();
 
 const persistConfig = {
   key: "auth",
@@ -20,7 +40,7 @@ const persistConfig = {
 
 const persistedAuthReducer = persistReducer(persistConfig, authReducer);
 
-export const store  = configureStore({
+export const store = configureStore({
   reducer: {
     [baseApi.reducerPath]: baseApi.reducer,
     auth: persistedAuthReducer,
@@ -33,9 +53,6 @@ export const store  = configureStore({
     }).concat(baseApi.middleware),
 });
 
-// Infer the `RootState` and `AppDispatch` types from the store itself
 export type RootState = ReturnType<typeof store.getState>;
-// Inferred type: {posts: PostsState, comments: CommentsState, users: UsersState}
 export type AppDispatch = typeof store.dispatch;
-
 export const persistor = persistStore(store);
