@@ -15,7 +15,7 @@ const DashboardLayout = ({ children }: { children: ReactNode }) => {
       <Navbar />
 
       <section className="flex max-w-[1500px] mx-auto items-center gap-5 xl:gap-10 relative bg-[#F8F9FB] dark:bg-gray-900 p-3 pr-0 rounded-xl">
-        <div className="hidden lg:block w-72">
+        <div className="hidden lg:block w-96">
           <Sidebar>
             {/* Navigations Based on the Role  */}
             {currentUser?.role === "user" && <UserNavigations />}

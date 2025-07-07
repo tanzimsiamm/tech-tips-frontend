@@ -50,36 +50,6 @@ const AdminNavigations = () => {
 
           <li>
             <Link
-              href="/admin-dashboard/memberships"
-              className={`flex items-center space-x-4 p-2 rounded-full transition-colors duration-200 
-                ${
-                  pathName === "/admin-dashboard/memberships"
-                    ? "bg-blue-500 text-white hover:bg-blue-600"
-                    : "text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700"
-                }`}
-            >
-              <div
-                className={`p-2 rounded-full flex items-center justify-center text-xl 
-                  ${
-                    pathName === "/admin-dashboard/memberships"
-                      ? "bg-transparent"
-                      : "bg-gray-200 dark:bg-gray-700 text-gray-500 dark:text-gray-400"
-                  }`}
-              >
-                <GoPackage
-                  className={
-                    pathName === "/admin-dashboard/memberships"
-                      ? "text-white"
-                      : ""
-                  }
-                />
-              </div>
-              <span className="font-medium">Memberships</span>
-            </Link>
-          </li>
-
-          <li>
-            <Link
               href="/admin-dashboard/manage-posts"
               className={`flex items-center space-x-4 p-2 rounded-full transition-colors duration-200 
                 ${

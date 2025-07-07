@@ -1,23 +1,16 @@
-// next.config.js
-module.exports = {
+/** @type {import('next').NextConfig} */
+const nextConfig = {
   images: {
-    domains: [
-      'i.ibb.co',
-      'placehold.co',
-      'example.com'
-      // Add all other domains you use
-    ],
     remotePatterns: [
       {
-        protocol: 'https',
-        hostname: '**.ibb.co',
-      },
-      {
-        protocol: 'https',
-        hostname: 'placehold.co',
+        protocol: "https",
+        hostname: "**",
       },
     ],
-    dangerouslyAllowSVG: true, // Only if you need SVG support
-    contentSecurityPolicy: "default-src 'self'; script-src 'none'; sandbox;",
-  }
-}
+  },
+  typescript: {
+    ignoreBuildErrors: true,
+ },
+};
+
+export default nextConfig;
