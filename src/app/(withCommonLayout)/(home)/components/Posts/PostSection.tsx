@@ -95,37 +95,37 @@ export default function PostSection() {
           </div>
 
           {/* Filter and Sort for larger screens */}
-          <div className="hidden sm:flex items-center gap-3">
-            <div className="flex items-center gap-2 bg-gray-100 dark:bg-gray-700 rounded-full px-3 py-2 text-gray-700 dark:text-gray-300 border border-gray-200 dark:border-gray-600">
-              <LuFilter className="text-lg" />
-              <select
-                onChange={(e) => setFilterQuery(prev => ({ ...prev, sortByUpvote: e.target.value }))}
-                className="bg-transparent outline-none text-sm cursor-pointer dark:text-gray-300"
-                defaultValue=""
-              >
-                <option value="" disabled>Sort by Upvote</option>
-                <option value='-1'>Most Upvoted</option>
-                <option value='1'>Most Downvoted</option>
-              </select>
-            </div>
+<div className="hidden sm:flex items-center gap-3">
+  <div className="flex items-center gap-2 bg-gray-100 dark:bg-gray-800 rounded-full px-3 py-2 text-gray-700 dark:text-gray-200 border border-gray-200 dark:border-gray-600">
+    <LuFilter className="text-lg" />
+    <select
+      onChange={(e) => setFilterQuery(prev => ({ ...prev, sortByUpvote: e.target.value }))}
+      className="bg-transparent outline-none text-sm cursor-pointer dark:text-gray-200 dark:[&>option]:bg-gray-800"
+      defaultValue=""
+    >
+      <option value="" disabled>Sort by Upvote</option>
+      <option value='-1'>Most Upvoted</option>
+      <option value='1'>Most Downvoted</option>
+    </select>
+  </div>
 
-            <div className="flex items-center gap-2 bg-gray-100 dark:bg-gray-700 rounded-full px-3 py-2 text-gray-700 dark:text-gray-300 border border-gray-200 dark:border-gray-600">
-              <MdOutlineSort className="text-lg" />
-              <select
-                onChange={(e) => setFilterQuery(prev => ({ ...prev, category: e.target.value }))}
-                className="bg-transparent outline-none text-sm cursor-pointer dark:text-gray-300"
-                defaultValue=""
-              >
-                <option value="" disabled>Select Category</option>
-                <option value=''>All Categories</option>
-                <option value='Web'>Web</option>
-                <option value='Software Engineering'>Software Engineering</option>
-                <option value='AI'>AI</option>
-                <option value='Technology'>Technology</option>
-                <option value='Others'>Others</option>
-              </select>
-            </div>
-          </div>
+  <div className="flex items-center gap-2 bg-gray-100 dark:bg-gray-800 rounded-full px-3 py-2 text-gray-700 dark:text-gray-200 border border-gray-200 dark:border-gray-600">
+    <MdOutlineSort className="text-lg" />
+    <select
+      onChange={(e) => setFilterQuery(prev => ({ ...prev, category: e.target.value }))}
+      className="bg-transparent outline-none text-sm cursor-pointer dark:text-gray-200 dark:[&>option]:bg-gray-800"
+      defaultValue=""
+    >
+      <option value="" disabled>Select Category</option>
+      <option value=''>All Categories</option>
+      <option value='Web'>Web</option>
+      <option value='Software Engineering'>Software Engineering</option>
+      <option value='AI'>AI</option>
+      <option value='Technology'>Technology</option>
+      <option value='Others'>Others</option>
+    </select>
+  </div>
+</div>
         </div>
       </div>
 

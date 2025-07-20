@@ -5,8 +5,7 @@ import { FaHome, FaUsers } from "react-icons/fa";
 import { ImBooks } from "react-icons/im";
 import { RiAdminFill } from "react-icons/ri";
 import { BsGraphUp } from "react-icons/bs";
-import { GoPackage } from "react-icons/go";
-import { MdOutlinePayment } from "react-icons/md"; // Added for Payment History icon
+import { MdOutlinePayment } from "react-icons/md"; 
 
 const AdminNavigations = () => {
   const pathName = usePathname();
