@@ -82,6 +82,7 @@ export default function Register() {
 
         <form onSubmit={handleSubmit(onSubmit)}>
           <div className="space-y-5">
+            {/* Name */}
             <div>
               <div className="relative flex items-center">
                 <input
@@ -109,6 +110,7 @@ export default function Register() {
               )}
             </div>
 
+            {/* Email */}
             <div>
               <div className="relative flex items-center">
                 <input
@@ -134,6 +136,7 @@ export default function Register() {
               )}
             </div>
 
+            {/* Password */}
             <div>
               <div className="relative flex items-center">
                 <input
@@ -160,44 +163,63 @@ export default function Register() {
               )}
             </div>
 
-            <div>
-              <div className="relative flex items-center justify-center border border-gray-300 dark:border-gray-600 rounded-xl bg-white dark:bg-gray-700 transition-colors duration-200 cursor-pointer overflow-hidden">
-                <input
-                  {...register("image", { required: true })}
-                  onChange={handleImageChange}
-                  type="file"
-                  className="absolute inset-0 w-full h-full opacity-0 cursor-pointer"
-                  accept="image/*"
-                />
-                {imagePreview ? (
-                  <div className="relative w-full h-24 flex items-center justify-center p-2">
-                    <Image
-                      width={96}
-                      height={96}
-                      alt="preview"
-                      className="size-20 object-cover rounded-md"
-                      src={imagePreview}
-                    />
-                    <span className="ml-4 text-gray-600 dark:text-gray-300 text-sm">
-                      Image Selected
-                    </span>
-                  </div>
-                ) : (
-                  <div className="flex flex-col items-center justify-center py-4 text-gray-500 dark:text-gray-400">
-                    <PiImage className="text-3xl mb-1" />
-                    <span className="text-sm">
-                      Upload Profile Image (Required)
-                    </span>
-                  </div>
-                )}
-              </div>
-              {errors.image && (
-                <span className="text-red-500 text-sm mt-1 block">
-                  {errors.image.type === "required" && "Image is required"}
-                </span>
-              )}
-            </div>
+            {/* Image Upload with Remove Option */}
+           <div>
+  <div className="relative flex flex-col items-center justify-center border border-gray-300 dark:border-gray-600 rounded-xl bg-white dark:bg-gray-700 transition-colors duration-200 overflow-hidden p-4">
+    {imagePreview ? (
+      <div className="flex flex-col items-center gap-3">
+        <Image
+          width={96}
+          height={96}
+          alt="preview"
+          className="size-20 object-cover rounded-md"
+          src={imagePreview}
+        />
+        <button
+          type="button"
+          onClick={() => {
+            setImagePreview("");
+            const fileInput = document.getElementById(
+              "image-upload"
+            ) as HTMLInputElement;
+            if (fileInput) fileInput.value = ""; // Reset input
+          }}
+          className="px-4 py-1 text-sm rounded-full bg-red-500 text-white hover:bg-red-600 transition"
+        >
+          Remove Image
+        </button>
+      </div>
+    ) : (
+      <label
+        htmlFor="image-upload"
+        className="w-full flex flex-col items-center justify-center cursor-pointer py-6 text-gray-500 dark:text-gray-400 hover:text-blue-500 transition"
+      >
+        <PiImage className="text-3xl mb-1" />
+        <span className="text-sm">Upload Profile Image (Required)</span>
+      </label>
+    )}
 
+    {/* Hidden File Input */}
+    <input
+      id="image-upload"
+      {...register("image", { required: true })}
+      onChange={handleImageChange}
+      type="file"
+      className="hidden"
+      accept="image/*"
+    />
+  </div>
+
+  {errors.image && (
+    <span className="text-red-500 text-sm mt-1 block">
+      {errors.image.type === "required" && "Image is required"}
+    </span>
+  )}
+</div>
+
+
+
+            {/* Terms */}
             <div>
               <label className="flex items-center gap-2 text-gray-600 dark:text-gray-400 font-medium text-sm cursor-pointer">
                 <input
@@ -215,8 +237,7 @@ export default function Register() {
               )}
             </div>
 
-            {/* <SocialLogin /> */}
-
+            {/* Submit Button */}
             <div>
               <button
                 className="w-full justify-center py-3 px-4 text-base font-semibold rounded-full text-white bg-blue-500 hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition-colors duration-200 dark:bg-blue-600 dark:hover:bg-blue-700 disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-2"
@@ -237,6 +258,7 @@ export default function Register() {
               </button>
             </div>
 
+            {/* Login Link */}
             <div className="mt-6 text-center">
               <h4 className="text-sm font-medium text-gray-600 dark:text-gray-400">
                 Already have an account?{" "}

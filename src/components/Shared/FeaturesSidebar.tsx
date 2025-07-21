@@ -3,7 +3,7 @@
 
 import { useAppDispatch, useAppSelector } from "@/src/redux/hooks";
 import Link from "next/link";
-import { FaTv, FaUserCircle, FaCalendarAlt } from "react-icons/fa";
+import { FaTv, FaUserCircle, FaCalendarAlt, FaMoon } from "react-icons/fa";
 import { GoPackage } from "react-icons/go";
 import { RxDashboard } from "react-icons/rx";
 import { SiHomeadvisor } from "react-icons/si";
@@ -15,6 +15,7 @@ import Cookies from "js-cookie";
 import { toast } from "sonner";
 import { useRouter } from "next/navigation";
 import { BiLogIn } from "react-icons/bi";
+import { ThemeSwitch } from "../theme-switch";
 
 const FeaturesSidebar = () => {
   const user = useAppSelector((state) => state.auth.user);
@@ -95,6 +96,20 @@ const FeaturesSidebar = () => {
                     Dashboard
                   </span>
                 </Link>
+              </li>
+
+              <li>
+                <div className="flex items-center space-x-4 p-2 rounded-full hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors duration-200 cursor-pointer">
+                  <div className="p-2 rounded-full bg-purple-500 text-xl flex items-center justify-center">
+                    <FaMoon className="text-white" />{" "}
+                  </div>
+                  <span className="font-medium text-gray-800 dark:text-gray-200">
+                    Theme
+                  </span>
+                  <div className="ml-auto pt-2">
+                    <ThemeSwitch />
+                  </div>
+                </div>
               </li>
             </ul>
           </div>

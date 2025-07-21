@@ -12,7 +12,7 @@ export default function CreatePost() {
   const [openModal, setOpenModal] = useState(false);
 
   return (
-    <div className="bg-white dark:bg-gray-800 p-4 rounded-xl shadow-sm w-full mx-auto mb-4 mt-4 border border-gray-200 dark:border-gray-700">
+    <div className="bg-white dark:bg-gray-800 p-4 rounded-xl shadow-sm w-full mx-auto mb-4 border border-gray-200 dark:border-gray-700">
       {openModal && <CreatePostModal open={openModal} setOpen={setOpenModal} />}
 
       <div className="flex items-center mb-4">
