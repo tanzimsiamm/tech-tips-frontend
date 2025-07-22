@@ -1,3 +1,4 @@
+
 "use client";
 
 import type { ThemeProviderProps } from "next-themes";
@@ -7,8 +8,8 @@ import { useRouter } from "next/navigation";
 import { ThemeProvider as NextThemesProvider } from "next-themes";
 import { Toaster } from "sonner";
 import { Provider } from "react-redux";
-import { persistor, store } from "@/src/redux/store";
-import { PersistGate } from "redux-persist/integration/react";
+import { store } from "@/src/redux/store";
+import ReduxPersistGate from "@/src/redux/ReduxPersistGate";
 
 export interface ProvidersProps {
   children: React.ReactNode;
@@ -20,12 +21,14 @@ export function Providers({ children, themeProps }: ProvidersProps) {
 
   return (
     <Provider store={store}>
-      <PersistGate loading={null} persistor={persistor}>
+      <ReduxPersistGate>
         <HeroUIProvider navigate={router.push}>
           <Toaster position="top-center" />
-          <NextThemesProvider {...themeProps}>{children}</NextThemesProvider>
+          <NextThemesProvider {...themeProps}>
+            {children}
+          </NextThemesProvider>
         </HeroUIProvider>
-      </PersistGate>
+      </ReduxPersistGate>
     </Provider>
   );
 }

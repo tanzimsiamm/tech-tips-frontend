@@ -1,10 +1,9 @@
-
 import { TComment } from "@/src/types";
 import baseApi from "../../api/baseApi";
 
 const commentApi = baseApi.injectEndpoints({
   endpoints: (builder) => ({
-    getComments: builder.query({
+    getComments: builder.query<{ data: TComment[] }, { postId: string }>({
       query: (query) => ({
         url: `/comments/${query.postId}`,
         method: "GET",
@@ -13,16 +12,16 @@ const commentApi = baseApi.injectEndpoints({
       providesTags: ["Comments"],
     }),
 
-    deleteComment: builder.mutation({
-      query: (commentId: string) => ({
+    deleteComment: builder.mutation<void, string>({
+      query: (commentId) => ({
         url: `/comments/${commentId}`,
         method: "DELETE",
       }),
       invalidatesTags: ["Comments", "Posts"],
     }),
 
-    addComment: builder.mutation({
-      query: (comment: TComment) => ({
+    addComment: builder.mutation<TComment, TComment>({
+      query: (comment) => ({
         url: `/comments`,
         method: "POST",
         body: comment,
@@ -30,14 +29,11 @@ const commentApi = baseApi.injectEndpoints({
       invalidatesTags: ["Posts", "Comments"],
     }),
 
-    updateComment: builder.mutation({
-      query: ({
-        commentId,
-        payload,
-      }: {
-        commentId: string;
-        payload: Partial<TComment>;
-      }) => ({
+    updateComment: builder.mutation<
+      TComment,
+      { commentId: string; payload: Partial<TComment> }
+    >({
+      query: ({ commentId, payload }) => ({
         url: `/comments/${commentId}`,
         method: "PATCH",
         body: payload,

@@ -18,13 +18,18 @@ import { MdStars } from "react-icons/md";
 import { useReactToPrint } from "react-to-print";
 import { AiFillPrinter } from "react-icons/ai";
 import { FaPen } from "react-icons/fa";
-import { useAddCommentMutation, useDeleteCommentMutation, useGetCommentsQuery } from "@/src/redux/features/comments/commetApi";
+import {
+  useAddCommentMutation,
+  useDeleteCommentMutation,
+  useGetCommentsQuery,
+} from "@/src/redux/features/comments/commetApi";
 import { TComment, TPost } from "@/src/types";
 import ImageGallery from "./ImageGallary";
 import VoteSection from "./VoteSection";
 import MiniUserProfile from "./MiniUserProfile";
 import { useSendNotificationMutation } from "@/src/redux/features/notification/notificationApi";
 import EditCommentModal from "./EditCommentModal";
+import { useRouter } from "next/navigation";
 
 export default function PostCard({ post }: { post: TPost }) {
   const { register, handleSubmit, reset } = useForm();
@@ -36,6 +41,7 @@ export default function PostCard({ post }: { post: TPost }) {
   const [commentForEdit, setCommentForEdit] = useState<any>({});
 
   const [sendNotification, { isSuccess }] = useSendNotificationMutation();
+  const router = useRouter();
 
   const contentRef = useRef<HTMLDivElement>(null);
   const reactToPrintFn = useReactToPrint({ contentRef });
@@ -52,7 +58,9 @@ export default function PostCard({ post }: { post: TPost }) {
     isPremium,
   } = post;
 
+  if (!_id) return null;
   const { data } = useGetCommentsQuery({ postId: _id });
+
   const comments: TComment[] = data?.data || [];
 
   const onSubmit = async (data: any) => {
@@ -74,7 +82,7 @@ export default function PostCard({ post }: { post: TPost }) {
     try {
       const response = await addComment(newComment as TComment).unwrap();
 
-      if (response?.success) {
+      if (response && response._id) {
         reset();
         await sendNotification({
           userEmail: authorInfo?.authorEmail,
@@ -160,11 +168,12 @@ export default function PostCard({ post }: { post: TPost }) {
       ></div>
 
       {images && images.length > 0 && (
-        <Link href={`/details/${_id}`}>
-          <div className="pointer-events-none">
-            <ImageGallery images={images} />
-          </div>
-        </Link>
+        <div
+          onClick={() => router.push(`/details/${_id}`)}
+          className="cursor-pointer"
+        >
+          <ImageGallery images={images} />
+        </div>
       )}
 
       <div className="flex justify-between items-center mt-4 pt-3 border-t border-gray-200 dark:border-gray-700">

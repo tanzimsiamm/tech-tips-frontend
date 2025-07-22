@@ -1,20 +1,16 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
 import axios from "axios";
 
-const imageHostingKey = 'c0c5035ed3e36a140cd0d5bd41fa1b8b';
-const imageUploadApi = `https://api.imgbb.com/1/upload?key=${imageHostingKey}`
+const uploadImage = async (image: File) => {
+  const formData = new FormData();
+  formData.append("image", image);
 
+  const res = await axios.post("http://localhost:5000/api/upload", formData, {
+    headers: {
+      "Content-Type": "multipart/form-data",
+    },
+  });
 
-const uploadImage = async (image: any) => {
-    const res = await axios.post(imageUploadApi, 
-        { image: image[0] }, 
-        {
-        headers: {
-          'content-type' : 'multipart/form-data'
-        }
-      })
-    //   returning direct image URL 
-      return res.data.data.display_url;
+  return res.data.url;
+};
 
-}
 export default uploadImage;

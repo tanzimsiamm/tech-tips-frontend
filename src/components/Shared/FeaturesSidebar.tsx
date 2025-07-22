@@ -17,7 +17,7 @@ import { BiLogIn } from "react-icons/bi";
 import { ThemeSwitch } from "../theme-switch";
 
 interface FeaturesSidebarProps {
-  showAllText?: boolean; // For drawer menu
+  showAllText?: boolean; 
 }
 
 const FeaturesSidebar = ({ showAllText = false }: FeaturesSidebarProps) => {
@@ -114,7 +114,7 @@ const FeaturesSidebar = ({ showAllText = false }: FeaturesSidebarProps) => {
                 </div>
                 <span className={textClass}>Theme</span>
               </div>
-              <div className="ml-2">
+              <div className="ml-2 pt-1">
                 <ThemeSwitch />
               </div>
             </div>

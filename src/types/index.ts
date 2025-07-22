@@ -16,11 +16,11 @@ export interface IInput {
 }
 
 export type TJwtDecoded = {
-  email : string;
-  exp : number;
-  iat : number;
-  role : string;
-}
+  email: string;
+  exp: number;
+  iat: number;
+  role: string;
+};
 
 export type TUser = {
   _id?: string;
@@ -41,45 +41,45 @@ export type TUser = {
   isBlocked?: boolean;
 };
 
-
 export type TComment = {
-  _id? : string;
-  comment : string,
-  postId : string,
-  userInfo  : {
-    name : string,
-    email : string,
-    image : string
-  },
-  createdAt? : string,
-  updatedAt? : string,
- 
-}
+  _id?: string;
+  comment: string;
+  postId: string;
+  userInfo: {
+    name: string;
+    email: string;
+    image: string;
+  };
+  createdAt?: string;
+  updatedAt?: string;
+};
 
 // type for post
 export type TPost = {
-    _id? : string,
-    title : string;
-    category : string;
-    votes?: number
-    voters?: [{ 
-      userId: string, 
-      voteType: string 
-    }],
-    description : string;
-    images : string[];
-    comments? : TComment[];
-    authorInfo : {
-      name : string;
-      email: string;
-      image : string;
-      role :string;
-      authorId : string;
-      authorEmail : string;
-    }
-    isPremium? : boolean;
-    createdAt? : string,
-    updatedAt? : string,
+  _id?: string;
+  title: string;
+  category: string;
+  votes?: number;
+  voters?: [
+    {
+      userId: string;
+      voteType: string;
+    },
+  ];
+  description: string;
+  images: string[];
+  comments?: TComment[];
+  authorInfo: {
+    name: string;
+    email: string;
+    image: string;
+    role: string;
+    authorId: string;
+    authorEmail: string;
+  };
+  isPremium?: boolean;
+  createdAt?: string;
+  updatedAt?: string;
 };
 
 export type TPayment = {
@@ -97,4 +97,4 @@ export type TPayment = {
     exp: string;
   };
   transactionId: string;
-}
+};
