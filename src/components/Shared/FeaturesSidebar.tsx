@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-unused-vars */
 "use client";
 
 import { useAppDispatch, useAppSelector } from "@/src/redux/hooks";
@@ -17,7 +16,11 @@ import { useRouter } from "next/navigation";
 import { BiLogIn } from "react-icons/bi";
 import { ThemeSwitch } from "../theme-switch";
 
-const FeaturesSidebar = () => {
+interface FeaturesSidebarProps {
+  showAllText?: boolean; // For drawer menu
+}
+
+const FeaturesSidebar = ({ showAllText = false }: FeaturesSidebarProps) => {
   const user = useAppSelector((state) => state.auth.user);
   const dispatch = useAppDispatch();
   const router = useRouter();
@@ -29,55 +32,48 @@ const FeaturesSidebar = () => {
     router.push("/");
   };
 
+  const textClass = showAllText
+    ? "font-medium text-gray-800 dark:text-gray-200"
+    : "hidden lg:inline font-medium text-gray-800 dark:text-gray-200";
+
+  const menuItemClasses =
+    "flex items-center space-x-3 p-2 rounded-full hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors duration-200";
+
   return (
-    <div className="w-full h-full p-4 space-y-6 bg-white dark:bg-gray-800 text-gray-700 dark:text-gray-300">
-      {user ? (
-        <>
-          <div className="space-y-4">
-            <h2 className="text-gray-500 dark:text-gray-400 text-sm font-semibold tracking-wide uppercase">
-              New Feeds
-            </h2>
-            <ul className="space-y-2">
-              <li>
-                <Link
-                  href="/"
-                  className="flex items-center space-x-4 p-2 rounded-full hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors duration-200"
-                >
-                  <div className="p-2 rounded-full bg-blue-500 text-xl flex items-center justify-center">
-                    <FaTv className="text-white" />
-                  </div>
-                  <span className="font-medium text-gray-800 dark:text-gray-200">
-                    Newsfeed
-                  </span>
-                  <span className="ml-auto bg-blue-500 text-white text-xs font-bold px-2 py-0.5 rounded-full">
-                    14
-                  </span>
-                </Link>
-              </li>
-              <li>
-                <Link
-                  href="/membership"
-                  className="flex items-center space-x-4 p-2 rounded-full hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors duration-200"
-                >
-                  <div className="p-2 rounded-full bg-orange-500 text-xl flex items-center justify-center">
-                    <GoPackage className="text-white" />
-                  </div>
-                  <span className="font-medium text-gray-800 dark:text-gray-200">
-                    Membership
-                  </span>
-                </Link>
-              </li>
+    <div className="w-full h-full p-2 lg:p-4 space-y-6 bg-white dark:bg-gray-800 text-gray-700 dark:text-gray-300">
+      {/* ---- NEW FEEDS ---- */}
+      <div className="space-y-4">
+        <h2 className="text-gray-500 dark:text-gray-400 text-sm font-semibold tracking-wide uppercase">
+          New Feeds
+        </h2>
+        <ul className="space-y-2">
+          <li>
+            <Link href="/" className={menuItemClasses}>
+              <div className="p-2 rounded-full bg-blue-500 text-xl flex items-center justify-center">
+                <FaTv className="text-white" />
+              </div>
+              <span className={textClass}>Newsfeed</span>
+            </Link>
+          </li>
+          <li>
+            <Link href="/membership" className={menuItemClasses}>
+              <div className="p-2 rounded-full bg-orange-500 text-xl flex items-center justify-center">
+                <GoPackage className="text-white" />
+              </div>
+              <span className={textClass}>Membership</span>
+            </Link>
+          </li>
+          {user ? (
+            <>
               <li>
                 <Link
                   href={`/profile/${user?.email}`}
-                  className="flex items-center space-x-4 p-2 rounded-full hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors duration-200"
+                  className={menuItemClasses}
                 >
                   <div className="p-2 rounded-full bg-blue-500 text-xl flex items-center justify-center">
                     <FaUserCircle className="text-white" />
                   </div>
-                  <span className="font-medium text-gray-800 dark:text-gray-200">
-                    Profile
-                  </span>
+                  <span className={textClass}>Profile</span>
                 </Link>
               </li>
               <li>
@@ -87,222 +83,108 @@ const FeaturesSidebar = () => {
                       ? "/admin-dashboard/statistics"
                       : "/user-dashboard/my-posts"
                   }
-                  className="flex items-center space-x-4 p-2 rounded-full hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors duration-200"
+                  className={menuItemClasses}
                 >
                   <div className="p-2 rounded-full bg-yellow-400 text-xl flex items-center justify-center">
                     <RxDashboard className="text-white" />
                   </div>
-                  <span className="font-medium text-gray-800 dark:text-gray-200">
-                    Dashboard
-                  </span>
+                  <span className={textClass}>Dashboard</span>
                 </Link>
               </li>
-
-              <li>
-                <div className="flex items-center space-x-4 p-2 rounded-full hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors duration-200 cursor-pointer">
-                  <div className="p-2 rounded-full bg-purple-500 text-xl flex items-center justify-center">
-                    <FaMoon className="text-white" />{" "}
-                  </div>
-                  <span className="font-medium text-gray-800 dark:text-gray-200">
-                    Theme
-                  </span>
-                  <div className="ml-auto pt-2">
-                    <ThemeSwitch />
-                  </div>
+            </>
+          ) : (
+            <li>
+              <Link href="/register" className={menuItemClasses}>
+                <div className="p-2 rounded-full bg-gray-500 text-xl flex items-center justify-center">
+                  <FaRegUser className="text-white" />
                 </div>
-              </li>
-            </ul>
-          </div>
+                <span className={textClass}>Register</span>
+              </Link>
+            </li>
+          )}
 
-          <div className="space-y-4">
-            <h2 className="text-gray-500 dark:text-gray-400 text-sm font-semibold tracking-wide uppercase">
-              More Pages
-            </h2>
-            <ul className="space-y-2">
-              <li>
-                <Link
-                  href="/about"
-                  className="flex items-center space-x-4 p-2 rounded-full hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors duration-200"
-                >
-                  <div className="p-2 rounded-full bg-blue-500 text-xl flex items-center justify-center">
-                    <SiHomeadvisor className="text-white" />
-                  </div>
-                  <span className="font-medium text-gray-800 dark:text-gray-200">
-                    About Us
-                  </span>
-                </Link>
-              </li>
-              <li>
-                <Link
-                  href="/contact"
-                  className="flex items-center space-x-4 p-2 rounded-full hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors duration-200"
-                >
-                  <div className="p-2 rounded-full bg-blue-500 text-xl flex items-center justify-center">
-                    <MdWifiCalling1 className="text-white" />
-                  </div>
-                  <span className="font-medium text-gray-800 dark:text-gray-200">
-                    Contact Us
-                  </span>
-                </Link>
-              </li>
-              <li>
-                <Link
-                  href="/latest-event"
-                  className="flex items-center space-x-4 p-2 rounded-full hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors duration-200"
-                >
-                  <div className="p-2 rounded-full bg-blue-500 text-xl flex items-center justify-center">
-                    <FaCalendarAlt className="text-white" />
-                  </div>
-                  <span className="font-medium text-gray-800 dark:text-gray-200">
-                    Latest Event
-                  </span>
-                </Link>
-              </li>
-            </ul>
-          </div>
+          {/* Theme Switch */}
+          <li>
+            <div
+              className={`${menuItemClasses} justify-between cursor-pointer`}
+            >
+              <div className="flex items-center gap-3">
+                <div className="p-2 rounded-full bg-purple-500 text-xl flex items-center justify-center">
+                  <FaMoon className="text-white" />
+                </div>
+                <span className={textClass}>Theme</span>
+              </div>
+              <div className="ml-2">
+                <ThemeSwitch />
+              </div>
+            </div>
+          </li>
+        </ul>
+      </div>
 
-          <div className="space-y-4">
-            <h2 className="text-gray-500 dark:text-gray-400 text-sm font-semibold tracking-wide uppercase">
-              Account
-            </h2>
-            <ul className="space-y-2">
-              <li>
-                <button
-                  onClick={logoutUser}
-                  className="w-full flex items-center space-x-4 p-2 rounded-full hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors duration-200 text-left"
-                >
-                  <div className="p-2 rounded-full bg-red-500 text-xl flex items-center justify-center">
-                    <IoArrowRedoOutline className="text-white" />
-                  </div>
-                  <span className="font-medium text-gray-800 dark:text-gray-200">
-                    Log out
-                  </span>
-                </button>
-              </li>
-            </ul>
-          </div>
-        </>
-      ) : (
-        <>
-          <div className="space-y-4">
-            <h2 className="text-gray-500 dark:text-gray-400 text-sm font-semibold tracking-wide uppercase">
-              New Feeds
-            </h2>
-            <ul className="space-y-2">
-              <li>
-                <Link
-                  href="/"
-                  className="flex items-center space-x-4 p-2 rounded-full hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors duration-200"
-                >
-                  <div className="p-2 rounded-full bg-blue-500 text-xl flex items-center justify-center">
-                    <FaTv className="text-white" />
-                  </div>
-                  <span className="font-medium text-gray-800 dark:text-gray-200">
-                    Newsfeed
-                  </span>
-                  <span className="ml-auto bg-blue-500 text-white text-xs font-bold px-2 py-0.5 rounded-full">
-                    14
-                  </span>
-                </Link>
-              </li>
-              <li>
-                <Link
-                  href="/membership"
-                  className="flex items-center space-x-4 p-2 rounded-full hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors duration-200"
-                >
-                  <div className="p-2 rounded-full bg-orange-500 text-xl flex items-center justify-center">
-                    <GoPackage className="text-white" />
-                  </div>
-                  <span className="font-medium text-gray-800 dark:text-gray-200">
-                    Membership
-                  </span>
-                </Link>
-              </li>
-              <li>
-                <Link
-                  href="/register"
-                  className="flex items-center space-x-4 p-2 rounded-full hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors duration-200"
-                >
-                  <div className="p-2 rounded-full bg-gray-500 text-xl flex items-center justify-center">
-                    <FaRegUser className="text-white" />
-                  </div>
-                  <span className="font-medium text-gray-800 dark:text-gray-200">
-                    Register
-                  </span>
-                </Link>
-              </li>
-            </ul>
-          </div>
+      {/* ---- MORE PAGES ---- */}
+      <div className="space-y-4">
+        <h2 className="text-gray-500 dark:text-gray-400 text-sm font-semibold tracking-wide uppercase">
+          More Pages
+        </h2>
+        <ul className="space-y-2">
+          <li>
+            <Link href="/about" className={menuItemClasses}>
+              <div className="p-2 rounded-full bg-blue-500 text-xl flex items-center justify-center">
+                <SiHomeadvisor className="text-white" />
+              </div>
+              <span className={textClass}>About Us</span>
+            </Link>
+          </li>
+          <li>
+            <Link href="/contact" className={menuItemClasses}>
+              <div className="p-2 rounded-full bg-blue-500 text-xl flex items-center justify-center">
+                <MdWifiCalling1 className="text-white" />
+              </div>
+              <span className={textClass}>Contact Us</span>
+            </Link>
+          </li>
+          <li>
+            <Link href="/latest-event" className={menuItemClasses}>
+              <div className="p-2 rounded-full bg-blue-500 text-xl flex items-center justify-center">
+                <FaCalendarAlt className="text-white" />
+              </div>
+              <span className={textClass}>Latest Event</span>
+            </Link>
+          </li>
+        </ul>
+      </div>
 
-          <div className="space-y-4">
-            <h2 className="text-gray-500 dark:text-gray-400 text-sm font-semibold tracking-wide uppercase">
-              More Pages
-            </h2>
-            <ul className="space-y-2">
-              <li>
-                <Link
-                  href="/about"
-                  className="flex items-center space-x-4 p-2 rounded-full hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors duration-200"
-                >
-                  <div className="p-2 rounded-full bg-blue-500 text-xl flex items-center justify-center">
-                    <SiHomeadvisor className="text-white" />
-                  </div>
-                  <span className="font-medium text-gray-800 dark:text-gray-200">
-                    About Us
-                  </span>
-                </Link>
-              </li>
-              <li>
-                <Link
-                  href="/contact"
-                  className="flex items-center space-x-4 p-2 rounded-full hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors duration-200"
-                >
-                  <div className="p-2 rounded-full bg-blue-500 text-xl flex items-center justify-center">
-                    <MdWifiCalling1 className="text-white" />
-                  </div>
-                  <span className="font-medium text-gray-800 dark:text-gray-200">
-                    Contact Us
-                  </span>
-                </Link>
-              </li>
-              <li>
-                <Link
-                  href="/latest-event"
-                  className="flex items-center space-x-4 p-2 rounded-full hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors duration-200"
-                >
-                  <div className="p-2 rounded-full bg-blue-500 text-xl flex items-center justify-center">
-                    <FaCalendarAlt className="text-white" />
-                  </div>
-                  <span className="font-medium text-gray-800 dark:text-gray-200">
-                    Latest Event
-                  </span>
-                </Link>
-              </li>
-            </ul>
-          </div>
-
-          <div className="space-y-4">
-            <h2 className="text-gray-500 dark:text-gray-400 text-sm font-semibold tracking-wide uppercase">
-              Account
-            </h2>
-            <ul className="space-y-2">
-              <li>
-                <Link
-                  href="/login"
-                  className="flex items-center space-x-4 p-2 rounded-full hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors duration-200"
-                >
-                  <div className="p-2 rounded-full bg-blue-500 text-xl flex items-center justify-center">
-                    <BiLogIn className="text-white" />
-                  </div>
-                  <span className="font-medium text-gray-800 dark:text-gray-200">
-                    Log In
-                  </span>
-                </Link>
-              </li>
-            </ul>
-          </div>
-        </>
-      )}
+      {/* ---- ACCOUNT ---- */}
+      <div className="space-y-4">
+        <h2 className="text-gray-500 dark:text-gray-400 text-sm font-semibold tracking-wide uppercase">
+          Account
+        </h2>
+        <ul className="space-y-2">
+          {user ? (
+            <li>
+              <button
+                onClick={logoutUser}
+                className="w-full flex items-center space-x-3 p-2 rounded-full hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors duration-200 text-left"
+              >
+                <div className="p-2 rounded-full bg-red-500 text-xl flex items-center justify-center">
+                  <IoArrowRedoOutline className="text-white" />
+                </div>
+                <span className={textClass}>Log out</span>
+              </button>
+            </li>
+          ) : (
+            <li>
+              <Link href="/login" className={menuItemClasses}>
+                <div className="p-2 rounded-full bg-blue-500 text-xl flex items-center justify-center">
+                  <BiLogIn className="text-white" />
+                </div>
+                <span className={textClass}>Log In</span>
+              </Link>
+            </li>
+          )}
+        </ul>
+      </div>
     </div>
   );
 };
