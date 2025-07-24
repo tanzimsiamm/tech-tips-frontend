@@ -25,41 +25,43 @@ ChartJS.register(
   Legend
 );
 
-// Updated dummy data for the charts with more relevant labels and values
+// Default fixed data for the last 30 days
 const contentViewsData = {
-  labels: Array.from({ length: 30 }, (_, i) => `Day ${i + 1}`), // Last 30 days
+  labels: Array.from({ length: 30 }, (_, i) => `Day ${i + 1}`),
   datasets: [
     {
       label: "Total Views",
-      data: Array.from(
-        { length: 30 },
-        () => Math.floor(Math.random() * 500) + 100
-      ), // Views between 100 and 600
-      backgroundColor: "rgba(59, 130, 246, 0.2)", // Blue-500 with transparency
-      borderColor: "rgba(59, 130, 246, 1)", // Blue-500
+      data: [
+        120, 150, 180, 200, 170, 210, 250, 300, 280, 320, 350, 370, 400, 420,
+        390, 410, 430, 450, 470, 490, 460, 440, 420, 400, 380, 360, 340, 320,
+        300, 280,
+      ],
+      backgroundColor: "rgba(59, 130, 246, 0.2)",
+      borderColor: "rgba(59, 130, 246, 1)",
       borderWidth: 2,
-      tension: 0.3, // Smooth lines
+      tension: 0.3,
       pointRadius: 3,
       pointBackgroundColor: "rgba(59, 130, 246, 1)",
     },
   ],
 };
 
+// Fixed engagement data
 const engagementData = {
-  labels: ["Jan", "Feb", "Mar", "Apr", "May", "Jun"], // Monthly engagement
+  labels: ["Jan", "Feb", "Mar", "Apr", "May", "Jun"],
   datasets: [
     {
       label: "Upvotes",
-      data: [120, 150, 180, 70, 110, 90].map((val) => val * 2), // Scaled up
-      backgroundColor: "rgba(34, 197, 94, 0.7)", // Green-500
+      data: [120, 150, 180, 100, 160, 200],
+      backgroundColor: "rgba(34, 197, 94, 0.7)",
       borderColor: "rgba(34, 197, 94, 1)",
       borderWidth: 1,
-      borderRadius: 5, // Rounded bars
+      borderRadius: 5,
     },
     {
       label: "Comments",
-      data: [30, 45, 22, 33, 19, 27].map((val) => val * 2), // Scaled up
-      backgroundColor: "rgba(251, 191, 36, 0.7)", // Yellow-500
+      data: [40, 60, 50, 30, 45, 70],
+      backgroundColor: "rgba(251, 191, 36, 0.7)",
       borderColor: "rgba(251, 191, 36, 1)",
       borderWidth: 1,
       borderRadius: 5,
@@ -67,18 +69,19 @@ const engagementData = {
   ],
 };
 
+// Fixed share distribution data
 const shareDistributionData = {
   labels: ["Facebook", "Twitter (X)", "LinkedIn", "Reddit", "Other"],
   datasets: [
     {
       label: "Shares",
-      data: [80, 150, 60, 100, 40],
+      data: [120, 180, 90, 140, 60],
       backgroundColor: [
-        "rgba(59, 130, 246, 0.8)", // Blue
-        "rgba(34, 197, 94, 0.8)", // Green
-        "rgba(251, 191, 36, 0.8)", // Yellow
-        "rgba(239, 68, 68, 0.8)", // Red
-        "rgba(168, 85, 247, 0.8)", // Purple
+        "rgba(59, 130, 246, 0.8)",
+        "rgba(34, 197, 94, 0.8)",
+        "rgba(251, 191, 36, 0.8)",
+        "rgba(239, 68, 68, 0.8)",
+        "rgba(168, 85, 247, 0.8)",
       ],
       borderColor: [
         "rgba(59, 130, 246, 1)",
@@ -94,41 +97,36 @@ const shareDistributionData = {
 };
 
 const Dashboard = () => {
-  // Chart options for dark mode compatibility
   const chartOptions = {
     responsive: true,
-    maintainAspectRatio: false, // Allows height to be controlled by parent div
+    maintainAspectRatio: false,
     plugins: {
       legend: {
         labels: {
-          color: "rgb(156 163 175)", // Tailwind gray-400 for legend text
+          color: "rgb(156 163 175)",
         },
       },
       tooltip: {
-        backgroundColor: "rgb(31 41 55)", // Tailwind gray-800 for tooltip background
-        titleColor: "rgb(255 255 255)", // White
-        bodyColor: "rgb(209 213 219)", // Tailwind gray-300
-      },
-      title: {
-        display: true,
-        color: "rgb(255 255 255)", // White for chart titles
+        backgroundColor: "rgb(31 41 55)",
+        titleColor: "rgb(255 255 255)",
+        bodyColor: "rgb(209 213 219)",
       },
     },
     scales: {
       x: {
         ticks: {
-          color: "rgb(156 163 175)", // Tailwind gray-400 for x-axis labels
+          color: "rgb(156 163 175)",
         },
         grid: {
-          color: "rgba(55, 65, 81, 0.5)", // Darker grid lines
+          color: "rgba(55, 65, 81, 0.5)",
         },
       },
       y: {
         ticks: {
-          color: "rgb(156 163 175)", // Tailwind gray-400 for y-axis labels
+          color: "rgb(156 163 175)",
         },
         grid: {
-          color: "rgba(55, 65, 81, 0.5)", // Darker grid lines
+          color: "rgba(55, 65, 81, 0.5)",
         },
       },
     },
@@ -157,7 +155,7 @@ const Dashboard = () => {
               Total Views
             </h3>
             <p className="text-2xl font-bold text-gray-900 dark:text-white">
-              5.2K
+              12.5K
             </p>
           </div>
         </div>
@@ -170,7 +168,7 @@ const Dashboard = () => {
               Total Upvotes
             </h3>
             <p className="text-2xl font-bold text-gray-900 dark:text-white">
-              1.8K
+              4.3K
             </p>
           </div>
         </div>
@@ -183,7 +181,7 @@ const Dashboard = () => {
               Total Comments
             </h3>
             <p className="text-2xl font-bold text-gray-900 dark:text-white">
-              750
+              1.2K
             </p>
           </div>
         </div>
@@ -196,7 +194,7 @@ const Dashboard = () => {
               Total Shares
             </h3>
             <p className="text-2xl font-bold text-gray-900 dark:text-white">
-              320
+              650
             </p>
           </div>
         </div>

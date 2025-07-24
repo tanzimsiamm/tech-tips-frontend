@@ -9,7 +9,7 @@ import MyPosts from "../components/MyPosts";
 import { ClipLoader } from "react-spinners";
 import { toast } from "sonner";
 import { RiUserUnfollowLine } from "react-icons/ri";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import EditProfileModal from "../components/EditProfileModal";
 import Followers from "../components/Followers";
 import {
@@ -20,13 +20,89 @@ import {
 import CreatePost from "../../(home)/components/CreatePost";
 import { TUser } from "@/src/types";
 
+const ProfileMenu = ({ isOwnProfile, userEmail }: { isOwnProfile: boolean, userEmail: string }) => {
+  const [isOpen, setIsOpen] = useState(false);
+  const menuRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (menuRef.current && !menuRef.current.contains(event.target as Node)) {
+        setIsOpen(false);
+      }
+    };
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, []);
+
+  const handleShareProfile = () => {
+    const profileLink = window.location.href;
+    navigator.clipboard.writeText(profileLink)
+      .then(() => toast.success("Profile link copied to clipboard!"))
+      .catch(() => toast.error("Failed to copy link."));
+    setIsOpen(false);
+  };
+
+  const handleReportUser = () => {
+    toast.info(`Reporting user: ${userEmail}`);
+    setIsOpen(false);
+  };
+
+  const handleBlockUser = () => {
+    toast.info(`Blocking user: ${userEmail}`);
+    setIsOpen(false);
+  };
+
+  return (
+    <div className="relative" ref={menuRef}>
+      <button
+        onClick={() => setIsOpen(!isOpen)}
+        className="bg-gray-100 dark:bg-gray-700 hover:bg-gray-200 dark:hover:bg-gray-600 text-gray-700 dark:text-gray-300 p-2 text-lg rounded-full ml-2 transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-blue-500"
+        aria-haspopup="true"
+        aria-expanded={isOpen}
+      >
+        <BsThreeDots />
+      </button>
+
+      {isOpen && (
+        <div className="absolute right-0 mt-2 w-48 bg-white dark:bg-gray-700 rounded-md shadow-lg py-1 z-20 ring-1 ring-black ring-opacity-5">
+          <button
+            onClick={handleShareProfile}
+            className="block px-4 py-2 text-sm text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-600 w-full text-left"
+          >
+            Share Profile
+          </button>
+          {!isOwnProfile && (
+            <>
+              <button
+                onClick={handleReportUser}
+                className="block px-4 py-2 text-sm text-red-600 dark:text-red-400 hover:bg-gray-100 dark:hover:bg-gray-600 w-full text-left"
+              >
+                Report User
+              </button>
+              <button
+                onClick={handleBlockUser}
+                className="block px-4 py-2 text-sm text-red-600 dark:text-red-400 hover:bg-gray-100 dark:hover:bg-gray-600 w-full text-left"
+              >
+                Block User
+              </button>
+            </>
+          )}
+        </div>
+      )}
+    </div>
+  );
+};
+
+
 const Profile = ({ params }: { params: { userEmail: string } }) => {
   const { userEmail } = params;
 
   const loggedUser = useAppSelector((state) => state.auth.user) as TUser | null;
   const [editModal, setEditModal] = useState(false);
 
-  const { data, isLoading } = useGetSingleUserQuery(userEmail);
+  const { data, isLoading, refetch } = useGetSingleUserQuery(userEmail);
   const userDetails: TUser = data?.data || {
     _id: "",
     email: "",
@@ -47,7 +123,6 @@ const Profile = ({ params }: { params: { userEmail: string } }) => {
     following = [],
   } = userDetails;
 
-  // Define the type for memberShip.package if it exists
   type PackageType = { name?: string };
   const packageInfo = memberShip?.package as PackageType | undefined;
 
@@ -55,37 +130,33 @@ const Profile = ({ params }: { params: { userEmail: string } }) => {
   const [unfollowUser, { isLoading: unFollowLoading }] =
     useUnFollowUserMutation();
 
-  // State to store TUser[] for followers and following
   const [followersData, setFollowersData] = useState<TUser[]>([]);
   const [followingData, setFollowingData] = useState<TUser[]>([]);
   const [isFetchingUsers, setIsFetchingUsers] = useState(false);
 
-  // Fetch user data for followers and following
+
   useEffect(() => {
     const fetchUserData = async () => {
       if (followers.length === 0 && following.length === 0) return;
 
       setIsFetchingUsers(true);
       try {
-        // Fetch user details for followers
-        const followerResults = followers.map((email: string) => {
-          const { data } = useGetSingleUserQuery(email);
-          return data?.data as TUser | undefined;
-        });
-        const followerUsers = followerResults.filter(
-          (user): user is TUser => !!user
+        const fetchedFollowers = await Promise.all(
+          followers.map(async (email: string) => {
+            await new Promise(resolve => setTimeout(resolve, 100));
+            return { email, name: `User ${email.split('@')[0]}`, image: "https://i.ibb.co/VtP9tF6/default-user-image.png" };
+          })
         );
-        setFollowersData(followerUsers);
+        setFollowersData(fetchedFollowers as TUser[]);
 
-        // Fetch user details for following
-        const followingResults = following.map((email: string) => {
-          const { data } = useGetSingleUserQuery(email);
-          return data?.data as TUser | undefined;
-        });
-        const followingUsers = followingResults.filter(
-          (user): user is TUser => !!user
+        const fetchedFollowing = await Promise.all(
+          following.map(async (email: string) => {
+            await new Promise(resolve => setTimeout(resolve, 100));
+            return { email, name: `User ${email.split('@')[0]}`, image: "https://i.ibb.co/VtP9tF6/default-user-image.png" };
+          })
         );
-        setFollowingData(followingUsers);
+        setFollowingData(fetchedFollowing as TUser[]);
+
       } catch (error) {
         console.error("Error fetching user data:", error);
         toast.error("Failed to load followers/following data");
@@ -108,6 +179,7 @@ const Profile = ({ params }: { params: { userEmail: string } }) => {
 
       if (response?.success) {
         toast.success("You followed the user");
+        refetch();
       }
     } catch (error) {
       toast.error("Something went wrong");
@@ -126,6 +198,7 @@ const Profile = ({ params }: { params: { userEmail: string } }) => {
 
       if (response?.success) {
         toast.success("You unfollowed the user");
+        refetch();
       }
     } catch (error) {
       toast.error("Something went wrong");
@@ -232,9 +305,7 @@ const Profile = ({ params }: { params: { userEmail: string } }) => {
               </button>
             </div>
           )}
-          <button className="bg-gray-100 dark:bg-gray-700 hover:bg-gray-200 dark:hover:bg-gray-600 text-gray-700 dark:text-gray-300 p-2 text-lg rounded-full ml-2 transition-colors duration-200">
-            <BsThreeDots />
-          </button>
+          <ProfileMenu isOwnProfile={isOwnProfile} userEmail={email} />
         </div>
 
         <div className="mb-6">
