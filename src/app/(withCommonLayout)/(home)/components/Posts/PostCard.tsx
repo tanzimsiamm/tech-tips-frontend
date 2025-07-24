@@ -8,7 +8,7 @@ import { useRef, useState } from "react";
 import Image from "next/image";
 import TimeAgo from "react-timeago";
 import { IoSendSharp } from "react-icons/io5";
-import { useForm } from "react-hook-form";
+import { useForm } from "react-hook-form"; // Ensure useForm is imported
 import { useAppSelector } from "@/src/redux/hooks";
 import { toast } from "sonner";
 import { ClipLoader } from "react-spinners";
@@ -30,9 +30,11 @@ import MiniUserProfile from "./MiniUserProfile";
 import { useSendNotificationMutation } from "@/src/redux/features/notification/notificationApi";
 import EditCommentModal from "./EditCommentModal";
 import { useRouter } from "next/navigation";
+import React from "react"; // Ensure React is imported for React.ChangeEvent
 
 export default function PostCard({ post }: { post: TPost }) {
-  const { register, handleSubmit, reset } = useForm();
+  // Destructure watch from useForm
+  const { register, handleSubmit, reset, watch } = useForm();
   const user = useAppSelector((state) => state.auth.user);
   const [addComment, { isLoading: addLoading }] = useAddCommentMutation();
   const [deleteComment, { isLoading: deleteLoading }] =
@@ -40,7 +42,7 @@ export default function PostCard({ post }: { post: TPost }) {
   const [openEditCommentModal, setEditCommentModal] = useState(false);
   const [commentForEdit, setCommentForEdit] = useState<any>({});
 
-  const [sendNotification, { isSuccess }] = useSendNotificationMutation();
+  const [sendNotification] = useSendNotificationMutation();
   const router = useRouter();
 
   const contentRef = useRef<HTMLDivElement>(null);
@@ -56,16 +58,58 @@ export default function PostCard({ post }: { post: TPost }) {
     voters,
     createdAt,
     isPremium,
+    title, // Make sure title is available in TPost for better share text
   } = post;
 
-  if (!_id) return null;
-  const { data } = useGetCommentsQuery({ postId: _id });
+  if (!_id) return null; // Ensure post ID exists before proceeding
 
-  const comments: TComment[] = data?.data || [];
+  const { data: commentsData } = useGetCommentsQuery({ postId: _id });
+  const comments: TComment[] = commentsData?.data || [];
+
+  const handleShare = async () => {
+    const shareUrl = `${window.location.origin}/details/${_id}`;
+    const shareTitle = post.title || "Check out this post!"; // Use post title or fallback
+    const shareText = description
+      ? description.slice(0, 100) + "..."
+      : "Find out more!";
+
+    const shareData = {
+      title: shareTitle,
+      text: shareText,
+      url: shareUrl,
+    };
+
+    if (navigator.share) {
+      try {
+        await navigator.share(shareData);
+        // console.log("Post shared successfully");
+      } catch (error: any) {
+        if (error.name === "AbortError") {
+          toast.info("Sharing cancelled.");
+        } else {
+          toast.error("Failed to share post.");
+          console.error("Error sharing:", error);
+        }
+      }
+    } else {
+      try {
+        await navigator.clipboard.writeText(shareUrl);
+        toast.success("Post link copied to clipboard!");
+      } catch (error) {
+        toast.error("Could not copy link to clipboard.");
+        console.error("Failed to copy link:", error);
+      }
+    }
+  };
 
   const onSubmit = async (data: any) => {
     if (!user) {
       toast.error("Please log in to comment.");
+      return;
+    }
+
+    if (!data.newComment || data.newComment.trim() === "") {
+      toast.error("Comment cannot be empty.");
       return;
     }
 
@@ -83,7 +127,7 @@ export default function PostCard({ post }: { post: TPost }) {
       const response = await addComment(newComment as TComment).unwrap();
 
       if (response && response._id) {
-        reset();
+        reset(); // Clear the textarea
         await sendNotification({
           userEmail: authorInfo?.authorEmail,
           text: `${user?.name} commented on your post`,
@@ -94,15 +138,33 @@ export default function PostCard({ post }: { post: TPost }) {
         });
       }
     } catch (error) {
-      toast.error("Something went wrong");
-      console.log(error);
+      toast.error("Something went wrong while adding comment.");
+      console.error(error);
     }
   };
 
+  // Function to handle Enter key press for comment submission
+  const handleKeyDown = (e: React.KeyboardEvent<HTMLTextAreaElement>) => {
+    if (e.key === "Enter" && !e.shiftKey) {
+      e.preventDefault(); // Prevent new line
+      handleSubmit(onSubmit)(); // Submit the form
+    }
+  };
+
+  // Watch the input value to disable/enable the submit button
+  const newCommentValue = watch("newComment");
+
+  // Prevent click event from propagating to the parent div
+  const stopPropagation = (e: React.MouseEvent) => {
+    e.stopPropagation();
+  };
+
   return (
+    // Make the entire card clickable, except for interactive elements
     <div
       ref={contentRef}
-      className="bg-white dark:bg-gray-800 rounded-xl shadow-sm p-4 sm:p-6 w-full mx-auto mb-4 border border-gray-200 dark:border-gray-700"
+      className="bg-white dark:bg-gray-800 rounded-xl shadow-sm p-4 sm:p-6 w-full mx-auto mb-4 border border-gray-200 dark:border-gray-700 cursor-pointer"
+      onClick={() => router.push(`/details/${_id}`)} // Navigate to details on card click
     >
       {openEditCommentModal && (
         <EditCommentModal
@@ -113,7 +175,9 @@ export default function PostCard({ post }: { post: TPost }) {
 
       <div className="flex items-start justify-between mb-4">
         <div className="flex items-center">
-          <section className="group relative mr-3">
+          <section className="group relative mr-3" onClick={stopPropagation}>
+            {" "}
+            {/* Stop propagation */}
             <Link href={`/profile/${authorInfo?.authorEmail}`}>
               <Image
                 width={56}
@@ -133,19 +197,25 @@ export default function PostCard({ post }: { post: TPost }) {
             <Link
               href={`/profile/${authorInfo?.authorEmail}`}
               className="font-bold text-gray-900 dark:text-white hover:underline text-lg"
+              onClick={stopPropagation} // Stop propagation
             >
               {authorInfo?.name}
             </Link>
             <p className="text-sm text-gray-500 dark:text-gray-400">
               {category} •{" "}
               <time className="text-gray-500 dark:text-gray-400">
-                <TimeAgo date={createdAt!} />
+                {createdAt && <TimeAgo date={createdAt} />}
               </time>
             </p>
           </div>
         </div>
 
-        <div className="flex items-center space-x-3 text-gray-600 dark:text-gray-400">
+        <div
+          className="flex items-center space-x-3 text-gray-600 dark:text-gray-400"
+          onClick={stopPropagation}
+        >
+          {" "}
+          {/* Stop propagation */}
           {isPremium && (
             <MdStars
               className="text-blue-500 text-2xl"
@@ -164,14 +234,11 @@ export default function PostCard({ post }: { post: TPost }) {
 
       <div
         className="text-gray-800 dark:text-gray-200 text-base leading-relaxed mb-4"
-        dangerouslySetInnerHTML={{ __html: description }}
+        dangerouslySetInnerHTML={{ __html: description || "" }}
       ></div>
 
       {images && images.length > 0 && (
-        <div
-          onClick={() => router.push(`/details/${_id}`)}
-          className="cursor-pointer"
-        >
+        <div /* Removed onClick here, as the parent div handles navigation */>
           <ImageGallery images={images} />
         </div>
       )}
@@ -181,26 +248,34 @@ export default function PostCard({ post }: { post: TPost }) {
           <VoteSection
             postId={_id as string}
             userId={user?._id as string}
-            votes={votes!}
-            voters={voters!}
+            votes={votes || 0}
+            voters={voters || []}
+            onClick={stopPropagation} // Stop propagation
           />
 
           <Link
             href={`/details/${_id}#comments`}
             className="flex items-center space-x-2 text-gray-600 dark:text-gray-400 hover:text-blue-500 dark:hover:text-blue-400 transition-colors duration-200"
+            onClick={stopPropagation} // Stop propagation
           >
             <BiCommentDetail className="text-xl" />
-            <span className="font-semibold">{comments?.length}</span>
+            <span className="font-semibold">{comments?.length || 0}</span>
           </Link>
         </div>
-        <button className="flex items-center space-x-2 text-gray-600 dark:text-gray-400 hover:text-blue-500 dark:hover:text-blue-400 transition-colors duration-200">
+        <button
+          onClick={handleShare}
+          className="flex items-center space-x-2 text-gray-600 dark:text-gray-400 hover:text-blue-500 dark:hover:text-blue-400 transition-colors duration-200"
+        >
           <FaShare className="text-lg" />
           <span className="text-sm font-medium">Share</span>
         </button>
       </div>
 
       <div className="flex flex-col space-y-4 mt-6 pt-4 border-t border-gray-100 dark:border-gray-700 relative">
-        <h4 className="font-semibold text-gray-700 dark:text-gray-300 cursor-pointer hover:text-blue-500 dark:hover:text-blue-400">
+        <h4
+          className="font-semibold text-gray-700 dark:text-gray-300 cursor-pointer hover:text-blue-500 dark:hover:text-blue-400"
+          onClick={() => router.push(`/details/${_id}#comments`)} // Explicit link to comments section
+        >
           View all {comments?.length} comments
         </h4>
 
@@ -217,7 +292,12 @@ export default function PostCard({ post }: { post: TPost }) {
 
         {comments?.slice(0, 2).map((comment: TComment) => (
           <div key={comment?._id} className="flex space-x-3">
-            <Link href={`/profile/${comment?.userInfo?.email}`}>
+            <Link
+              href={`/profile/${comment?.userInfo?.email}`}
+              onClick={stopPropagation}
+            >
+              {" "}
+              {/* Stop propagation */}
               <Image
                 src={
                   comment?.userInfo?.image ||
@@ -238,7 +318,12 @@ export default function PostCard({ post }: { post: TPost }) {
                   </h4>
                   {(user?.email === comment?.userInfo?.email ||
                     user?.role === "admin") && (
-                    <div className="flex space-x-2 opacity-0 group-hover:opacity-100 transition-opacity duration-200">
+                    <div
+                      className="flex space-x-2 opacity-0 group-hover:opacity-100 transition-opacity duration-200"
+                      onClick={stopPropagation}
+                    >
+                      {" "}
+                      {/* Stop propagation */}
                       <button
                         type="button"
                         className="text-gray-500 hover:text-blue-500 dark:hover:text-blue-400 transition-colors"
@@ -266,18 +351,11 @@ export default function PostCard({ post }: { post: TPost }) {
                 </p>
               </div>
 
+              {/* REMOVED: Like and Reply options from comments as requested */}
               <div className="flex items-center space-x-4 text-gray-500 dark:text-gray-400 text-xs mt-1 ml-2">
                 <span className="font-medium">
-                  <TimeAgo date={comment.createdAt!} />
+                  {comment.createdAt && <TimeAgo date={comment.createdAt} />}
                 </span>
-                <button className="flex items-center space-x-1 hover:text-blue-500 dark:hover:text-blue-400 transition-colors">
-                  <FaThumbsUp className="text-xs" />
-                  <span>Like</span>
-                </button>
-                <button className="flex items-center space-x-1 hover:text-blue-500 dark:hover:text-blue-400 transition-colors">
-                  <FaReply className="text-xs" />
-                  <span>Reply</span>
-                </button>
               </div>
             </div>
           </div>
@@ -288,6 +366,7 @@ export default function PostCard({ post }: { post: TPost }) {
         <form
           className="flex items-center gap-3 mt-6 pt-4 border-t border-gray-100 dark:border-gray-700"
           onSubmit={handleSubmit(onSubmit)}
+          onClick={stopPropagation} // Stop propagation for the form itself
         >
           <div>
             <Image
@@ -311,11 +390,15 @@ export default function PostCard({ post }: { post: TPost }) {
                 e.target.style.height = "auto";
                 e.target.style.height = e.target.scrollHeight + "px";
               }}
+              onKeyDown={handleKeyDown} // Add onKeyDown for Enter submission
             />
             <button
               type="submit"
               className="absolute right-3 top-1/2 -translate-y-1/2 text-blue-500 hover:text-blue-600 dark:hover:text-blue-400 transition-colors duration-200 disabled:opacity-50 disabled:cursor-not-allowed"
-              disabled={addLoading}
+              // Disable if loading, or if the comment value is empty or just whitespace
+              disabled={
+                addLoading || !newCommentValue || newCommentValue.trim() === ""
+              }
             >
               {addLoading ? (
                 <ClipLoader

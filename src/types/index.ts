@@ -98,3 +98,31 @@ export type TPayment = {
   };
   transactionId: string;
 };
+
+
+export type TUserForMyFollowers = {
+  _id?: string;
+  name: string;
+  email: string;
+  role: string;
+  image?: string;
+  coverImg?: string;
+  memberShip?: null | {
+    takenDate: string;
+    exp: string;
+    package: object;
+  };
+  followers?: Array<{
+    _id?: string;
+    name: string;
+    email: string;
+    image?: string;
+  }>;
+  following?: Array<{
+    _id?: string;
+    name: string;
+    email: string;
+    image?: string;
+  }>;
+  isBlocked?: boolean;
+};

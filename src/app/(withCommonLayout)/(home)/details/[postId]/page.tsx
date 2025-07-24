@@ -2,7 +2,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 "use client";
 
-import { FaShare, FaThumbsUp, FaReply, FaEdit, FaPen } from "react-icons/fa";
+import { FaShare, FaThumbsUp, FaReply, FaPen } from "react-icons/fa";
 import { RiDeleteBin4Line } from "react-icons/ri";
 import Image from "next/image";
 import TimeAgo from "react-timeago";
@@ -17,7 +17,7 @@ import VoteSection from "../../components/Posts/VoteSection";
 import { useGetSinglePostQuery } from "@/src/redux/features/posts/postApi";
 import { MdStars } from "react-icons/md";
 import { AiFillPrinter } from "react-icons/ai";
-import { useRef, useState } from "react";
+import React, { useRef, useState } from "react";
 import { useReactToPrint } from "react-to-print";
 import EditCommentModal from "../../components/Posts/EditCommentModal";
 import Link from "next/link";
@@ -28,16 +28,18 @@ import {
   useDeleteCommentMutation,
   useGetCommentsQuery,
 } from "@/src/redux/features/comments/commetApi";
+import { useParams } from "next/navigation";
 
-export default function PostDetails({
-  params,
-}: {
-  params: { postId: string };
-}) {
-  const { data } = useGetSinglePostQuery(params?.postId);
-  const post: TPost = data?.data || {};
+export default function PostDetails() {
+  const params = useParams();
+  const postId = params?.postId as string;
 
-  const { register, handleSubmit, reset } = useForm();
+  const { data, isLoading, error } = useGetSinglePostQuery(postId, {
+    skip: !postId,
+  });
+  const post: TPost = data?.data || ({} as TPost);
+
+  const { register, handleSubmit, reset, watch } = useForm(); // Added watch
   const user = useAppSelector((state) => state.auth.user);
   const [addComment, { isLoading: addLoading }] = useAddCommentMutation();
   const [deleteComment, { isLoading: deleteLoading }] =
@@ -56,17 +58,26 @@ export default function PostDetails({
     voters,
     createdAt,
     isPremium,
-  } = post;
+    title,
+  } = post || {};
 
-  const { data: commentsData } = useGetCommentsQuery({ postId: _id });
+  const { data: commentsData } = useGetCommentsQuery(
+    { postId: _id || "" },
+    { skip: !_id }
+  );
   const comments: TComment[] = commentsData?.data || [];
 
   const contentRef = useRef<HTMLDivElement>(null);
   const reactToPrintFn = useReactToPrint({ contentRef });
 
   const onSubmit = async (data: any) => {
+    // Trim the comment to check if it's just whitespace
     if (!user) {
       toast.error("Please log in to comment.");
+      return;
+    }
+    if (!data.newComment || data.newComment.trim() === "") {
+      toast.error("Comment cannot be empty.");
       return;
     }
 
@@ -82,15 +93,66 @@ export default function PostDetails({
 
     try {
       const response = await addComment(newComment as TComment).unwrap();
-
-      if (response?.success) {
-        reset();
-      }
-    } catch (error) {
+      if (response) reset();
+    } catch (err) {
       toast.error("Something went wrong");
-      console.log(error);
+      console.log(err);
     }
   };
+
+  // Share functionality (added back in for completeness)
+  const handleShare = async () => {
+    if (navigator.share) {
+      try {
+        await navigator.share({
+          title: title || "Post Details",
+          text: description
+            ? description.substring(0, 150) + "..."
+            : "Check out this post!",
+          url: `${window.location.origin}/details/${_id}`,
+        });
+        console.log("Post shared successfully");
+      } catch (error) {
+        console.error("Error sharing:", error);
+      }
+    } else {
+      const postUrl = `${window.location.origin}/details/${_id}`;
+      navigator.clipboard
+        .writeText(postUrl)
+        .then(() => {
+          toast.success("Post link copied to clipboard!");
+        })
+        .catch((err) => {
+          console.error("Failed to copy: ", err);
+          toast.error("Could not copy link to clipboard.");
+        });
+    }
+  };
+
+  // Handle Enter key for comment submission
+  const handleKeyDown = (e: React.KeyboardEvent<HTMLTextAreaElement>) => {
+    if (e.key === "Enter" && !e.shiftKey) {
+      // Submit on Enter, but allow Shift+Enter for new line
+      e.preventDefault(); // Prevent default new line behavior
+      handleSubmit(onSubmit)(); // Trigger form submission
+    }
+  };
+
+  // Watch the input value to disable button if empty
+  const newCommentValue = watch("newComment");
+
+  if (isLoading)
+    return (
+      <div className="flex justify-center items-center h-screen">
+        <ClipLoader color="#3B82F6" size={50} />
+      </div>
+    );
+  if (error)
+    return (
+      <div className="text-red-500 text-center py-10">
+        Error loading post. Please try again.
+      </div>
+    );
 
   return (
     <div
@@ -104,6 +166,7 @@ export default function PostDetails({
         />
       )}
 
+      {/* Post Header */}
       <div className="flex items-start justify-between mb-4">
         <div className="flex items-center">
           <section className="group relative mr-3">
@@ -132,7 +195,7 @@ export default function PostDetails({
             <p className="text-sm text-gray-500 dark:text-gray-400">
               {category} •{" "}
               <time className="text-gray-500 dark:text-gray-400">
-                <TimeAgo date={createdAt!} />
+                {createdAt && <TimeAgo date={createdAt} />}
               </time>
             </p>
           </div>
@@ -155,24 +218,26 @@ export default function PostDetails({
         </div>
       </div>
 
+      {/* Post Content */}
       <h2 className="text-gray-900 dark:text-white mb-3 font-bold text-xl sm:text-2xl">
-        {post?.title}
+        {title}
       </h2>
 
       <div
         className="text-gray-800 dark:text-gray-200 text-base leading-relaxed mb-4"
-        dangerouslySetInnerHTML={{ __html: description }}
-      ></div>
+        dangerouslySetInnerHTML={{ __html: description || "" }}
+      />
 
       {images && images.length > 0 && <ImageGallery images={images} />}
 
+      {/* Vote + Share */}
       <div className="flex justify-between items-center mt-4 pt-3 border-t border-gray-200 dark:border-gray-700">
         <div className="flex items-center space-x-6 text-gray-600 dark:text-gray-400">
           <VoteSection
             postId={_id as string}
             userId={user?._id as string}
-            votes={votes!}
-            voters={voters!}
+            votes={votes || 0}
+            voters={voters || []}
           />
 
           <div className="flex items-center space-x-2 text-gray-600 dark:text-gray-400">
@@ -180,12 +245,16 @@ export default function PostDetails({
             <span className="font-semibold">{comments?.length}</span>
           </div>
         </div>
-        <button className="flex items-center space-x-2 text-gray-600 dark:text-gray-400 hover:text-blue-500 dark:hover:text-blue-400 transition-colors duration-200">
+        <button
+          onClick={handleShare}
+          className="flex items-center space-x-2 text-gray-600 dark:text-gray-400 hover:text-blue-500 dark:hover:text-blue-400 transition-colors duration-200"
+        >
           <FaShare className="text-lg" />
           <span className="text-sm font-medium">Share</span>
         </button>
       </div>
 
+      {/* Comments Section */}
       <div className="flex flex-col space-y-4 mt-6 pt-4 border-t border-gray-100 dark:border-gray-700 relative">
         <h4 className="font-semibold text-gray-700 dark:text-gray-300">
           Comments
@@ -253,7 +322,8 @@ export default function PostDetails({
                 </p>
               </div>
 
-              <div className="flex items-center space-x-4 text-gray-500 dark:text-gray-400 text-xs mt-1 ml-2">
+              {/* Removed Like and Reply buttons from here */}
+              {/* <div className="flex items-center space-x-4 text-gray-500 dark:text-gray-400 text-xs mt-1 ml-2">
                 <span className="font-medium">
                   <TimeAgo date={comment.createdAt!} />
                 </span>
@@ -265,12 +335,13 @@ export default function PostDetails({
                   <FaReply className="text-xs" />
                   <span>Reply</span>
                 </button>
-              </div>
+              </div> */}
             </div>
           </div>
         ))}
       </div>
 
+      {/* Add Comment Form */}
       {user && (
         <form
           className="flex items-center gap-3 mt-6 pt-4 border-t border-gray-100 dark:border-gray-700"
@@ -298,11 +369,14 @@ export default function PostDetails({
                 e.target.style.height = "auto";
                 e.target.style.height = e.target.scrollHeight + "px";
               }}
+              onKeyDown={handleKeyDown} // Added onKeyDown handler
             />
             <button
               type="submit"
               className="absolute right-3 top-1/2 -translate-y-1/2 text-blue-500 hover:text-blue-600 dark:hover:text-blue-400 transition-colors duration-200 disabled:opacity-50 disabled:cursor-not-allowed"
-              disabled={addLoading}
+              disabled={
+                addLoading || !newCommentValue || newCommentValue.trim() === ""
+              } // Disable if loading or input is empty/whitespace
             >
               {addLoading ? (
                 <ClipLoader
