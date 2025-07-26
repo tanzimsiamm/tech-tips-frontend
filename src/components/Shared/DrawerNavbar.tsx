@@ -3,6 +3,7 @@
 import { useState } from "react";
 import { FaBars, FaTimes } from "react-icons/fa";
 import { motion, AnimatePresence } from "framer-motion";
+
 import FeaturesSidebar from "@/src/components/Shared/FeaturesSidebar";
 
 const DrawerNavbar = () => {
@@ -30,22 +31,22 @@ const DrawerNavbar = () => {
             {/* Backdrop */}
             <motion.div
               key="backdrop"
-              initial={{ opacity: 0 }}
               animate={{ opacity: 0.4 }}
-              exit={{ opacity: 0 }}
-              transition={{ duration: 0.3 }}
               className="fixed inset-0 bg-black z-40 lg:hidden"
+              exit={{ opacity: 0 }}
+              initial={{ opacity: 0 }}
+              transition={{ duration: 0.3 }}
               onClick={() => setIsDrawerOpen(false)}
             />
 
             {/* Drawer Sidebar */}
             <motion.div
               key="drawer"
-              initial={{ x: "-100%" }}
               animate={{ x: 0 }}
-              exit={{ x: "-100%" }}
-              transition={{ type: "spring", stiffness: 300, damping: 30 }}
               className="fixed top-0 left-0 h-full w-72 bg-white dark:bg-gray-800 z-50 shadow-lg lg:hidden"
+              exit={{ x: "-100%" }}
+              initial={{ x: "-100%" }}
+              transition={{ type: "spring", stiffness: 300, damping: 30 }}
             >
               {/* Drawer Header */}
               <div className="flex justify-between items-center p-4 border-b border-gray-200 dark:border-gray-700">

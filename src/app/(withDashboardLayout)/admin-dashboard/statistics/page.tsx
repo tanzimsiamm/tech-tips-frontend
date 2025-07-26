@@ -1,11 +1,6 @@
 "use client";
 
-import {
-  FaChartLine,
-  FaUsers,
-  FaDollarSign,
-  FaFileAlt,
-} from "react-icons/fa"; 
+import { FaChartLine, FaUsers, FaDollarSign, FaFileAlt } from "react-icons/fa";
 import {
   BarChart,
   Bar,
@@ -32,6 +27,7 @@ import {
   Tooltip as ChartJsTooltip,
   Legend as ChartJsLegend,
 } from "chart.js";
+
 import { useGetStatisticsQuery } from "@/src/redux/features/statistics/statisticsApi";
 
 // Register the Chart.js components (for internal use if needed, but Recharts is used here)
@@ -43,7 +39,7 @@ ChartJS.register(
   BarElement,
   Title,
   ChartJsTooltip,
-  ChartJsLegend
+  ChartJsLegend,
 );
 
 const COLORS_PIE = [
@@ -53,7 +49,7 @@ const COLORS_PIE = [
   "#FF8042",
   "#A855F7",
   "#EC4899",
-]; 
+];
 
 const Statistics = () => {
   const { data } = useGetStatisticsQuery(undefined);
@@ -183,11 +179,11 @@ const Statistics = () => {
           <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-4">
             Monthly Revenue Overview
           </h3>
-          <ResponsiveContainer width="100%" height="85%">
+          <ResponsiveContainer height="85%" width="100%">
             <LineChart data={paymentsLineData}>
               <CartesianGrid
-                strokeDasharray="3 3"
                 stroke={chartStyles.grid.stroke}
+                strokeDasharray="3 3"
               />
               <XAxis
                 dataKey="name"
@@ -208,12 +204,12 @@ const Statistics = () => {
               />
               <Legend wrapperStyle={{ color: chartStyles.legend.color }} />
               <Line
-                type="monotone"
+                activeDot={{ r: 6 }}
                 dataKey="revenue"
+                dot={{ r: 4 }}
                 stroke="#22D3EE"
                 strokeWidth={2}
-                dot={{ r: 4 }}
-                activeDot={{ r: 6 }}
+                type="monotone"
               />
             </LineChart>
           </ResponsiveContainer>
@@ -223,7 +219,7 @@ const Statistics = () => {
           <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-4">
             Content Engagement Metrics
           </h3>
-          <ResponsiveContainer width="100%" height="85%">
+          <ResponsiveContainer height="85%" width="100%">
             <BarChart data={postBarData}>
               <XAxis
                 dataKey="name"
@@ -252,19 +248,19 @@ const Statistics = () => {
           <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-4">
             User Distribution
           </h3>
-          <ResponsiveContainer width="100%" height="85%">
+          <ResponsiveContainer height="85%" width="100%">
             <PieChart>
               <Pie
-                data={usersPieData}
                 cx="50%"
                 cy="50%"
-                outerRadius={100}
-                fill="#8884d8"
+                data={usersPieData}
                 dataKey="value"
+                fill="#8884d8"
                 label={({ name, percent }) =>
                   `${name} (${((percent ?? 0) * 100).toFixed(0)}%)`
                 }
                 labelLine={false} // Hide the label connecting lines
+                outerRadius={100}
               >
                 {usersPieData.map((entry, index) => (
                   <Cell

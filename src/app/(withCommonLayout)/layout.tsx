@@ -1,11 +1,13 @@
 "use client";
 
+import { ReactNode } from "react";
+
+import RightSidebar from "./(home)/components/RightSidebar";
+
 import DrawerNavbar from "@/src/components/Shared/DrawerNavbar";
 import FeaturesSidebar from "@/src/components/Shared/FeaturesSidebar";
 import Sidebar from "@/src/components/Shared/Sidebar";
 import { useAppSelector } from "@/src/redux/hooks";
-import { ReactNode } from "react";
-import RightSidebar from "./(home)/components/RightSidebar";
 
 const CommonLayout = ({ children }: { children: ReactNode }) => {
   const user = useAppSelector((state) => state.auth.user);

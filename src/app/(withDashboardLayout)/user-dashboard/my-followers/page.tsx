@@ -1,10 +1,11 @@
 "use client";
 
-import { useAppSelector } from "@/src/redux/hooks";
-import { useGetSingleUserQuery } from "@/src/redux/features/user/userApi";
 import { FaUserFriends, FaUserPlus } from "react-icons/fa";
 import Image from "next/image";
 import Link from "next/link";
+
+import { useGetSingleUserQuery } from "@/src/redux/features/user/userApi";
+import { useAppSelector } from "@/src/redux/hooks";
 import { TUserForMyFollowers } from "@/src/types";
 
 const MyFollowers = () => {
@@ -52,21 +53,21 @@ const MyFollowers = () => {
                     <td className="p-4">
                       <Link href={`/profile/${follower?.email}`}>
                         <Image
+                          alt={follower?.name || "User"}
+                          className="size-10 rounded-full object-cover border border-gray-300 dark:border-gray-600"
+                          height={40}
                           src={
                             follower?.image ||
                             "https://i.ibb.co/VtP9tF6/default-user-image.png"
                           }
-                          alt={follower?.name || "User"}
                           width={40}
-                          height={40}
-                          className="size-10 rounded-full object-cover border border-gray-300 dark:border-gray-600"
                         />
                       </Link>
                     </td>
                     <td className="p-4 text-gray-900 dark:text-white font-medium">
                       <Link
-                        href={`/profile/${follower?.email}`}
                         className="hover:underline"
+                        href={`/profile/${follower?.email}`}
                       >
                         {follower?.name}
                       </Link>
@@ -118,21 +119,21 @@ const MyFollowers = () => {
                     <td className="p-4">
                       <Link href={`/profile/${followedUser?.email}`}>
                         <Image
+                          alt={followedUser?.name || "User"}
+                          className="size-10 rounded-full object-cover border border-gray-300 dark:border-gray-600"
+                          height={40}
                           src={
                             followedUser?.image ||
                             "https://i.ibb.co/VtP9tF6/default-user-image.png"
                           }
-                          alt={followedUser?.name || "User"}
                           width={40}
-                          height={40}
-                          className="size-10 rounded-full object-cover border border-gray-300 dark:border-gray-600"
                         />
                       </Link>
                     </td>
                     <td className="p-4 text-gray-900 dark:text-white font-medium">
                       <Link
-                        href={`/profile/${followedUser?.email}`}
                         className="hover:underline"
+                        href={`/profile/${followedUser?.email}`}
                       >
                         {followedUser?.name}
                       </Link>

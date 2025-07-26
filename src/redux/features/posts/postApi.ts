@@ -1,74 +1,76 @@
-
-import { TPost } from "@/src/types";
 import baseApi from "../../api/baseApi";
 
+import { TPost } from "@/src/types";
 
 const postApi = baseApi.injectEndpoints({
-    endpoints : (builder) => ({
+  endpoints: (builder) => ({
+    createPost: builder.mutation({
+      query: (post: TPost) => ({
+        url: "/posts",
+        method: "POST",
+        body: post,
+      }),
+      invalidatesTags: ["Posts"],
+    }),
 
-        createPost : builder.mutation({
-            query: (post : TPost) => ({
-                url : '/posts',
-                method : "POST",
-                body: post,   
-            }),
-           invalidatesTags: ['Posts']
-        }),
+    getPosts: builder.query({
+      query: (query) => ({
+        url: "/posts",
+        method: "GET",
+        params: query,
+      }),
+      providesTags: ["Posts"],
+    }),
 
-        getPosts : builder.query({
-            query: (query) => ({
-                url : '/posts',
-                method : "GET",
-                params : query,
-            }),
-            providesTags: ['Posts']
-        }),
+    getSinglePost: builder.query({
+      query: (postId: string) => ({
+        url: `/posts/${postId}`,
+        method: "GET",
+      }),
+      providesTags: ["Post"],
+    }),
 
+    deletePost: builder.mutation({
+      query: (postId: string) => ({
+        url: `/posts/${postId}`,
+        method: "DELETE",
+      }),
+      invalidatesTags: ["Posts"],
+    }),
 
-        getSinglePost : builder.query({
-            query: (postId: string) => ({
-                url : `/posts/${postId}`,
-                method : "GET",   
-            }),
-            providesTags : ['Post']
-        }),
+    updatePost: builder.mutation({
+      query: ({
+        postId,
+        payload,
+      }: {
+        postId: string;
+        payload: Partial<TPost>;
+      }) => ({
+        url: `/posts/${postId}`,
+        method: "PUT",
+        body: payload,
+      }),
+      invalidatesTags: ["Posts", "Post"],
+    }),
 
-        deletePost : builder.mutation({
-            query: (postId: string) => ({
-                url : `/posts/${postId}`,
-                method : "DELETE",   
-            }),
-            invalidatesTags: ['Posts']
-        }),
-        
-        updatePost : builder.mutation({
-            query: ({ postId , payload } : { postId: string, payload:Partial<TPost>}) => ({
-                
-                url : `/posts/${postId}`,
-                method : "PUT", 
-                body : payload,  
-            }),
-            invalidatesTags: ['Posts', 'Post']
-        }),
-        
-        votePost : builder.mutation({
-            query: (payload) => ({
-                // payload  { postId, userId, voteType }
-                
-                url : `/posts/vote`,
-                method : "POST", 
-                body : payload,  
-            }),
-            invalidatesTags: ['Posts', 'Post']
-        }),
-        
-    })
-})
+    votePost: builder.mutation({
+      query: (payload) => ({
+        // payload  { postId, userId, voteType }
+
+        url: `/posts/vote`,
+        method: "POST",
+        body: payload,
+      }),
+      invalidatesTags: ["Posts", "Post"],
+    }),
+  }),
+});
 
 export const {
-    useCreatePostMutation,
-     useGetPostsQuery,
-      useUpdatePostMutation,
-       useDeletePostMutation,
-        useGetSinglePostQuery, useVotePostMutation
-    } = postApi;
+  useCreatePostMutation,
+  useGetPostsQuery,
+  useUpdatePostMutation,
+  useDeletePostMutation,
+  useGetSinglePostQuery,
+  useVotePostMutation,
+} = postApi;

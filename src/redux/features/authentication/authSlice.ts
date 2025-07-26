@@ -1,5 +1,6 @@
-import { TUser } from "@/src/types";
 import { createSlice } from "@reduxjs/toolkit";
+
+import { TUser } from "@/src/types";
 
 type TAuthState = {
   user: null | TUser;
@@ -17,6 +18,7 @@ const authSlice = createSlice({
   reducers: {
     setUser: (state, action) => {
       const { user, token } = action.payload;
+
       state.user = user;
       state.token = token;
     },

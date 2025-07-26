@@ -1,8 +1,8 @@
-
 "use client";
 
 import { ReactNode } from "react";
 import { PersistGate } from "redux-persist/integration/react";
+
 import { persistor } from "@/src/redux/store";
 
 type ReduxPersistGateProps = {
@@ -10,5 +10,9 @@ type ReduxPersistGateProps = {
 };
 
 export default function ReduxPersistGate({ children }: ReduxPersistGateProps) {
-  return <PersistGate loading={null} persistor={persistor}>{children}</PersistGate>;
+  return (
+    <PersistGate loading={null} persistor={persistor}>
+      {children}
+    </PersistGate>
+  );
 }

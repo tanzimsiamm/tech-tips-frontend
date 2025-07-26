@@ -1,6 +1,5 @@
 "use client";
 
-import { useAppDispatch, useAppSelector } from "@/src/redux/hooks";
 import Link from "next/link";
 import { FaTv, FaUserCircle, FaCalendarAlt, FaMoon } from "react-icons/fa";
 import { GoPackage } from "react-icons/go";
@@ -9,15 +8,18 @@ import { SiHomeadvisor } from "react-icons/si";
 import { MdWifiCalling1 } from "react-icons/md";
 import { FaRegUser } from "react-icons/fa6";
 import { IoArrowRedoOutline } from "react-icons/io5";
-import { logout } from "@/src/redux/features/authentication/authSlice";
 import Cookies from "js-cookie";
 import { toast } from "sonner";
 import { useRouter } from "next/navigation";
 import { BiLogIn } from "react-icons/bi";
+
 import { ThemeSwitch } from "../theme-switch";
 
+import { logout } from "@/src/redux/features/authentication/authSlice";
+import { useAppDispatch, useAppSelector } from "@/src/redux/hooks";
+
 interface FeaturesSidebarProps {
-  showAllText?: boolean; 
+  showAllText?: boolean;
 }
 
 const FeaturesSidebar = ({ showAllText = false }: FeaturesSidebarProps) => {
@@ -48,7 +50,7 @@ const FeaturesSidebar = ({ showAllText = false }: FeaturesSidebarProps) => {
         </h2>
         <ul className="space-y-2">
           <li>
-            <Link href="/" className={menuItemClasses}>
+            <Link className={menuItemClasses} href="/">
               <div className="p-2 rounded-full bg-blue-500 text-xl flex items-center justify-center">
                 <FaTv className="text-white" />
               </div>
@@ -56,7 +58,7 @@ const FeaturesSidebar = ({ showAllText = false }: FeaturesSidebarProps) => {
             </Link>
           </li>
           <li>
-            <Link href="/membership" className={menuItemClasses}>
+            <Link className={menuItemClasses} href="/membership">
               <div className="p-2 rounded-full bg-orange-500 text-xl flex items-center justify-center">
                 <GoPackage className="text-white" />
               </div>
@@ -67,8 +69,8 @@ const FeaturesSidebar = ({ showAllText = false }: FeaturesSidebarProps) => {
             <>
               <li>
                 <Link
-                  href={`/profile/${user?.email}`}
                   className={menuItemClasses}
+                  href={`/profile/${user?.email}`}
                 >
                   <div className="p-2 rounded-full bg-blue-500 text-xl flex items-center justify-center">
                     <FaUserCircle className="text-white" />
@@ -78,12 +80,12 @@ const FeaturesSidebar = ({ showAllText = false }: FeaturesSidebarProps) => {
               </li>
               <li>
                 <Link
+                  className={menuItemClasses}
                   href={
                     user?.role === "admin"
                       ? "/admin-dashboard/statistics"
                       : "/user-dashboard/my-posts"
                   }
-                  className={menuItemClasses}
                 >
                   <div className="p-2 rounded-full bg-yellow-400 text-xl flex items-center justify-center">
                     <RxDashboard className="text-white" />
@@ -94,7 +96,7 @@ const FeaturesSidebar = ({ showAllText = false }: FeaturesSidebarProps) => {
             </>
           ) : (
             <li>
-              <Link href="/register" className={menuItemClasses}>
+              <Link className={menuItemClasses} href="/register">
                 <div className="p-2 rounded-full bg-gray-500 text-xl flex items-center justify-center">
                   <FaRegUser className="text-white" />
                 </div>
@@ -129,7 +131,7 @@ const FeaturesSidebar = ({ showAllText = false }: FeaturesSidebarProps) => {
         </h2>
         <ul className="space-y-2">
           <li>
-            <Link href="/about" className={menuItemClasses}>
+            <Link className={menuItemClasses} href="/about">
               <div className="p-2 rounded-full bg-blue-500 text-xl flex items-center justify-center">
                 <SiHomeadvisor className="text-white" />
               </div>
@@ -137,7 +139,7 @@ const FeaturesSidebar = ({ showAllText = false }: FeaturesSidebarProps) => {
             </Link>
           </li>
           <li>
-            <Link href="/contact" className={menuItemClasses}>
+            <Link className={menuItemClasses} href="/contact">
               <div className="p-2 rounded-full bg-blue-500 text-xl flex items-center justify-center">
                 <MdWifiCalling1 className="text-white" />
               </div>
@@ -145,7 +147,7 @@ const FeaturesSidebar = ({ showAllText = false }: FeaturesSidebarProps) => {
             </Link>
           </li>
           <li>
-            <Link href="/latest-event" className={menuItemClasses}>
+            <Link className={menuItemClasses} href="/latest-event">
               <div className="p-2 rounded-full bg-blue-500 text-xl flex items-center justify-center">
                 <FaCalendarAlt className="text-white" />
               </div>
@@ -164,8 +166,8 @@ const FeaturesSidebar = ({ showAllText = false }: FeaturesSidebarProps) => {
           {user ? (
             <li>
               <button
-                onClick={logoutUser}
                 className="w-full flex items-center space-x-3 p-2 rounded-full hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors duration-200 text-left"
+                onClick={logoutUser}
               >
                 <div className="p-2 rounded-full bg-red-500 text-xl flex items-center justify-center">
                   <IoArrowRedoOutline className="text-white" />
@@ -175,7 +177,7 @@ const FeaturesSidebar = ({ showAllText = false }: FeaturesSidebarProps) => {
             </li>
           ) : (
             <li>
-              <Link href="/login" className={menuItemClasses}>
+              <Link className={menuItemClasses} href="/login">
                 <div className="p-2 rounded-full bg-blue-500 text-xl flex items-center justify-center">
                   <BiLogIn className="text-white" />
                 </div>

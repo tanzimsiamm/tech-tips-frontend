@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
 "use client";
 
 import { FieldValues, useForm } from "react-hook-form";
@@ -12,6 +11,7 @@ import { PiImage } from "react-icons/pi";
 import { toast } from "sonner";
 import { useRouter } from "next/navigation";
 import Image from "next/image";
+
 import { useSignUpMutation } from "@/src/redux/features/authentication/authApi";
 import uploadImage from "@/src/utils/uploadImage";
 
@@ -30,9 +30,11 @@ export default function Register() {
     setLoading(true);
 
     const imageURL = await uploadImage(data.image);
+
     if (!imageURL) {
       toast.error("Image not uploaded");
       setLoading(false);
+
       return;
     }
 
@@ -50,6 +52,7 @@ export default function Register() {
     if (result?.error?.data?.message) {
       toast.error("Email is already exist");
       setLoading(false);
+
       return;
     } else if (result?.data?.success) {
       toast.success("Registered Successfully! Please Login");
@@ -60,8 +63,10 @@ export default function Register() {
 
   const handleImageChange = (e: ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
+
     if (file) {
       const reader = new FileReader();
+
       reader.onloadend = () => {
         setImagePreview(reader.result as string);
       };
@@ -86,9 +91,9 @@ export default function Register() {
             <div>
               <div className="relative flex items-center">
                 <input
-                  type="text"
-                  placeholder="Your Name"
                   className="w-full py-3 pl-12 pr-4 outline-none border border-gray-300 dark:border-gray-600 rounded-xl bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors duration-200 placeholder-gray-400 dark:placeholder-gray-300"
+                  placeholder="Your Name"
+                  type="text"
                   {...register("name", {
                     required: true,
                     minLength: 3,
@@ -114,9 +119,9 @@ export default function Register() {
             <div>
               <div className="relative flex items-center">
                 <input
-                  type="email"
-                  placeholder="Email"
                   className="w-full py-3 pl-12 pr-4 outline-none border border-gray-300 dark:border-gray-600 rounded-xl bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors duration-200 placeholder-gray-400 dark:placeholder-gray-300"
+                  placeholder="Email"
+                  type="email"
                   {...register("email", {
                     required: true,
                     pattern:
@@ -140,9 +145,9 @@ export default function Register() {
             <div>
               <div className="relative flex items-center">
                 <input
-                  type="password"
-                  placeholder="Password"
                   className="w-full py-3 pl-12 pr-4 outline-none border border-gray-300 dark:border-gray-600 rounded-xl bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors duration-200 placeholder-gray-400 dark:placeholder-gray-300"
+                  placeholder="Password"
+                  type="password"
                   {...register("password", {
                     required: true,
                     pattern:
@@ -164,67 +169,68 @@ export default function Register() {
             </div>
 
             {/* Image Upload with Remove Option */}
-           <div>
-  <div className="relative flex flex-col items-center justify-center border border-gray-300 dark:border-gray-600 rounded-xl bg-white dark:bg-gray-700 transition-colors duration-200 overflow-hidden p-4">
-    {imagePreview ? (
-      <div className="flex flex-col items-center gap-3">
-        <Image
-          width={96}
-          height={96}
-          alt="preview"
-          className="size-20 object-cover rounded-md"
-          src={imagePreview}
-        />
-        <button
-          type="button"
-          onClick={() => {
-            setImagePreview("");
-            const fileInput = document.getElementById(
-              "image-upload"
-            ) as HTMLInputElement;
-            if (fileInput) fileInput.value = ""; // Reset input
-          }}
-          className="px-4 py-1 text-sm rounded-full bg-red-500 text-white hover:bg-red-600 transition"
-        >
-          Remove Image
-        </button>
-      </div>
-    ) : (
-      <label
-        htmlFor="image-upload"
-        className="w-full flex flex-col items-center justify-center cursor-pointer py-6 text-gray-500 dark:text-gray-400 hover:text-blue-500 transition"
-      >
-        <PiImage className="text-3xl mb-1" />
-        <span className="text-sm">Upload Profile Image (Required)</span>
-      </label>
-    )}
+            <div>
+              <div className="relative flex flex-col items-center justify-center border border-gray-300 dark:border-gray-600 rounded-xl bg-white dark:bg-gray-700 transition-colors duration-200 overflow-hidden p-4">
+                {imagePreview ? (
+                  <div className="flex flex-col items-center gap-3">
+                    <Image
+                      alt="preview"
+                      className="size-20 object-cover rounded-md"
+                      height={96}
+                      src={imagePreview}
+                      width={96}
+                    />
+                    <button
+                      className="px-4 py-1 text-sm rounded-full bg-red-500 text-white hover:bg-red-600 transition"
+                      type="button"
+                      onClick={() => {
+                        setImagePreview("");
+                        const fileInput = document.getElementById(
+                          "image-upload",
+                        ) as HTMLInputElement;
 
-    {/* Hidden File Input */}
-    <input
-      id="image-upload"
-      {...register("image", { required: true })}
-      onChange={handleImageChange}
-      type="file"
-      className="hidden"
-      accept="image/*"
-    />
-  </div>
+                        if (fileInput) fileInput.value = ""; // Reset input
+                      }}
+                    >
+                      Remove Image
+                    </button>
+                  </div>
+                ) : (
+                  <label
+                    className="w-full flex flex-col items-center justify-center cursor-pointer py-6 text-gray-500 dark:text-gray-400 hover:text-blue-500 transition"
+                    htmlFor="image-upload"
+                  >
+                    <PiImage className="text-3xl mb-1" />
+                    <span className="text-sm">
+                      Upload Profile Image (Required)
+                    </span>
+                  </label>
+                )}
 
-  {errors.image && (
-    <span className="text-red-500 text-sm mt-1 block">
-      {errors.image.type === "required" && "Image is required"}
-    </span>
-  )}
-</div>
+                {/* Hidden File Input */}
+                <input
+                  id="image-upload"
+                  {...register("image", { required: true })}
+                  accept="image/*"
+                  className="hidden"
+                  type="file"
+                  onChange={handleImageChange}
+                />
+              </div>
 
-
+              {errors.image && (
+                <span className="text-red-500 text-sm mt-1 block">
+                  {errors.image.type === "required" && "Image is required"}
+                </span>
+              )}
+            </div>
 
             {/* Terms */}
             <div>
               <label className="flex items-center gap-2 text-gray-600 dark:text-gray-400 font-medium text-sm cursor-pointer">
                 <input
-                  type="checkbox"
                   className="form-checkbox h-4 w-4 text-blue-600 rounded border-gray-300 dark:border-gray-600 dark:bg-gray-700 focus:ring-blue-500"
+                  type="checkbox"
                   {...register("terms", { required: true })}
                 />
                 I agree to the Terms and Conditions
@@ -241,15 +247,15 @@ export default function Register() {
             <div>
               <button
                 className="w-full justify-center py-3 px-4 text-base font-semibold rounded-full text-white bg-blue-500 hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition-colors duration-200 dark:bg-blue-600 dark:hover:bg-blue-700 disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-2"
-                type="submit"
                 disabled={loading}
+                type="submit"
               >
                 {loading ? (
                   <ClipLoader
+                    aria-label="Loading Spinner"
                     color="#ffffff"
                     loading={loading}
                     size={25}
-                    aria-label="Loading Spinner"
                     speedMultiplier={0.8}
                   />
                 ) : (
@@ -263,8 +269,8 @@ export default function Register() {
               <h4 className="text-sm font-medium text-gray-600 dark:text-gray-400">
                 Already have an account?{" "}
                 <Link
-                  href="/login"
                   className="text-blue-500 hover:text-blue-600 dark:text-blue-400 dark:hover:text-blue-500 transition-colors duration-200"
+                  href="/login"
                 >
                   Log In
                 </Link>

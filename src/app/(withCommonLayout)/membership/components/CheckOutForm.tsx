@@ -1,11 +1,10 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
 "use client";
 
 import { CardElement, useElements, useStripe } from "@stripe/react-stripe-js";
 import { useEffect, useState } from "react";
 import { ClipLoader } from "react-spinners";
-
 import { toast } from "sonner";
+
 import { useAppSelector } from "@/src/redux/hooks";
 import { useSavePaymentMutation } from "@/src/redux/features/payment/paymentApi";
 import { useUpdateUserMutation } from "@/src/redux/features/user/userApi";
@@ -47,7 +46,7 @@ export default function CheckoutForm({
           }
         })
         .catch((err) => {
-          console.error("Error fetching client secret:", err);
+          // console.error("Error fetching client secret:", err); // Removed console.error
           toast.error("Error connecting to payment gateway.");
           setOpen(false);
         });
@@ -61,6 +60,7 @@ export default function CheckoutForm({
     if (!stripe || !elements || !clientSecret) {
       setLoading(false);
       toast.error("Payment gateway not ready. Please try again.");
+
       return;
     }
 
@@ -69,6 +69,7 @@ export default function CheckoutForm({
     if (card === null) {
       setLoading(false);
       toast.error("Card details are missing.");
+
       return;
     }
 
@@ -78,9 +79,10 @@ export default function CheckoutForm({
     if (createPaymentMethodError) {
       setLoading(false);
       toast.error(
-        createPaymentMethodError.message || "Failed to create payment method."
+        createPaymentMethodError.message || "Failed to create payment method.",
       );
-      console.error(createPaymentMethodError);
+      // console.error(createPaymentMethodError); // Removed console.error
+
       return;
     }
 
@@ -96,14 +98,16 @@ export default function CheckoutForm({
       });
 
     if (confirmError) {
-      console.error(confirmError);
+      // console.error(confirmError); // Removed console.error
       toast.error(confirmError.message || "Payment confirmation failed.");
       setLoading(false);
+
       return;
     }
 
     if (paymentIntent?.status === "succeeded") {
       const today = new Date();
+
       today.setDate(today.getDate() + 30);
       const expiryMembershipDate = today.toISOString();
 
@@ -141,7 +145,7 @@ export default function CheckoutForm({
       }
     } else {
       toast.error(
-        "Payment was not successful. Status: " + paymentIntent?.status
+        "Payment was not successful. Status: " + paymentIntent?.status,
       );
       setLoading(false);
     }
@@ -149,7 +153,7 @@ export default function CheckoutForm({
 
   return (
     <div className="p-4 bg-gray-50 dark:bg-gray-700 rounded-xl border border-gray-200 dark:border-gray-600">
-      <form onSubmit={handleSubmit} className="space-y-6">
+      <form className="space-y-6" onSubmit={handleSubmit}>
         <div className="p-4 border border-gray-300 dark:border-gray-600 rounded-xl bg-white dark:bg-gray-800">
           <CardElement
             options={{
@@ -177,23 +181,23 @@ export default function CheckoutForm({
 
         <div className="flex justify-end space-x-3">
           <button
+            className="px-6 py-2 text-base font-semibold rounded-full text-gray-700 dark:text-gray-300 bg-gray-200 dark:bg-gray-700 hover:bg-gray-300 dark:hover:bg-gray-600 transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-offset-2 dark:focus:ring-offset-gray-800"
             type="button"
             onClick={() => setOpen(false)}
-            className="px-6 py-2 text-base font-semibold rounded-full text-gray-700 dark:text-gray-300 bg-gray-200 dark:bg-gray-700 hover:bg-gray-300 dark:hover:bg-gray-600 transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-offset-2 dark:focus:ring-offset-gray-800"
           >
             Cancel
           </button>
           <button
-            type="submit"
             className="px-6 py-2 text-base font-semibold rounded-full text-white bg-blue-500 hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 dark:focus:ring-offset-gray-800 transition-colors duration-200 disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2"
             disabled={!stripe || !elements || !clientSecret || loading}
+            type="submit"
           >
             {loading ? (
               <ClipLoader
+                aria-label="Loading Spinner"
                 color="#ffffff"
                 loading={loading}
                 size={20}
-                aria-label="Loading Spinner"
                 speedMultiplier={0.8}
               />
             ) : (

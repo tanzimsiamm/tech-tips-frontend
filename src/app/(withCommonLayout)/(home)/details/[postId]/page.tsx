@@ -1,34 +1,34 @@
-/* eslint-disable @typescript-eslint/no-unused-vars */
-/* eslint-disable @typescript-eslint/no-explicit-any */
 "use client";
 
-import { FaShare, FaThumbsUp, FaReply, FaPen } from "react-icons/fa";
+import { FaShare, FaPen } from "react-icons/fa";
 import { RiDeleteBin4Line } from "react-icons/ri";
 import Image from "next/image";
 import TimeAgo from "react-timeago";
 import { IoSendSharp } from "react-icons/io5";
 import { useForm } from "react-hook-form";
-import { useAppSelector } from "@/src/redux/hooks";
 import { toast } from "sonner";
 import { ClipLoader } from "react-spinners";
 import { BiCommentDetail } from "react-icons/bi";
-import MiniUserProfile from "../../components/Posts/MiniUserProfile";
-import VoteSection from "../../components/Posts/VoteSection";
-import { useGetSinglePostQuery } from "@/src/redux/features/posts/postApi";
 import { MdStars } from "react-icons/md";
 import { AiFillPrinter } from "react-icons/ai";
 import React, { useRef, useState } from "react";
 import { useReactToPrint } from "react-to-print";
-import EditCommentModal from "../../components/Posts/EditCommentModal";
 import Link from "next/link";
+import { useParams } from "next/navigation";
+
+import EditCommentModal from "../../components/Posts/EditCommentModal";
 import ImageGallery from "../../components/Posts/ImageGallary";
+import VoteSection from "../../components/Posts/VoteSection";
+import MiniUserProfile from "../../components/Posts/MiniUserProfile";
+
 import { TComment, TPost } from "@/src/types";
 import {
   useAddCommentMutation,
   useDeleteCommentMutation,
   useGetCommentsQuery,
 } from "@/src/redux/features/comments/commetApi";
-import { useParams } from "next/navigation";
+import { useGetSinglePostQuery } from "@/src/redux/features/posts/postApi";
+import { useAppSelector } from "@/src/redux/hooks";
 
 export default function PostDetails() {
   const params = useParams();
@@ -63,7 +63,7 @@ export default function PostDetails() {
 
   const { data: commentsData } = useGetCommentsQuery(
     { postId: _id || "" },
-    { skip: !_id }
+    { skip: !_id },
   );
   const comments: TComment[] = commentsData?.data || [];
 
@@ -74,10 +74,12 @@ export default function PostDetails() {
     // Trim the comment to check if it's just whitespace
     if (!user) {
       toast.error("Please log in to comment.");
+
       return;
     }
     if (!data.newComment || data.newComment.trim() === "") {
       toast.error("Comment cannot be empty.");
+
       return;
     }
 
@@ -93,6 +95,7 @@ export default function PostDetails() {
 
     try {
       const response = await addComment(newComment as TComment).unwrap();
+
       if (response) reset();
     } catch (err) {
       toast.error("Something went wrong");
@@ -117,6 +120,7 @@ export default function PostDetails() {
       }
     } else {
       const postUrl = `${window.location.origin}/details/${_id}`;
+
       navigator.clipboard
         .writeText(postUrl)
         .then(() => {
@@ -161,8 +165,8 @@ export default function PostDetails() {
     >
       {openEditCommentModal && (
         <EditCommentModal
-          setOpen={setEditCommentModal}
           comment={commentForEdit}
+          setOpen={setEditCommentModal}
         />
       )}
 
@@ -172,14 +176,14 @@ export default function PostDetails() {
           <section className="group relative mr-3">
             <Link href={`/profile/${authorInfo?.authorEmail}`}>
               <Image
-                width={56}
-                height={56}
+                alt="User Avatar"
                 className="size-12 rounded-full object-cover border border-gray-300 dark:border-gray-600"
+                height={56}
                 src={
                   authorInfo?.image ||
                   "https://i.ibb.co/VtP9tF6/default-user-image.png"
                 }
-                alt="User Avatar"
+                width={56}
               />
             </Link>
             <MiniUserProfile userInfo={post.authorInfo} />
@@ -187,8 +191,8 @@ export default function PostDetails() {
 
           <div>
             <Link
-              href={`/profile/${authorInfo?.authorEmail}`}
               className="font-bold text-gray-900 dark:text-white hover:underline text-lg"
+              href={`/profile/${authorInfo?.authorEmail}`}
             >
               {authorInfo?.name}
             </Link>
@@ -209,9 +213,9 @@ export default function PostDetails() {
             />
           )}
           <button
-            onClick={reactToPrintFn}
             className="p-2 rounded-full hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors duration-200"
             title="Print Post"
+            onClick={reactToPrintFn}
           >
             <AiFillPrinter className="text-xl" />
           </button>
@@ -224,8 +228,8 @@ export default function PostDetails() {
       </h2>
 
       <div
-        className="text-gray-800 dark:text-gray-200 text-base leading-relaxed mb-4"
         dangerouslySetInnerHTML={{ __html: description || "" }}
+        className="text-gray-800 dark:text-gray-200 text-base leading-relaxed mb-4"
       />
 
       {images && images.length > 0 && <ImageGallery images={images} />}
@@ -236,8 +240,8 @@ export default function PostDetails() {
           <VoteSection
             postId={_id as string}
             userId={user?._id as string}
-            votes={votes || 0}
             voters={voters || []}
+            votes={votes || 0}
           />
 
           <div className="flex items-center space-x-2 text-gray-600 dark:text-gray-400">
@@ -246,8 +250,8 @@ export default function PostDetails() {
           </div>
         </div>
         <button
-          onClick={handleShare}
           className="flex items-center space-x-2 text-gray-600 dark:text-gray-400 hover:text-blue-500 dark:hover:text-blue-400 transition-colors duration-200"
+          onClick={handleShare}
         >
           <FaShare className="text-lg" />
           <span className="text-sm font-medium">Share</span>
@@ -263,9 +267,9 @@ export default function PostDetails() {
         {(addLoading || deleteLoading) && (
           <div className="absolute inset-0 z-10 bg-white/80 dark:bg-gray-800/90 rounded-xl flex justify-center items-center">
             <ClipLoader
+              aria-label="Loading Spinner"
               color="#3B82F6"
               size={35}
-              aria-label="Loading Spinner"
               speedMultiplier={0.8}
             />
           </div>
@@ -275,14 +279,14 @@ export default function PostDetails() {
           <div key={comment?._id} className="flex space-x-3">
             <Link href={`/profile/${comment?.userInfo?.email}`}>
               <Image
+                alt={comment?.userInfo?.name || "User"}
+                className="size-10 rounded-full object-cover border border-gray-200 dark:border-gray-600"
+                height={40}
                 src={
                   comment?.userInfo?.image ||
                   "https://i.ibb.co/VtP9tF6/default-user-image.png"
                 }
-                alt={comment?.userInfo?.name || "User"}
                 width={40}
-                height={40}
-                className="size-10 rounded-full object-cover border border-gray-200 dark:border-gray-600"
               />
             </Link>
 
@@ -296,21 +300,21 @@ export default function PostDetails() {
                     user?.role === "admin") && (
                     <div className="flex space-x-2 opacity-0 group-hover:opacity-100 transition-opacity duration-200">
                       <button
-                        type="button"
                         className="text-gray-500 hover:text-blue-500 dark:hover:text-blue-400 transition-colors"
+                        title="Edit Comment"
+                        type="button"
                         onClick={() => {
                           setCommentForEdit(comment);
                           setEditCommentModal(true);
                         }}
-                        title="Edit Comment"
                       >
                         <FaPen className="text-sm" />
                       </button>
                       <button
-                        type="button"
                         className="text-gray-500 hover:text-red-500 dark:hover:text-red-400 transition-colors"
-                        onClick={() => deleteComment(comment?._id as string)}
                         title="Delete Comment"
+                        type="button"
+                        onClick={() => deleteComment(comment?._id as string)}
                       >
                         <RiDeleteBin4Line className="text-sm" />
                       </button>
@@ -349,13 +353,13 @@ export default function PostDetails() {
         >
           <div>
             <Image
-              width={40}
-              height={40}
+              alt="User Avatar"
               className="size-10 rounded-full object-cover border border-gray-200 dark:border-gray-600"
+              height={40}
               src={
                 user?.image || "https://i.ibb.co/VtP9tF6/default-user-image.png"
               }
-              alt="User Avatar"
+              width={40}
             />
           </div>
 
@@ -372,18 +376,18 @@ export default function PostDetails() {
               onKeyDown={handleKeyDown} // Added onKeyDown handler
             />
             <button
-              type="submit"
               className="absolute right-3 top-1/2 -translate-y-1/2 text-blue-500 hover:text-blue-600 dark:hover:text-blue-400 transition-colors duration-200 disabled:opacity-50 disabled:cursor-not-allowed"
+              type="submit"
               disabled={
                 addLoading || !newCommentValue || newCommentValue.trim() === ""
               } // Disable if loading or input is empty/whitespace
             >
               {addLoading ? (
                 <ClipLoader
+                  aria-label="Loading Spinner"
                   color="#3B82F6"
                   loading={addLoading}
                   size={20}
-                  aria-label="Loading Spinner"
                   speedMultiplier={0.8}
                 />
               ) : (

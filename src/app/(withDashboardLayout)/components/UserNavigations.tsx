@@ -20,13 +20,13 @@ const UserNavigations = () => {
         <ul className="space-y-2">
           <li>
             <Link
-              href="/"
               className={`flex items-center space-x-4 p-2 rounded-full transition-colors duration-200 
                 ${
                   pathName === "/"
                     ? "bg-blue-500 text-white hover:bg-blue-600"
                     : "text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700"
                 }`}
+              href="/"
             >
               <div
                 className={`p-2 rounded-full flex items-center justify-center text-xl 
@@ -44,13 +44,13 @@ const UserNavigations = () => {
 
           <li>
             <Link
-              href="/user-dashboard/my-posts"
               className={`flex items-center space-x-4 p-2 rounded-full transition-colors duration-200 
                 ${
                   pathName === "/user-dashboard/my-posts"
                     ? "bg-blue-500 text-white hover:bg-blue-600"
                     : "text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700"
                 }`}
+              href="/user-dashboard/my-posts"
             >
               <div
                 className={`p-2 rounded-full flex items-center justify-center text-xl 
@@ -72,13 +72,13 @@ const UserNavigations = () => {
 
           <li>
             <Link
-              href="/user-dashboard/my-membership"
               className={`flex items-center space-x-4 p-2 rounded-full transition-colors duration-200 
                 ${
                   pathName === "/user-dashboard/my-membership"
                     ? "bg-blue-500 text-white hover:bg-blue-600"
                     : "text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700"
                 }`}
+              href="/user-dashboard/my-membership"
             >
               <div
                 className={`p-2 rounded-full flex items-center justify-center text-xl 
@@ -102,13 +102,13 @@ const UserNavigations = () => {
 
           <li>
             <Link
-              href="/user-dashboard/my-followers"
               className={`flex items-center space-x-4 p-2 rounded-full transition-colors duration-200 
                 ${
                   pathName === "/user-dashboard/my-followers"
                     ? "bg-blue-500 text-white hover:bg-blue-600"
                     : "text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700"
                 }`}
+              href="/user-dashboard/my-followers"
             >
               <div
                 className={`p-2 rounded-full flex items-center justify-center text-xl 
@@ -132,13 +132,13 @@ const UserNavigations = () => {
 
           <li>
             <Link
-              href="/user-dashboard/my-payments"
               className={`flex items-center space-x-4 p-2 rounded-full transition-colors duration-200 
                 ${
                   pathName === "/user-dashboard/my-payments"
                     ? "bg-blue-500 text-white hover:bg-blue-600"
                     : "text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700"
                 }`}
+              href="/user-dashboard/my-payments"
             >
               <div
                 className={`p-2 rounded-full flex items-center justify-center text-xl 
@@ -162,13 +162,13 @@ const UserNavigations = () => {
 
           <li>
             <Link
-              href="/user-dashboard/user-analytics"
               className={`flex items-center space-x-4 p-2 rounded-full transition-colors duration-200 
                 ${
                   pathName === "/user-dashboard/user-analytics"
                     ? "bg-blue-500 text-white hover:bg-blue-600"
                     : "text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700"
                 }`}
+              href="/user-dashboard/user-analytics"
             >
               <div
                 className={`p-2 rounded-full flex items-center justify-center text-xl 

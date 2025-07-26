@@ -1,15 +1,16 @@
 import { FaEnvelope, FaUser } from "react-icons/fa";
 import Image from "next/image";
-import { useAppSelector } from "@/src/redux/hooks";
+import { toast } from "sonner";
+import { ClipLoader } from "react-spinners";
+import Link from "next/link";
+import { RiUserUnfollowLine } from "react-icons/ri";
+
 import {
   useFollowUserMutation,
   useGetSingleUserQuery,
   useUnFollowUserMutation,
 } from "@/src/redux/features/user/userApi";
-import { toast } from "sonner";
-import { ClipLoader } from "react-spinners";
-import Link from "next/link";
-import { RiUserUnfollowLine } from "react-icons/ri";
+import { useAppSelector } from "@/src/redux/hooks";
 import { TUser } from "@/src/types";
 
 const MiniUserProfile = ({
@@ -39,6 +40,7 @@ const MiniUserProfile = ({
         userId: user?._id as string,
         targetedUserId: userInfo.authorId,
       });
+
       if ("data" in response && response.data?.success) {
         toast.success("You followed the user");
       }
@@ -54,6 +56,7 @@ const MiniUserProfile = ({
         userId: user?._id as string,
         targetedUserId: userInfo.authorId,
       });
+
       if ("data" in response && response.data?.success) {
         toast.success("You unfollowed the user");
       }
@@ -70,11 +73,11 @@ const MiniUserProfile = ({
           <div className="flex items-center">
             {userInfo?.image ? (
               <Image
-                width={300}
-                height={300}
-                src={userInfo.image}
                 alt="User"
                 className="w-16 h-16 rounded-full object-cover mr-4"
+                height={300}
+                src={userInfo.image}
+                width={300}
               />
             ) : (
               <div className="w-16 h-16 rounded-full bg-gray-300 mr-4 flex items-center justify-center text-gray-600">
@@ -108,21 +111,21 @@ const MiniUserProfile = ({
             <div className="flex mt-4 space-x-2">
               {/* for another user  */}
               {latestAuthorData?.followers?.find(
-                (follower) => follower === user?.email
+                (follower) => follower === user?.email,
               ) ? (
                 <>
                   <button
-                    onClick={handleUnfollow}
                     className="flex-1 bg-gray-200 hover:bg-gray-300  text-gray-700 py-1 px-4 rounded-full font-semibold flex items-center gap-1 justify-center"
+                    onClick={handleUnfollow}
                   >
                     {!(followLoading || unFollowLoading) && (
                       <RiUserUnfollowLine />
                     )}{" "}
                     {followLoading || unFollowLoading ? (
                       <ClipLoader
+                        aria-label="Loading Spinner"
                         color="#171A16"
                         size={16}
-                        aria-label="Loading Spinner"
                         speedMultiplier={0.8}
                       />
                     ) : (
@@ -133,14 +136,14 @@ const MiniUserProfile = ({
               ) : (
                 <>
                   <button
-                    onClick={handleFollow}
                     className="flex-1 font-semibold bg-blue-500 hover:bg-blue-600 text-white py-1 px-4 rounded-full"
+                    onClick={handleFollow}
                   >
                     {followLoading || unFollowLoading ? (
                       <ClipLoader
+                        aria-label="Loading Spinner"
                         color="#ffffff"
                         size={16}
-                        aria-label="Loading Spinner"
                         speedMultiplier={0.8}
                       />
                     ) : (

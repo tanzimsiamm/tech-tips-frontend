@@ -1,20 +1,25 @@
-/* eslint-disable react-hooks/exhaustive-deps */
-"use client"
+"use client";
 
 import { useEffect, useState } from "react";
-import PostCard from "./PostCard";
 import { TfiSearch } from "react-icons/tfi";
 import { useInView } from "react-intersection-observer";
 import { MdOutlineSort } from "react-icons/md";
 import { LuFilter } from "react-icons/lu";
-import { useGetPostsQuery } from "@/src/redux/features/posts/postApi";
-import { TPost } from "@/src/types";
+
+import PostCard from "./PostCard";
 import PostSkeleton from "./PostSkeleton";
 
+import { useGetPostsQuery } from "@/src/redux/features/posts/postApi";
+import { TPost } from "@/src/types";
+
 export default function PostSection() {
-  const [filterQuery, setFilterQuery] = useState({})
-  const [limit, setLimit] = useState(10)
-  const { data, isFetching } = useGetPostsQuery({ ...filterQuery, skip: 0, limit });
+  const [filterQuery, setFilterQuery] = useState({});
+  const [limit, setLimit] = useState(10);
+  const { data, isFetching } = useGetPostsQuery({
+    ...filterQuery,
+    skip: 0,
+    limit,
+  });
   const { totalPosts, posts } = data?.data || {};
 
   const { ref, inView } = useInView({
@@ -23,10 +28,12 @@ export default function PostSection() {
 
   useEffect(() => {
     if (inView && posts && totalPosts && posts.length < totalPosts) {
-      const isFilterActive = Object.keys(filterQuery).some(option => ['category', 'searchTerm', 'sortByUpvote'].includes(option));
+      const isFilterActive = Object.keys(filterQuery).some((option) =>
+        ["category", "searchTerm", "sortByUpvote"].includes(option),
+      );
 
       if (!isFilterActive) {
-        setLimit(prevLimit => prevLimit + 10);
+        setLimit((prevLimit) => prevLimit + 10);
       }
     }
   }, [inView, filterQuery, posts, totalPosts]);
@@ -35,97 +42,149 @@ export default function PostSection() {
     <section className="bg-gray-50 dark:bg-black min-h-screen">
       <div className="sticky top-0 z-10 bg-white dark:bg-gray-900 border-b border-gray-200 dark:border-gray-800 p-4">
         <div className="flex flex-col sm:flex-row items-center justify-between gap-3">
-
           {/* Search Input for larger screens */}
           <div className="relative flex-1 w-full hidden sm:flex items-center">
             <span className="absolute left-4 text-gray-500 dark:text-gray-400">
               <TfiSearch />
             </span>
             <input
-              onChange={(e) => setFilterQuery(prev => ({ ...prev, searchTerm: e.target.value }))}
-              type="text"
+              aria-label="Search posts"
               className="w-full py-2 pl-10 pr-4 rounded-full bg-gray-100 dark:bg-gray-700 text-gray-900 dark:text-white placeholder-gray-500 dark:placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors duration-200"
               placeholder="Search posts..."
+              type="text"
+              onChange={(e) =>
+                setFilterQuery((prev) => ({
+                  ...prev,
+                  searchTerm: e.target.value,
+                }))
+              }
             />
           </div>
 
           {/* Search Dropdown for small screens */}
           <div className="relative w-full sm:hidden">
-            <div className="dropdown w-full">
-              <div tabIndex={0} role="button" className="w-full flex items-center justify-center gap-2 p-3 rounded-full bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-300 shadow-sm border border-gray-200 dark:border-gray-600">
-                <TfiSearch /> <span className="font-medium">Search & Filter</span>
-              </div>
-              <ul tabIndex={0} className="dropdown-content menu p-4 shadow-lg bg-white dark:bg-gray-800 rounded-xl w-full mt-2 space-y-3 border border-gray-200 dark:border-gray-700">
-                <li>
+            <details className="dropdown w-full">
+              <summary
+                aria-expanded="false"
+                aria-haspopup="menu"
+                className="w-full flex items-center justify-center gap-2 p-3 rounded-full bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-300 shadow-sm border border-gray-200 dark:border-gray-600 cursor-pointer list-none"
+              >
+                <TfiSearch />{" "}
+                <span className="font-medium">Search & Filter</span>
+              </summary>
+              <div className="dropdown-content menu p-4 shadow-lg bg-white dark:bg-gray-800 rounded-xl w-full mt-2 space-y-3 border border-gray-200 dark:border-gray-700">
+                <div>
                   <input
-                    onChange={(e) => setFilterQuery(prev => ({ ...prev, searchTerm: e.target.value }))}
-                    type="text"
+                    aria-label="Search posts"
                     className="w-full py-2 px-4 rounded-full bg-gray-100 dark:bg-gray-700 text-gray-900 dark:text-white placeholder-gray-500 dark:placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors duration-200"
                     placeholder="Search posts..."
+                    type="text"
+                    onChange={(e) =>
+                      setFilterQuery((prev) => ({
+                        ...prev,
+                        searchTerm: e.target.value,
+                      }))
+                    }
                   />
-                </li>
-                <li>
+                </div>
+                <div>
                   <select
-                    onChange={(e) => setFilterQuery(prev => ({ ...prev, sortByUpvote: e.target.value }))}
+                    aria-label="Sort by upvote"
                     className="w-full p-2 rounded-full bg-gray-100 dark:bg-gray-700 text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors duration-200"
                     defaultValue=""
+                    onChange={(e) =>
+                      setFilterQuery((prev) => ({
+                        ...prev,
+                        sortByUpvote: e.target.value,
+                      }))
+                    }
                   >
-                    <option value="" disabled>Sort by Upvote</option>
-                    <option value='-1'>Most Upvoted</option>
-                    <option value='1'>Most Downvoted</option>
+                    <option disabled value="">
+                      Sort by Upvote
+                    </option>
+                    <option value="-1">Most Upvoted</option>
+                    <option value="1">Most Downvoted</option>
                   </select>
-                </li>
-                <li>
+                </div>
+                <div>
                   <select
-                    onChange={(e) => setFilterQuery(prev => ({ ...prev, category: e.target.value }))}
+                    aria-label="Select category"
                     className="w-full p-2 rounded-full bg-gray-100 dark:bg-gray-700 text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors duration-200"
                     defaultValue=""
+                    onChange={(e) =>
+                      setFilterQuery((prev) => ({
+                        ...prev,
+                        category: e.target.value,
+                      }))
+                    }
                   >
-                    <option value="" disabled>Select Category</option>
-                    <option value=''>All Categories</option>
-                    <option value='Web'>Web</option>
-                    <option value='Software Engineering'>Software Engineering</option>
-                    <option value='AI'>AI</option>
-                    <option value='Technology'>Technology</option>
-                    <option value='Others'>Others</option>
+                    <option disabled value="">
+                      Select Category
+                    </option>
+                    <option value="">All Categories</option>
+                    <option value="Web">Web</option>
+                    <option value="Software Engineering">
+                      Software Engineering
+                    </option>
+                    <option value="AI">AI</option>
+                    <option value="Technology">Technology</option>
+                    <option value="Others">Others</option>
                   </select>
-                </li>
-              </ul>
-            </div>
+                </div>
+              </div>
+            </details>
           </div>
 
           {/* Filter and Sort for larger screens */}
-<div className="hidden sm:flex items-center gap-3">
-  <div className="flex items-center gap-2 bg-gray-100 dark:bg-gray-800 rounded-full px-3 py-2 text-gray-700 dark:text-gray-200 border border-gray-200 dark:border-gray-600">
-    <LuFilter className="text-lg" />
-    <select
-      onChange={(e) => setFilterQuery(prev => ({ ...prev, sortByUpvote: e.target.value }))}
-      className="bg-transparent outline-none text-sm cursor-pointer dark:text-gray-200 dark:[&>option]:bg-gray-800"
-      defaultValue=""
-    >
-      <option value="" disabled>Sort by Upvote</option>
-      <option value='-1'>Most Upvoted</option>
-      <option value='1'>Most Downvoted</option>
-    </select>
-  </div>
+          <div className="hidden sm:flex items-center gap-3">
+            <div className="flex items-center gap-2 bg-gray-100 dark:bg-gray-800 rounded-full px-3 py-2 text-gray-700 dark:text-gray-200 border border-gray-200 dark:border-gray-600">
+              <LuFilter className="text-lg" />
+              <select
+                aria-label="Sort by upvote"
+                className="bg-transparent outline-none text-sm cursor-pointer dark:text-gray-200 dark:[&>option]:bg-gray-800"
+                defaultValue=""
+                onChange={(e) =>
+                  setFilterQuery((prev) => ({
+                    ...prev,
+                    sortByUpvote: e.target.value,
+                  }))
+                }
+              >
+                <option disabled value="">
+                  Sort by Upvote
+                </option>
+                <option value="-1">Most Upvoted</option>
+                <option value="1">Most Downvoted</option>
+              </select>
+            </div>
 
-  <div className="flex items-center gap-2 bg-gray-100 dark:bg-gray-800 rounded-full px-3 py-2 text-gray-700 dark:text-gray-200 border border-gray-200 dark:border-gray-600">
-    <MdOutlineSort className="text-lg" />
-    <select
-      onChange={(e) => setFilterQuery(prev => ({ ...prev, category: e.target.value }))}
-      className="bg-transparent outline-none text-sm cursor-pointer dark:text-gray-200 dark:[&>option]:bg-gray-800"
-      defaultValue=""
-    >
-      <option value="" disabled>Select Category</option>
-      <option value=''>All Categories</option>
-      <option value='Web'>Web</option>
-      <option value='Software Engineering'>Software Engineering</option>
-      <option value='AI'>AI</option>
-      <option value='Technology'>Technology</option>
-      <option value='Others'>Others</option>
-    </select>
-  </div>
-</div>
+            <div className="flex items-center gap-2 bg-gray-100 dark:bg-gray-800 rounded-full px-3 py-2 text-gray-700 dark:text-gray-200 border border-gray-200 dark:border-gray-600">
+              <MdOutlineSort className="text-lg" />
+              <select
+                aria-label="Select category"
+                className="bg-transparent outline-none text-sm cursor-pointer dark:text-gray-200 dark:[&>option]:bg-gray-800"
+                defaultValue=""
+                onChange={(e) =>
+                  setFilterQuery((prev) => ({
+                    ...prev,
+                    category: e.target.value,
+                  }))
+                }
+              >
+                <option disabled value="">
+                  Select Category
+                </option>
+                <option value="">All Categories</option>
+                <option value="Web">Web</option>
+                <option value="Software Engineering">
+                  Software Engineering
+                </option>
+                <option value="AI">AI</option>
+                <option value="Technology">Technology</option>
+                <option value="Others">Others</option>
+              </select>
+            </div>
+          </div>
         </div>
       </div>
 
@@ -140,23 +199,33 @@ export default function PostSection() {
         )}
 
         {posts && posts.length > 0 && posts.length < totalPosts && (
-          <div ref={ref} className="text-center py-4 text-gray-500 dark:text-gray-400">
+          <div
+            ref={ref}
+            aria-live="polite"
+            className="text-center py-4 text-gray-500 dark:text-gray-400"
+          >
             Loading more posts...
           </div>
         )}
 
         {posts && posts.length === totalPosts && totalPosts > 0 && (
-          <div className="text-center py-4 text-gray-500 dark:text-gray-400">
-            You've reached the end of the feed!
+          <div
+            aria-live="polite"
+            className="text-center py-4 text-gray-500 dark:text-gray-400"
+          >
+            You&apos;ve reached the end of the feed!
           </div>
         )}
 
         {posts && totalPosts === 0 && (
-          <div className="text-center py-12 text-gray-500 dark:text-gray-400 text-lg">
+          <div
+            aria-live="polite"
+            className="text-center py-12 text-gray-500 dark:text-gray-400 text-lg"
+          >
             No posts found matching your criteria.
           </div>
         )}
       </div>
     </section>
-  )
+  );
 }

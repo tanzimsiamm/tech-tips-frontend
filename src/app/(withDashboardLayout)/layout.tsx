@@ -1,11 +1,13 @@
 "use client";
 
 import { ReactNode } from "react";
-import { useAppSelector } from "@/src/redux/hooks";
-import Sidebar from "@/src/components/Shared/Sidebar";
+
 import UserNavigations from "./components/UserNavigations";
 import AdminNavigations from "./components/AdminNavigations";
 import DashboardDrawerNavbar from "./components/DashboardDrawerNavbar";
+
+import Sidebar from "@/src/components/Shared/Sidebar";
+import { useAppSelector } from "@/src/redux/hooks";
 
 const DashboardLayout = ({ children }: { children: ReactNode }) => {
   const currentUser = useAppSelector((state) => state.auth.user);

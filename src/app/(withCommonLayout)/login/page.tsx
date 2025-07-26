@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
 "use client";
 
 import { jwtDecode } from "jwt-decode";
@@ -10,10 +9,11 @@ import { AiOutlineMail } from "react-icons/ai";
 import { GoUnlock } from "react-icons/go";
 import { ClipLoader } from "react-spinners";
 import { toast } from "sonner";
+import { Button } from "@heroui/button";
+
 import { useLoginMutation } from "@/src/redux/features/authentication/authApi";
 import { useAppDispatch } from "@/src/redux/hooks";
 import { TJwtDecoded } from "@/src/types";
-import { Button } from "@heroui/button";
 import { setUser } from "@/src/redux/features/authentication/authSlice";
 
 type TProps = {
@@ -50,11 +50,12 @@ export default function Login({ setOpen }: TProps) {
       const name = res?.data?.data?.name;
 
       const decoded: TJwtDecoded = jwtDecode(res.data.token);
+
       dispatch(
         setUser({
           user: { ...decoded, image: userImage, name },
           token: res.data.token,
-        })
+        }),
       );
       Cookies.set("accessToken", res?.data?.token, { expires: 1 });
 
@@ -75,24 +76,24 @@ export default function Login({ setOpen }: TProps) {
             </h1>
             <div className="flex flex-wrap items-center justify-center gap-4">
               <button
+                className="bg-yellow-500 hover:bg-yellow-600 p-2 rounded-full text-sm lg:text-base text-black font-semibold transition-colors duration-200 w-full sm:w-auto px-4"
                 onClick={() =>
                   setDemoUser({
                     email: "demoUser@gmail.com",
                     password: "12345En$",
                   })
                 }
-                className="bg-yellow-500 hover:bg-yellow-600 p-2 rounded-full text-sm lg:text-base text-black font-semibold transition-colors duration-200 w-full sm:w-auto px-4"
               >
                 Login As User
               </button>
               <button
+                className="bg-yellow-500 hover:bg-yellow-600 p-2 rounded-full text-sm lg:text-base text-black font-semibold transition-colors duration-200 w-full sm:w-auto px-4"
                 onClick={() =>
                   setDemoUser({
                     email: "demoAdmin@gmail.com",
                     password: "12345En$",
                   })
                 }
-                className="bg-yellow-500 hover:bg-yellow-600 p-2 rounded-full text-sm lg:text-base text-black font-semibold transition-colors duration-200 w-full sm:w-auto px-4"
               >
                 Login As Admin
               </button>
@@ -106,18 +107,18 @@ export default function Login({ setOpen }: TProps) {
 
         <div className="w-full">
           <div className="p-0">
-            <form onSubmit={handleLogin} className="text-white">
+            <form className="text-white" onSubmit={handleLogin}>
               <div className="mb-5">
                 <div className="relative flex items-center">
                   <input
+                    className="w-full py-3 pl-12 pr-4 outline-none border border-gray-300 dark:border-gray-600 rounded-xl bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors duration-200 placeholder-gray-400 dark:placeholder-gray-300"
+                    defaultValue={demoUser?.email || ""}
+                    name="email"
+                    placeholder="Email"
+                    type="email"
                     onChange={() =>
                       setErrors({ emailError: "", passwordError: "" })
                     }
-                    type="email"
-                    placeholder="Email"
-                    className="w-full py-3 pl-12 pr-4 outline-none border border-gray-300 dark:border-gray-600 rounded-xl bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors duration-200 placeholder-gray-400 dark:placeholder-gray-300"
-                    name="email"
-                    defaultValue={demoUser?.email || ""}
                   />
                   <span className="text-xl absolute left-4 text-gray-500 dark:text-gray-400">
                     <AiOutlineMail />
@@ -134,14 +135,14 @@ export default function Login({ setOpen }: TProps) {
               <div className="mb-6">
                 <div className="relative flex items-center">
                   <input
+                    className="w-full py-3 pl-12 pr-4 outline-none border border-gray-300 dark:border-gray-600 rounded-xl bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors duration-200 placeholder-gray-400 dark:placeholder-gray-300"
+                    defaultValue={demoUser?.password || ""}
+                    name="password"
+                    placeholder="Password"
+                    type="password"
                     onChange={() =>
                       setErrors({ emailError: "", passwordError: "" })
                     }
-                    type="password"
-                    placeholder="Password"
-                    className="w-full py-3 pl-12 pr-4 outline-none border border-gray-300 dark:border-gray-600 rounded-xl bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors duration-200 placeholder-gray-400 dark:placeholder-gray-300"
-                    name="password"
-                    defaultValue={demoUser?.password || ""}
                   />
                   <span className="text-xl absolute left-4 text-gray-500 dark:text-gray-400">
                     <GoUnlock />
@@ -160,15 +161,15 @@ export default function Login({ setOpen }: TProps) {
               <div className="mt-8">
                 <Button
                   className="w-full justify-center py-3 px-4 text-base font-semibold rounded-full text-white bg-blue-500 hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition-colors duration-200 dark:bg-blue-600 dark:hover:bg-blue-700 disabled:opacity-50 disabled:cursor-not-allowed"
-                  type="submit"
                   disabled={loading}
+                  type="submit"
                 >
                   {loading ? (
                     <ClipLoader
+                      aria-label="Loading Spinner"
                       color="#ffffff"
                       loading={loading}
                       size={25}
-                      aria-label="Loading Spinner"
                       speedMultiplier={0.8}
                     />
                   ) : (
@@ -181,8 +182,8 @@ export default function Login({ setOpen }: TProps) {
                 <h4 className="text-sm font-medium text-gray-600 dark:text-gray-400">
                   Don&apos;t have an account?{" "}
                   <Link
-                    href="/register"
                     className="text-blue-500 hover:text-blue-600 dark:text-blue-400 dark:hover:text-blue-500 transition-colors duration-200"
+                    href="/register"
                   >
                     Register
                   </Link>

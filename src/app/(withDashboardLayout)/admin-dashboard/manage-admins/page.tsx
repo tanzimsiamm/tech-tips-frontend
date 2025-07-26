@@ -6,13 +6,15 @@ import Swal from "sweetalert2";
 import { MdModeEdit } from "react-icons/md";
 import { RiDeleteBinLine } from "react-icons/ri";
 import Image from "next/image";
+
+import UpdateUserModal from "../components/UpdateUserModal";
+
 import {
   useDeleteUserMutation,
   useGetUsersQuery,
   useUpdateUserMutation,
 } from "@/src/redux/features/user/userApi";
 import { TUser } from "@/src/types";
-import UpdateUserModal from "../components/UpdateUserModal";
 
 export default function ManageAdmins() {
   const [openUpdateModal, setOpenUpdateModal] = useState<boolean>(false);
@@ -42,6 +44,7 @@ export default function ManageAdmins() {
             userId,
             payload: { isBlocked: action === "block" },
           }).unwrap();
+
           if (response.success) {
             Swal.fire({
               title: `${actionVerb}d!`,
@@ -75,6 +78,7 @@ export default function ManageAdmins() {
       if (result.isConfirmed) {
         try {
           const response: any = await deleteUserFromDB(userId).unwrap();
+
           if (response.success) {
             Swal.fire({
               title: "Deleted!",
@@ -103,11 +107,11 @@ export default function ManageAdmins() {
             Manage Admins
           </h2>
           <button
+            className="px-4 py-2 bg-blue-500 text-white rounded-full text-sm font-semibold hover:bg-blue-600 transition-colors duration-200"
             onClick={() => {
               setUpdateUserEmail("");
               setOpenUpdateModal(true);
             }}
-            className="px-4 py-2 bg-blue-500 text-white rounded-full text-sm font-semibold hover:bg-blue-600 transition-colors duration-200"
           >
             Add New Admin
           </button>
@@ -115,9 +119,9 @@ export default function ManageAdmins() {
 
         {openUpdateModal && (
           <UpdateUserModal
-            userEmail={updateUserEmail}
             open={openUpdateModal}
             setOpen={setOpenUpdateModal}
+            userEmail={updateUserEmail}
           />
         )}
 
@@ -125,9 +129,9 @@ export default function ManageAdmins() {
           {isLoading && (
             <div className="absolute inset-0 flex items-center justify-center bg-white/80 dark:bg-gray-800/80 z-10">
               <PulseLoader
+                aria-label="Loading Spinner"
                 color="#2563EB"
                 size={13}
-                aria-label="Loading Spinner"
                 speedMultiplier={0.7}
               />
             </div>
@@ -137,44 +141,44 @@ export default function ManageAdmins() {
             <thead className="bg-gray-100 dark:bg-gray-700 uppercase text-xs font-semibold tracking-wider">
               <tr>
                 <th
-                  scope="col"
                   className="px-4 py-3 border-b border-gray-200 dark:border-gray-600 rounded-tl-xl"
+                  scope="col"
                 >
                   Image
                 </th>
                 <th
-                  scope="col"
                   className="px-4 py-3 border-b border-gray-200 dark:border-gray-600"
+                  scope="col"
                 >
                   Name
                 </th>
                 <th
-                  scope="col"
                   className="px-4 py-3 border-b border-gray-200 dark:border-gray-600"
+                  scope="col"
                 >
                   Email
                 </th>
                 <th
-                  scope="col"
                   className="px-4 py-3 border-b border-gray-200 dark:border-gray-600"
+                  scope="col"
                 >
                   Role
                 </th>
                 <th
-                  scope="col"
                   className="px-4 py-3 border-b border-gray-200 dark:border-gray-600 text-center"
+                  scope="col"
                 >
                   Edit
                 </th>
                 <th
-                  scope="col"
                   className="px-4 py-3 border-b border-gray-200 dark:border-gray-600 text-center"
+                  scope="col"
                 >
                   Status
                 </th>
                 <th
-                  scope="col"
                   className="px-4 py-3 border-b border-gray-200 dark:border-gray-600 rounded-tr-xl text-center"
+                  scope="col"
                 >
                   Delete
                 </th>
@@ -188,14 +192,14 @@ export default function ManageAdmins() {
                 >
                   <td className="px-4 py-3 flex items-center justify-center">
                     <Image
-                      width={40}
-                      height={40}
                       alt="profile"
+                      className="size-9 rounded-full object-cover border border-gray-200 dark:border-gray-600"
+                      height={40}
                       src={
                         user.image ||
                         "https://i.ibb.co/VtP9tF6/default-user-image.png"
                       }
-                      className="size-9 rounded-full object-cover border border-gray-200 dark:border-gray-600"
+                      width={40}
                     />
                   </td>
                   <td className="px-4 py-3 font-medium text-gray-900 dark:text-white">
@@ -211,11 +215,11 @@ export default function ManageAdmins() {
                   <td className="px-4 py-3 text-center">
                     <button
                       className="p-2 rounded-full text-blue-500 hover:bg-blue-100 dark:hover:bg-blue-900/30 transition-colors duration-200"
+                      title="Edit Admin"
                       onClick={() => {
                         setUpdateUserEmail(user.email!);
                         setOpenUpdateModal(true);
                       }}
-                      title="Edit Admin"
                     >
                       <MdModeEdit className="text-xl" />
                     </button>
@@ -225,16 +229,16 @@ export default function ManageAdmins() {
                     {user.isBlocked ? (
                       <button
                         className="px-3 py-1 rounded-full bg-red-100 dark:bg-red-900/30 text-red-600 dark:text-red-400 text-xs font-semibold hover:bg-red-200 dark:hover:bg-red-800/50 transition-colors duration-200"
-                        onClick={() => updateUserInfo(user._id!, "activate")}
                         title="Activate Admin"
+                        onClick={() => updateUserInfo(user._id!, "activate")}
                       >
                         Blocked
                       </button>
                     ) : (
                       <button
                         className="px-3 py-1 rounded-full bg-green-100 dark:bg-green-900/30 text-green-600 dark:text-green-400 text-xs font-semibold hover:bg-green-200 dark:hover:bg-green-800/50 transition-colors duration-200"
-                        onClick={() => updateUserInfo(user._id!, "block")}
                         title="Block Admin"
+                        onClick={() => updateUserInfo(user._id!, "block")}
                       >
                         Active
                       </button>
@@ -244,8 +248,8 @@ export default function ManageAdmins() {
                   <td className="px-4 py-3 text-center">
                     <button
                       className="p-2 rounded-full text-red-500 hover:bg-red-100 dark:hover:bg-red-900/30 transition-colors duration-200"
-                      onClick={() => deleteUser(user._id!)}
                       title="Delete Admin"
+                      onClick={() => deleteUser(user._id!)}
                     >
                       <RiDeleteBinLine className="text-xl" />
                     </button>

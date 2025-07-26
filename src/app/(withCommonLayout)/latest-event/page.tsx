@@ -66,11 +66,11 @@ const LatestEventsPage = () => {
               className="bg-white dark:bg-gray-800 rounded-2xl shadow-xl overflow-hidden border border-gray-200 dark:border-gray-700 transition-transform duration-200 hover:scale-[1.02]"
             >
               <Image
-                width={600}
-                height={400}
-                src={event.image}
                 alt={event.title}
                 className="w-full h-48 object-cover"
+                height={400}
+                src={event.image}
+                width={600}
               />
               <div className="p-5 sm:p-6">
                 <h3 className="text-xl sm:text-2xl font-bold text-gray-900 dark:text-white mb-3 leading-tight">

@@ -1,8 +1,9 @@
 "use client";
 
-import { useGetPostsQuery } from "@/src/redux/features/posts/postApi";
 import PostCard from "../../(home)/components/Posts/PostCard";
 import PostSkeleton from "../../(home)/components/Posts/PostSkeleton";
+
+import { useGetPostsQuery } from "@/src/redux/features/posts/postApi";
 import { TPost } from "@/src/types";
 
 const MyPosts = ({ userEmail }: { userEmail: string }) => {

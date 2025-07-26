@@ -1,14 +1,14 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
 "use client";
 
 import { loadStripe } from "@stripe/stripe-js";
 import { Elements } from "@stripe/react-stripe-js";
 import { MdOutlinePayment } from "react-icons/md";
 import { FaTimes, FaCheckCircle } from "react-icons/fa"; // Added FaTimes for close button
+
 import CheckoutForm from "./CheckOutForm";
 
 const stripePromise = loadStripe(
-  "pk_test_51OECRRFLaeRKmWHlOnS7nvYdRDI0mKR7gAbUTLpORBLigHEpLvbJEwY6qGjI3VqnLdaLkqLGA79jNs2d6PJEGSZZ00fp3AR825"
+  "pk_test_51OECRRFLaeRKmWHlOnS7nvYdRDI0mKR7gAbUTLpORBLigHEpLvbJEwY6qGjI3VqnLdaLkqLGA79jNs2d6PJEGSZZ00fp3AR825",
 );
 
 type TModalProps = {
@@ -26,8 +26,8 @@ export default function PaymentModal({ setOpen, membersShip }: TModalProps) {
             Complete Your Subscription
           </h2>
           <button
-            onClick={() => setOpen(false)}
             className="p-2 rounded-full hover:bg-gray-100 dark:hover:bg-gray-700 text-gray-500 dark:text-gray-400 transition-colors duration-200"
+            onClick={() => setOpen(false)}
           >
             <FaTimes className="text-xl" />
           </button>

@@ -1,9 +1,10 @@
 "use client";
 
 import { FaCalendarAlt, FaRegClock, FaCheckCircle } from "react-icons/fa";
-import { useAppSelector } from "@/src/redux/hooks";
 import Link from "next/link";
 import Image from "next/image";
+
+import { useAppSelector } from "@/src/redux/hooks";
 
 const MyMembership = () => {
   const { memberShip }: any = useAppSelector((state) => state.auth.user);
@@ -22,7 +23,7 @@ const MyMembership = () => {
             <div
               className={`w-full h-4`}
               style={{ backgroundColor: pkg.bgColor }}
-            ></div>
+            />
           )}
 
           <div className="p-6 sm:p-8 text-center">
@@ -81,11 +82,11 @@ const MyMembership = () => {
       ) : (
         <section className="max-w-xl mx-auto p-6 sm:p-8 bg-white dark:bg-gray-800 rounded-2xl shadow-xl border border-gray-200 dark:border-gray-700 text-center">
           <Image
-            src="https://placehold.co/200x200/1DA1F2/FFFFFF?text=No+Plan"
             alt="No Membership"
-            width={200}
-            height={200}
             className="mx-auto mb-6 rounded-lg"
+            height={200}
+            src="https://placehold.co/200x200/1DA1F2/FFFFFF?text=No+Plan"
+            width={200}
           />
 
           <h2 className="text-2xl sm:text-3xl font-bold text-gray-900 dark:text-white mb-4">
@@ -96,7 +97,7 @@ const MyMembership = () => {
             today to unlock exclusive tech content and premium features!
           </p>
 
-          <Link href="/membership" className="inline-block">
+          <Link className="inline-block" href="/membership">
             <button className="px-8 py-3 text-white bg-blue-500 hover:bg-blue-600 dark:bg-blue-600 dark:hover:bg-blue-700 rounded-full font-semibold transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 dark:focus:ring-offset-gray-800">
               Explore Membership Plans
             </button>

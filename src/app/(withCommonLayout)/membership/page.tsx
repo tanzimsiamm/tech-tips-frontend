@@ -1,10 +1,12 @@
 "use client";
 
 import { useState } from "react";
-import { useAppSelector } from "@/src/redux/hooks";
 import { useRouter } from "next/navigation";
 import { FaCheckCircle } from "react-icons/fa";
+
 import PaymentModal from "./components/PaymentModal";
+
+import { useAppSelector } from "@/src/redux/hooks";
 
 const membershipPackages = [
   {
@@ -82,6 +84,7 @@ const Membership = () => {
   const handleSubscribeClick = (pack: any) => {
     if (!loggedUser) {
       router.push("/login");
+
       return;
     }
     setSelectedMembership(pack);
@@ -136,8 +139,8 @@ const Membership = () => {
                 </ul>
               </div>
               <button
-                onClick={() => handleSubscribeClick(pack)}
                 className={`w-full py-2.5 sm:py-3 px-4 text-sm sm:text-base text-white font-semibold rounded-full ${pack.bgColorClass} ${pack.hoverBgColorClass} focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-${pack.colorClass.replace("text-", "")} transition-colors duration-200 dark:focus:ring-offset-gray-800`}
+                onClick={() => handleSubscribeClick(pack)}
               >
                 Subscribe Now
               </button>

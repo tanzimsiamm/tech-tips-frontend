@@ -1,5 +1,6 @@
-import { TUser } from "@/src/types";
 import baseApi from "../../api/baseApi";
+
+import { TUser } from "@/src/types";
 
 const userApi = baseApi.injectEndpoints({
   endpoints: (builder) => ({

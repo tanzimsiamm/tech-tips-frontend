@@ -1,15 +1,14 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
-/* eslint-disable @typescript-eslint/no-explicit-any */
+
 "use client";
 
-import { FaShare, FaThumbsUp, FaReply, FaEdit } from "react-icons/fa";
+import { FaShare } from "react-icons/fa";
 import { RiDeleteBin4Line } from "react-icons/ri";
 import { useRef, useState } from "react";
 import Image from "next/image";
 import TimeAgo from "react-timeago";
 import { IoSendSharp } from "react-icons/io5";
 import { useForm } from "react-hook-form"; // Ensure useForm is imported
-import { useAppSelector } from "@/src/redux/hooks";
 import { toast } from "sonner";
 import { ClipLoader } from "react-spinners";
 import { BiCommentDetail } from "react-icons/bi";
@@ -18,19 +17,22 @@ import { MdStars } from "react-icons/md";
 import { useReactToPrint } from "react-to-print";
 import { AiFillPrinter } from "react-icons/ai";
 import { FaPen } from "react-icons/fa";
+import { useRouter } from "next/navigation";
+import React from "react"; // Ensure React is imported for React.ChangeEvent
+
+import ImageGallery from "./ImageGallary";
+import VoteSection from "./VoteSection";
+import MiniUserProfile from "./MiniUserProfile";
+import EditCommentModal from "./EditCommentModal";
+
 import {
   useAddCommentMutation,
   useDeleteCommentMutation,
   useGetCommentsQuery,
 } from "@/src/redux/features/comments/commetApi";
 import { TComment, TPost } from "@/src/types";
-import ImageGallery from "./ImageGallary";
-import VoteSection from "./VoteSection";
-import MiniUserProfile from "./MiniUserProfile";
 import { useSendNotificationMutation } from "@/src/redux/features/notification/notificationApi";
-import EditCommentModal from "./EditCommentModal";
-import { useRouter } from "next/navigation";
-import React from "react"; // Ensure React is imported for React.ChangeEvent
+import { useAppSelector } from "@/src/redux/hooks";
 
 export default function PostCard({ post }: { post: TPost }) {
   // Destructure watch from useForm
@@ -105,11 +107,13 @@ export default function PostCard({ post }: { post: TPost }) {
   const onSubmit = async (data: any) => {
     if (!user) {
       toast.error("Please log in to comment.");
+
       return;
     }
 
     if (!data.newComment || data.newComment.trim() === "") {
       toast.error("Comment cannot be empty.");
+
       return;
     }
 
@@ -168,8 +172,8 @@ export default function PostCard({ post }: { post: TPost }) {
     >
       {openEditCommentModal && (
         <EditCommentModal
-          setOpen={setEditCommentModal}
           comment={commentForEdit}
+          setOpen={setEditCommentModal}
         />
       )}
 
@@ -180,14 +184,14 @@ export default function PostCard({ post }: { post: TPost }) {
             {/* Stop propagation */}
             <Link href={`/profile/${authorInfo?.authorEmail}`}>
               <Image
-                width={56}
-                height={56}
+                alt="User Avatar"
                 className="size-12 rounded-full object-cover border border-gray-300 dark:border-gray-600"
+                height={56}
                 src={
                   authorInfo?.image ||
                   "https://i.ibb.co/VtP9tF6/default-user-image.png"
                 }
-                alt="User Avatar"
+                width={56}
               />
             </Link>
             <MiniUserProfile userInfo={post.authorInfo} />
@@ -195,8 +199,8 @@ export default function PostCard({ post }: { post: TPost }) {
 
           <div>
             <Link
-              href={`/profile/${authorInfo?.authorEmail}`}
               className="font-bold text-gray-900 dark:text-white hover:underline text-lg"
+              href={`/profile/${authorInfo?.authorEmail}`}
               onClick={stopPropagation} // Stop propagation
             >
               {authorInfo?.name}
@@ -223,9 +227,9 @@ export default function PostCard({ post }: { post: TPost }) {
             />
           )}
           <button
-            onClick={reactToPrintFn}
             className="p-2 rounded-full hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors duration-200"
             title="Print Post"
+            onClick={reactToPrintFn}
           >
             <AiFillPrinter className="text-xl" />
           </button>
@@ -233,9 +237,9 @@ export default function PostCard({ post }: { post: TPost }) {
       </div>
 
       <div
-        className="text-gray-800 dark:text-gray-200 text-base leading-relaxed mb-4"
         dangerouslySetInnerHTML={{ __html: description || "" }}
-      ></div>
+        className="text-gray-800 dark:text-gray-200 text-base leading-relaxed mb-4"
+      />
 
       {images && images.length > 0 && (
         <div /* Removed onClick here, as the parent div handles navigation */>
@@ -248,14 +252,13 @@ export default function PostCard({ post }: { post: TPost }) {
           <VoteSection
             postId={_id as string}
             userId={user?._id as string}
-            votes={votes || 0}
             voters={voters || []}
-            onClick={stopPropagation} // Stop propagation
+            votes={votes || 0}
           />
 
           <Link
-            href={`/details/${_id}#comments`}
             className="flex items-center space-x-2 text-gray-600 dark:text-gray-400 hover:text-blue-500 dark:hover:text-blue-400 transition-colors duration-200"
+            href={`/details/${_id}#comments`}
             onClick={stopPropagation} // Stop propagation
           >
             <BiCommentDetail className="text-xl" />
@@ -263,8 +266,8 @@ export default function PostCard({ post }: { post: TPost }) {
           </Link>
         </div>
         <button
-          onClick={handleShare}
           className="flex items-center space-x-2 text-gray-600 dark:text-gray-400 hover:text-blue-500 dark:hover:text-blue-400 transition-colors duration-200"
+          onClick={handleShare}
         >
           <FaShare className="text-lg" />
           <span className="text-sm font-medium">Share</span>
@@ -282,9 +285,9 @@ export default function PostCard({ post }: { post: TPost }) {
         {(addLoading || deleteLoading) && (
           <div className="absolute inset-0 z-10 bg-white/80 dark:bg-gray-800/90 rounded-xl flex justify-center items-center">
             <ClipLoader
+              aria-label="Loading Spinner"
               color="#3B82F6"
               size={35}
-              aria-label="Loading Spinner"
               speedMultiplier={0.8}
             />
           </div>
@@ -299,14 +302,14 @@ export default function PostCard({ post }: { post: TPost }) {
               {" "}
               {/* Stop propagation */}
               <Image
+                alt={comment?.userInfo?.name || "User"}
+                className="size-10 rounded-full object-cover border border-gray-200 dark:border-gray-600"
+                height={40}
                 src={
                   comment?.userInfo?.image ||
                   "https://i.ibb.co/VtP9tF6/default-user-image.png"
                 }
-                alt={comment?.userInfo?.name || "User"}
                 width={40}
-                height={40}
-                className="size-10 rounded-full object-cover border border-gray-200 dark:border-gray-600"
               />
             </Link>
 
@@ -325,21 +328,21 @@ export default function PostCard({ post }: { post: TPost }) {
                       {" "}
                       {/* Stop propagation */}
                       <button
-                        type="button"
                         className="text-gray-500 hover:text-blue-500 dark:hover:text-blue-400 transition-colors"
+                        title="Edit Comment"
+                        type="button"
                         onClick={() => {
                           setCommentForEdit(comment);
                           setEditCommentModal(true);
                         }}
-                        title="Edit Comment"
                       >
                         <FaPen className="text-sm" />
                       </button>
                       <button
-                        type="button"
                         className="text-gray-500 hover:text-red-500 dark:hover:text-red-400 transition-colors"
-                        onClick={() => deleteComment(comment?._id as string)}
                         title="Delete Comment"
+                        type="button"
+                        onClick={() => deleteComment(comment?._id as string)}
                       >
                         <RiDeleteBin4Line className="text-sm" />
                       </button>
@@ -365,18 +368,18 @@ export default function PostCard({ post }: { post: TPost }) {
       {user && (
         <form
           className="flex items-center gap-3 mt-6 pt-4 border-t border-gray-100 dark:border-gray-700"
-          onSubmit={handleSubmit(onSubmit)}
           onClick={stopPropagation} // Stop propagation for the form itself
+          onSubmit={handleSubmit(onSubmit)}
         >
           <div>
             <Image
-              width={40}
-              height={40}
+              alt="User Avatar"
               className="size-10 rounded-full object-cover border border-gray-200 dark:border-gray-600"
+              height={40}
               src={
                 user?.image || "https://i.ibb.co/VtP9tF6/default-user-image.png"
               }
-              alt="User Avatar"
+              width={40}
             />
           </div>
 
@@ -402,10 +405,10 @@ export default function PostCard({ post }: { post: TPost }) {
             >
               {addLoading ? (
                 <ClipLoader
+                  aria-label="Loading Spinner"
                   color="#3B82F6"
                   loading={addLoading}
                   size={20}
-                  aria-label="Loading Spinner"
                   speedMultiplier={0.8}
                 />
               ) : (

@@ -1,19 +1,18 @@
-/* eslint-disable @typescript-eslint/no-unused-vars */
-/* eslint-disable @typescript-eslint/no-explicit-any */
 "use client";
 
 import { FaShare } from "react-icons/fa";
 import Image from "next/image";
 import TimeAgo from "react-timeago";
-import { useAppSelector } from "@/src/redux/hooks";
 import { BiCommentDetail } from "react-icons/bi";
 import Link from "next/link";
 import { MdStars } from "react-icons/md";
 import { MdModeEdit } from "react-icons/md";
 import { RiDeleteBinLine } from "react-icons/ri";
 import { useState } from "react";
-import { useDeletePostMutation } from "@/src/redux/features/posts/postApi";
 import { toast } from "sonner";
+
+import { useDeletePostMutation } from "@/src/redux/features/posts/postApi";
+import { useAppSelector } from "@/src/redux/hooks";
 import { TComment, TPost } from "@/src/types";
 import { useGetCommentsQuery } from "@/src/redux/features/comments/commetApi";
 import UpdatePostModal from "@/src/app/(withCommonLayout)/(home)/components/CreatePost/UpdatePostModal";
@@ -37,7 +36,7 @@ export default function MiniPostCard({ post }: { post: TPost }) {
     isPremium,
   } = post;
 
-  const { data } = useGetCommentsQuery({ postId: _id });
+  const { data } = useGetCommentsQuery({ postId: _id as string });
   const comments: TComment[] = data?.data || [];
 
   const handleDelete = async (postId: string) => {
@@ -58,8 +57,8 @@ export default function MiniPostCard({ post }: { post: TPost }) {
       {updateModal && (
         <UpdatePostModal
           open={updateModal}
-          setOpen={setUpdateModal}
           postId={_id as string}
+          setOpen={setUpdateModal}
         />
       )}
 
@@ -68,14 +67,14 @@ export default function MiniPostCard({ post }: { post: TPost }) {
           <section className="group relative mr-3">
             <Link href={`/profile/${authorInfo?.authorEmail}`}>
               <Image
-                width={56}
-                height={56}
+                alt="User Avatar"
                 className="size-12 rounded-full object-cover border border-gray-300 dark:border-gray-600"
+                height={56}
                 src={
                   authorInfo?.image ||
                   "https://i.ibb.co/VtP9tF6/default-user-image.png"
                 }
-                alt="User Avatar"
+                width={56}
               />
             </Link>
             <MiniUserProfile userInfo={post.authorInfo} />
@@ -83,8 +82,8 @@ export default function MiniPostCard({ post }: { post: TPost }) {
 
           <div>
             <Link
-              href={`/profile/${authorInfo?.authorEmail}`}
               className="font-bold text-gray-900 dark:text-white hover:underline text-lg"
+              href={`/profile/${authorInfo?.authorEmail}`}
             >
               {authorInfo?.name}
             </Link>
@@ -109,16 +108,16 @@ export default function MiniPostCard({ post }: { post: TPost }) {
             user?.role === "admin") && (
             <>
               <button
-                onClick={() => setUpdateModal(true)}
                 className="p-2 rounded-full hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors duration-200"
                 title="Edit Post"
+                onClick={() => setUpdateModal(true)}
               >
                 <MdModeEdit className="text-xl" />
               </button>
               <button
-                onClick={() => handleDelete(_id!)}
                 className="p-2 rounded-full hover:bg-gray-100 dark:hover:bg-gray-700 text-red-500 transition-colors duration-200"
                 title="Delete Post"
+                onClick={() => handleDelete(_id!)}
               >
                 <RiDeleteBinLine className="text-xl" />
               </button>
@@ -130,8 +129,8 @@ export default function MiniPostCard({ post }: { post: TPost }) {
       <p className="text-gray-800 dark:text-gray-200 mb-4 text-base leading-relaxed font-semibold">
         {title}
         <Link
-          href={`/details/${_id}`}
           className="text-blue-500 dark:text-blue-400 hover:underline pl-2"
+          href={`/details/${_id}`}
         >
           See more...
         </Link>
@@ -139,15 +138,15 @@ export default function MiniPostCard({ post }: { post: TPost }) {
 
       {images && images.length > 0 && (
         <Link
-          href={`/details/${_id}`}
           className="block rounded-xl overflow-hidden"
+          href={`/details/${_id}`}
         >
           <Image
-            width={300}
-            height={300}
             alt="Post image"
             className="rounded-xl h-48 w-full object-cover object-center transform transition-transform duration-300 hover:scale-105"
+            height={300}
             src={images[0]}
+            width={300}
           />
         </Link>
       )}
@@ -157,13 +156,13 @@ export default function MiniPostCard({ post }: { post: TPost }) {
           <VoteSection
             postId={_id as string}
             userId={user?._id as string}
-            votes={votes ?? 0}
             voters={voters ?? []}
+            votes={votes ?? 0}
           />
 
           <Link
-            href={`/details/${_id}#comments`}
             className="flex items-center space-x-2 text-gray-600 dark:text-gray-400 hover:text-blue-500 dark:hover:text-blue-400 transition-colors duration-200"
+            href={`/details/${_id}#comments`}
           >
             <BiCommentDetail className="text-xl" />
             <span className="font-semibold">{comments?.length}</span>

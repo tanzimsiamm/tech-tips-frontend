@@ -99,7 +99,6 @@ export type TPayment = {
   transactionId: string;
 };
 
-
 export type TUserForMyFollowers = {
   _id?: string;
   name: string;

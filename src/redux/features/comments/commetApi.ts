@@ -1,5 +1,6 @@
-import { TComment } from "@/src/types";
 import baseApi from "../../api/baseApi";
+
+import { TComment } from "@/src/types";
 
 const commentApi = baseApi.injectEndpoints({
   endpoints: (builder) => ({

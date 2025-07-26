@@ -11,8 +11,8 @@ const ContactUsPage = () => {
             Get in Touch
           </h1>
           <p className="text-lg sm:text-xl text-gray-700 dark:text-gray-300 max-w-2xl mx-auto leading-relaxed">
-            Have questions, feedback, or just want to chat about tech? We'd love
-            to hear from you!
+            Have questions, feedback, or just want to chat about tech? We&apos;d
+            love to hear from you!
           </p>
         </div>
 
@@ -26,49 +26,49 @@ const ContactUsPage = () => {
             <form className="space-y-5">
               <div>
                 <label
-                  htmlFor="name"
                   className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1"
+                  htmlFor="name"
                 >
                   Full Name
                 </label>
                 <input
-                  type="text"
-                  id="name"
                   className="w-full p-3 border border-gray-300 dark:border-gray-600 rounded-xl bg-white dark:bg-gray-700 text-gray-900 dark:text-white placeholder-gray-500 dark:placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors duration-200"
+                  id="name"
                   placeholder="Your full name"
+                  type="text"
                 />
               </div>
               <div>
                 <label
-                  htmlFor="email"
                   className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1"
+                  htmlFor="email"
                 >
                   Email Address
                 </label>
                 <input
-                  type="email"
-                  id="email"
                   className="w-full p-3 border border-gray-300 dark:border-gray-600 rounded-xl bg-white dark:bg-gray-700 text-gray-900 dark:text-white placeholder-gray-500 dark:placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors duration-200"
+                  id="email"
                   placeholder="Your email address"
+                  type="email"
                 />
               </div>
               <div>
                 <label
-                  htmlFor="message"
                   className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1"
+                  htmlFor="message"
                 >
                   Your Message
                 </label>
                 <textarea
-                  id="message"
                   className="w-full p-3 border border-gray-300 dark:border-gray-600 rounded-xl bg-white dark:bg-gray-700 text-gray-900 dark:text-white placeholder-gray-500 dark:placeholder-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors duration-200 resize-y"
-                  rows={5}
+                  id="message"
                   placeholder="Tell us what's on your mind..."
+                  rows={5}
                 />
               </div>
               <button
-                type="submit"
                 className="w-full py-3 px-4 bg-blue-500 text-white font-bold rounded-full hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition-colors duration-200 dark:bg-blue-600 dark:hover:bg-blue-700"
+                type="submit"
               >
                 Send Message
               </button>
@@ -80,8 +80,8 @@ const ContactUsPage = () => {
             <div>
               <h2 className="text-2xl font-bold mb-4">Reach Out to Us</h2>
               <p className="mb-6 text-blue-100 dark:text-blue-200 leading-relaxed">
-                We're here to help! Connect with our team through the following
-                channels.
+                We&apos;re here to help! Connect with our team through the
+                following channels.
               </p>
               <div className="space-y-4">
                 <div className="flex items-center text-blue-100 dark:text-blue-200">

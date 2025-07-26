@@ -6,37 +6,37 @@ const teams = [
   {
     userName: "Alice Johnson",
     position: "Lead Frontend Developer",
-    image: "https://placehold.co/120x120/A78BFA/FFFFFF?text=AJ", 
+    image: "https://placehold.co/120x120/A78BFA/FFFFFF?text=AJ",
     id: 1,
   },
   {
     userName: "Bob Williams",
     position: "Lead Backend Developer",
-    image: "https://placehold.co/120x120/60A5FA/FFFFFF?text=BW", 
+    image: "https://placehold.co/120x120/60A5FA/FFFFFF?text=BW",
     id: 2,
   },
   {
     userName: "Charlie Brown",
     position: "UI/UX Designer",
-    image: "https://placehold.co/120x120/FBBF24/FFFFFF?text=CB", 
+    image: "https://placehold.co/120x120/FBBF24/FFFFFF?text=CB",
     id: 3,
   },
   {
     userName: "Diana Prince",
     position: "DevOps Engineer",
-    image: "https://placehold.co/120x120/EC4899/FFFFFF?text=DP", 
+    image: "https://placehold.co/120x120/EC4899/FFFFFF?text=DP",
     id: 4,
   },
   {
     userName: "Eve Davis",
     position: "Content Strategist",
-    image: "https://placehold.co/120x120/34D399/FFFFFF?text=ED", 
+    image: "https://placehold.co/120x120/34D399/FFFFFF?text=ED",
     id: 5,
   },
   {
     userName: "Frank White",
     position: "Community Manager",
-    image: "https://placehold.co/120x120/8B5CF6/FFFFFF?text=FW", 
+    image: "https://placehold.co/120x120/8B5CF6/FFFFFF?text=FW",
     id: 6,
   },
 ];
@@ -105,11 +105,11 @@ const AboutUsPage = () => {
               className="bg-gray-50 dark:bg-gray-900 p-6 rounded-xl shadow-inner border border-gray-100 dark:border-gray-700 transition-transform duration-200 hover:scale-105"
             >
               <Image
-                width={120}
-                height={120}
-                src={team.image}
                 alt={team.userName}
                 className="size-28 sm:size-32 object-cover rounded-full mx-auto mb-4 border-4 border-blue-100 dark:border-blue-900 shadow-md"
+                height={120}
+                src={team.image}
+                width={120}
               />
               <h3 className="text-xl sm:text-2xl font-bold text-gray-900 dark:text-white mb-1">
                 {team.userName}

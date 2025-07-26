@@ -1,6 +1,5 @@
 // lib/redux/store.ts
 import { configureStore } from "@reduxjs/toolkit";
-import baseApi from "./api/baseApi";
 import {
   persistReducer,
   persistStore,
@@ -12,6 +11,8 @@ import {
   REGISTER,
 } from "redux-persist";
 import createWebStorage from "redux-persist/lib/storage/createWebStorage";
+
+import baseApi from "./api/baseApi";
 import authReducer from "./features/authentication/authSlice";
 
 // Create a noop storage for server-side
@@ -29,9 +30,10 @@ const createNoopStorage = () => {
   };
 };
 
-const storage = typeof window !== 'undefined' ? 
-  createWebStorage('local') : 
-  createNoopStorage();
+const storage =
+  typeof window !== "undefined"
+    ? createWebStorage("local")
+    : createNoopStorage();
 
 const persistConfig = {
   key: "auth",

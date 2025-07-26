@@ -12,12 +12,14 @@ import {
   FaTimes,
 } from "react-icons/fa";
 import { TfiLayoutListPost } from "react-icons/tfi";
-import { useGetSingleUserQuery } from "@/src/redux/features/user/userApi";
 import { useState } from "react";
+
+import TextEditor from "./TextEditor";
+
+import { useGetSingleUserQuery } from "@/src/redux/features/user/userApi";
 import { TPost, TUser } from "@/src/types";
 import { useCreatePostMutation } from "@/src/redux/features/posts/postApi";
 import { useAppSelector } from "@/src/redux/hooks";
-import TextEditor from "./TextEditor";
 
 type TModalProps = {
   open: boolean;
@@ -50,6 +52,7 @@ export default function CreatePostModal({ open, setOpen }: TModalProps) {
         authorEmail: user?.email as string,
       },
     };
+
     if (data.image1) postData.images.push(data.image1);
     if (data.image2) postData.images.push(data.image2);
     if (data.image3) postData.images.push(data.image3);
@@ -63,7 +66,6 @@ export default function CreatePostModal({ open, setOpen }: TModalProps) {
       }
     } catch (error) {
       toast.error("Something went wrong");
-      console.log(error);
     }
   };
 
@@ -76,10 +78,10 @@ export default function CreatePostModal({ open, setOpen }: TModalProps) {
         {isLoading && (
           <div className="absolute inset-0 z-50 bg-white/80 dark:bg-gray-900/80 rounded-xl flex justify-center items-center">
             <ClipLoader
+              aria-label="Loading Spinner"
               color="#3B82F6"
               loading={isLoading}
               size={60}
-              aria-label="Loading Spinner"
               speedMultiplier={0.8}
             />
           </div>
@@ -90,9 +92,9 @@ export default function CreatePostModal({ open, setOpen }: TModalProps) {
             Create New Post
           </h2>
           <button
+            className="p-2 rounded-full hover:bg-gray-100 dark:hover:bg-gray-700 text-gray-500 dark:text-gray-400 transition-colors duration-200"
             type="button"
             onClick={() => setOpen(false)}
-            className="p-2 rounded-full hover:bg-gray-100 dark:hover:bg-gray-700 text-gray-500 dark:text-gray-400 transition-colors duration-200"
           >
             <FaTimes className="text-xl" />
           </button>
@@ -104,9 +106,10 @@ export default function CreatePostModal({ open, setOpen }: TModalProps) {
             <FaPen className="text-blue-500 text-xl" />
             <input
               {...register("title", { required: true })}
-              type="text"
-              placeholder="Post Title"
               className="w-full p-3 border border-gray-300 dark:border-gray-600 rounded-xl bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors duration-200 placeholder-gray-400 dark:placeholder-gray-300"
+              id="postTitle" // Added ID
+              placeholder="Post Title"
+              type="text"
             />
           </div>
 
@@ -117,8 +120,9 @@ export default function CreatePostModal({ open, setOpen }: TModalProps) {
               className="w-full p-3 border border-gray-300 dark:border-gray-600 rounded-xl bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-green-500 transition-colors duration-200"
               {...register("category", { required: true })}
               defaultValue=""
+              id="postCategory" // Added ID
             >
-              <option value="" disabled>
+              <option disabled value="">
                 Select Category
               </option>
               <option value="Web">Web</option>
@@ -132,13 +136,19 @@ export default function CreatePostModal({ open, setOpen }: TModalProps) {
           {/* Premium Selection */}
           {userFromDB?.memberShip && (
             <div className="flex flex-col sm:flex-row sm:items-center gap-4 sm:gap-10 text-gray-700 dark:text-gray-300">
-              <label className="font-semibold flex items-center gap-3">
+              <label
+                className="font-semibold flex items-center gap-3"
+                htmlFor="contentType" // Added htmlFor
+              >
                 <TfiLayoutListPost className="text-purple-600 text-xl" />{" "}
                 Content Type
               </label>
 
               <div className="flex space-x-6 items-center">
-                <label className="flex items-center space-x-2 cursor-pointer">
+                <label
+                  className="flex items-center space-x-2 cursor-pointer"
+                  htmlFor="premiumContent" // Added htmlFor
+                >
                   <input
                     type="radio"
                     value={"premium"}
@@ -146,19 +156,24 @@ export default function CreatePostModal({ open, setOpen }: TModalProps) {
                       required: "Please choose an option",
                     })}
                     className="form-radio h-4 w-4 text-blue-600 border-gray-300 dark:border-gray-600 dark:bg-gray-700 focus:ring-blue-500"
+                    id="premiumContent" // Added ID
                   />
                   <span>Premium</span>
                 </label>
 
-                <label className="flex items-center space-x-2 cursor-pointer">
+                <label
+                  className="flex items-center space-x-2 cursor-pointer"
+                  htmlFor="freeContent" // Added htmlFor
+                >
                   <input
+                    defaultChecked
                     type="radio"
                     value="free"
-                    defaultChecked
                     {...register("premium", {
                       required: "Please choose an option",
                     })}
                     className="form-radio h-4 w-4 text-blue-600 border-gray-300 dark:border-gray-600 dark:bg-gray-700 focus:ring-blue-500"
+                    id="freeContent" // Added ID
                   />
                   <span>Free</span>
                 </label>
@@ -170,7 +185,12 @@ export default function CreatePostModal({ open, setOpen }: TModalProps) {
           <div className="flex flex-col space-y-2">
             <div className="flex items-center space-x-3 text-gray-700 dark:text-gray-300">
               <FaAlignLeft className="text-yellow-500 text-xl" />
-              <label className="font-semibold">Description</label>
+              <label
+                className="font-semibold"
+                htmlFor="postDescription" // Added htmlFor
+              >
+                Description
+              </label>
             </div>
             <TextEditor setLatestDescription={setLatestDescription} />
           </div>
@@ -179,48 +199,56 @@ export default function CreatePostModal({ open, setOpen }: TModalProps) {
           <div className="space-y-4">
             <div className="flex items-center space-x-3 text-gray-700 dark:text-gray-300">
               <FaImage className="text-red-500 text-xl" />
-              <label className="font-semibold">Image URLs (Optional)</label>
+              <label
+                className="font-semibold"
+                htmlFor="imageUrls" // Added htmlFor
+              >
+                Image URLs (Optional)
+              </label>
             </div>
             <input
               {...register("image1")}
-              type="text"
-              placeholder="Image URL 1"
               className="w-full p-3 border border-gray-300 dark:border-gray-600 rounded-xl bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-red-500 transition-colors duration-200 placeholder-gray-400 dark:placeholder-gray-300"
+              id="image1" // Added ID
+              placeholder="Image URL 1"
+              type="text"
             />
             <input
               {...register("image2")}
-              type="text"
-              placeholder="Image URL 2"
               className="w-full p-3 border border-gray-300 dark:border-gray-600 rounded-xl bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-red-500 transition-colors duration-200 placeholder-gray-400 dark:placeholder-gray-300"
+              id="image2" // Added ID
+              placeholder="Image URL 2"
+              type="text"
             />
             <input
               {...register("image3")}
-              type="text"
-              placeholder="Image URL 3"
               className="w-full p-3 border border-gray-300 dark:border-gray-600 rounded-xl bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-red-500 transition-colors duration-200 placeholder-gray-400 dark:placeholder-gray-300"
+              id="image3" // Added ID
+              placeholder="Image URL 3"
+              type="text"
             />
           </div>
         </div>
 
         <div className="p-4 flex justify-end space-x-4 border-t border-gray-200 dark:border-gray-700">
           <button
+            className="px-6 py-2 text-base font-semibold rounded-full text-gray-700 dark:text-gray-300 bg-gray-200 dark:bg-gray-700 hover:bg-gray-300 dark:hover:bg-gray-600 transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-offset-2 dark:focus:ring-offset-gray-800"
             type="button"
             onClick={() => setOpen(false)}
-            className="px-6 py-2 text-base font-semibold rounded-full text-gray-700 dark:text-gray-300 bg-gray-200 dark:bg-gray-700 hover:bg-gray-300 dark:hover:bg-gray-600 transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-offset-2 dark:focus:ring-offset-gray-800"
           >
             Cancel
           </button>
           <button
-            type="submit"
             className="px-6 py-2 text-base font-semibold rounded-full text-white bg-blue-500 hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 dark:focus:ring-offset-gray-800 transition-colors duration-200 disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-2"
             disabled={isLoading}
+            type="submit"
           >
             {isLoading ? (
               <ClipLoader
+                aria-label="Loading Spinner"
                 color="#ffffff"
                 loading={isLoading}
                 size={20}
-                aria-label="Loading Spinner"
                 speedMultiplier={0.8}
               />
             ) : (

@@ -3,18 +3,19 @@
 
 import Image from "next/image";
 import { RiUserUnfollowLine } from "react-icons/ri";
+import { toast } from "sonner";
+import { ClipLoader } from "react-spinners";
+import { FaUserPlus } from "react-icons/fa6";
+import Link from "next/link";
+import { usePathname } from "next/navigation";
+
+import { useAppSelector } from "@/src/redux/hooks";
 import {
   useFollowUserMutation,
   useGetSingleUserQuery,
   useGetUsersQuery,
   useUnFollowUserMutation,
 } from "@/src/redux/features/user/userApi";
-import { useAppSelector } from "@/src/redux/hooks";
-import { toast } from "sonner";
-import { ClipLoader } from "react-spinners";
-import { FaUserPlus } from "react-icons/fa6";
-import Link from "next/link";
-import { usePathname } from "next/navigation";
 import { useSendNotificationMutation } from "@/src/redux/features/notification/notificationApi";
 import { TUser } from "@/src/types";
 
@@ -54,8 +55,9 @@ const RightSidebar = () => {
 
   const filterUsers: TUser[] = totalUsers.filter((user: TUser) => {
     const isFollowing = followingUsers.some(
-      (followingUser) => user?._id === followingUser?._id
+      (followingUser) => user?._id === followingUser?._id,
     );
+
     return !isFollowing && user.email !== loggedUser?.email;
   });
 
@@ -65,6 +67,7 @@ const RightSidebar = () => {
         userId: loggedUser?._id as string,
         targetedUserId: targetedId,
       });
+
       if (response?.data?.success) {
         toast.success("You followed the user");
       }
@@ -80,6 +83,7 @@ const RightSidebar = () => {
         userId: loggedUser?._id as string,
         targetedUserId: targetedId,
       });
+
       if (response?.data?.success) {
         toast.success("You unfollowed the user");
       }
@@ -102,9 +106,9 @@ const RightSidebar = () => {
                 {unFollowLoading && (
                   <div className="absolute inset-0 z-10 bg-white/80 dark:bg-gray-800/90 rounded-xl flex justify-center items-center">
                     <ClipLoader
+                      aria-label="Loading Spinner"
                       color="#3B82F6"
                       size={38}
-                      aria-label="Loading Spinner"
                       speedMultiplier={0.8}
                     />
                   </div>
@@ -115,19 +119,19 @@ const RightSidebar = () => {
                     className="flex items-center justify-between pb-3 border-b border-gray-100 dark:border-gray-700 last:border-b-0 last:pb-0"
                   >
                     <Link
-                      href={`/profile/${user?.email}`}
                       className="flex items-center space-x-3 group"
+                      href={`/profile/${user?.email}`}
                     >
                       <div className="size-10 flex-shrink-0">
                         <Image
-                          width={40}
+                          alt={user?.name || "User"}
+                          className="w-full h-full rounded-full object-cover border border-gray-300 dark:border-gray-600 group-hover:scale-105 transition-transform duration-200"
                           height={40}
                           src={
                             user?.image ||
                             "https://i.ibb.co/VtP9tF6/default-user-image.png"
                           }
-                          alt={user?.name || "User"}
-                          className="w-full h-full rounded-full object-cover border border-gray-300 dark:border-gray-600 group-hover:scale-105 transition-transform duration-200"
+                          width={40}
                         />
                       </div>
                       <p className="font-medium text-gray-800 dark:text-gray-200 group-hover:text-blue-500 dark:group-hover:text-blue-400 transition-colors duration-200">
@@ -135,9 +139,9 @@ const RightSidebar = () => {
                       </p>
                     </Link>
                     <button
-                      onClick={() => handleUnfollow(user?._id as string)}
                       className="bg-gray-100 dark:bg-gray-700 hover:bg-gray-200 dark:hover:bg-gray-600 text-gray-700 dark:text-gray-300 py-1 px-3 rounded-full text-sm font-semibold flex items-center gap-1 justify-center transition-colors duration-200"
                       disabled={unFollowLoading}
+                      onClick={() => handleUnfollow(user?._id as string)}
                     >
                       <RiUserUnfollowLine />
                       Unfollow
@@ -156,9 +160,9 @@ const RightSidebar = () => {
               {followLoading && (
                 <div className="absolute inset-0 z-10 bg-white/80 dark:bg-gray-800/90 rounded-xl flex justify-center items-center">
                   <ClipLoader
+                    aria-label="Loading Spinner"
                     color="#3B82F6"
                     size={38}
-                    aria-label="Loading Spinner"
                     speedMultiplier={0.8}
                   />
                 </div>
@@ -169,19 +173,19 @@ const RightSidebar = () => {
                   className="flex items-center justify-between pb-3 border-b border-gray-100 dark:border-gray-700 last:border-b-0 last:pb-0"
                 >
                   <Link
-                    href={`/profile/${user?.email}`}
                     className="flex items-center space-x-3 group"
+                    href={`/profile/${user?.email}`}
                   >
                     <div className="size-10 flex-shrink-0">
                       <Image
-                        width={40}
+                        alt={user?.name || "User"}
+                        className="w-full h-full rounded-full object-cover border border-gray-300 dark:border-gray-600 group-hover:scale-105 transition-transform duration-200"
                         height={40}
                         src={
                           user?.image ||
                           "https://i.ibb.co/VtP9tF6/default-user-image.png"
                         }
-                        alt={user?.name || "User"}
-                        className="w-full h-full rounded-full object-cover border border-gray-300 dark:border-gray-600 group-hover:scale-105 transition-transform duration-200"
+                        width={40}
                       />
                     </div>
                     <p className="font-medium text-gray-800 dark:text-gray-200 group-hover:text-blue-500 dark:group-hover:text-blue-400 transition-colors duration-200">
@@ -189,9 +193,9 @@ const RightSidebar = () => {
                     </p>
                   </Link>
                   <button
-                    onClick={() => handleFollow(user?._id as string)}
                     className="bg-blue-500 hover:bg-blue-600 dark:bg-blue-600 dark:hover:bg-blue-700 text-white py-1 px-3 rounded-full text-sm font-semibold flex items-center gap-1 justify-center transition-colors duration-200"
                     disabled={followLoading}
+                    onClick={() => handleFollow(user?._id as string)}
                   >
                     <FaUserPlus /> Follow
                   </button>

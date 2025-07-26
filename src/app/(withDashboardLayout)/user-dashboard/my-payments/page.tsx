@@ -1,8 +1,8 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
 "use client";
 
 import { PulseLoader } from "react-spinners";
 import Image from "next/image";
+
 import { useAppSelector } from "@/src/redux/hooks";
 import { useGetPaymentHistoriesQuery } from "@/src/redux/features/payment/paymentApi";
 import { TPayment } from "@/src/types";
@@ -10,7 +10,7 @@ import { TPayment } from "@/src/types";
 export default function PaymentHistory() {
   const currentUser = useAppSelector((state) => state.auth.user);
   const { data, isLoading } = useGetPaymentHistoriesQuery(
-    currentUser?.email as string
+    currentUser?.email as string,
   );
   const histories: TPayment[] = data?.data || [];
 
@@ -30,9 +30,9 @@ export default function PaymentHistory() {
           {isLoading && (
             <div className="absolute inset-0 flex items-center justify-center bg-white/80 dark:bg-gray-800/80 z-10">
               <PulseLoader
+                aria-label="Loading Spinner"
                 color="#2563EB"
                 size={13}
-                aria-label="Loading Spinner"
                 speedMultiplier={0.7}
               />
             </div>
@@ -42,32 +42,32 @@ export default function PaymentHistory() {
             <thead className="bg-gray-100 dark:bg-gray-700 uppercase text-xs font-semibold tracking-wider">
               <tr>
                 <th
-                  scope="col"
                   className="px-4 py-3 border-b border-gray-200 dark:border-gray-600 rounded-tl-xl"
+                  scope="col"
                 >
                   User
                 </th>
                 <th
-                  scope="col"
                   className="px-4 py-3 border-b border-gray-200 dark:border-gray-600"
+                  scope="col"
                 >
                   Email
                 </th>
                 <th
-                  scope="col"
                   className="px-4 py-3 border-b border-gray-200 dark:border-gray-600"
+                  scope="col"
                 >
                   Package
                 </th>
                 <th
-                  scope="col"
                   className="px-4 py-3 border-b border-gray-200 dark:border-gray-600"
+                  scope="col"
                 >
                   Amount
                 </th>
                 <th
-                  scope="col"
                   className="px-4 py-3 border-b border-gray-200 dark:border-gray-600 rounded-tr-xl"
+                  scope="col"
                 >
                   Expiry Date
                 </th>
@@ -81,14 +81,14 @@ export default function PaymentHistory() {
                 >
                   <td className="px-4 py-3 flex items-center space-x-3">
                     <Image
-                      width={40}
-                      height={40}
                       alt="profile"
+                      className="size-9 rounded-full object-cover border border-gray-200 dark:border-gray-600"
+                      height={40}
                       src={
                         doc?.userInfo?.image ||
                         "https://i.ibb.co/VtP9tF6/default-user-image.png"
                       }
-                      className="size-9 rounded-full object-cover border border-gray-200 dark:border-gray-600"
+                      width={40}
                     />
                     <span className="font-medium text-gray-900 dark:text-white">
                       {doc?.userInfo?.name}

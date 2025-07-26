@@ -5,7 +5,7 @@ import { FaHome, FaUsers } from "react-icons/fa";
 import { ImBooks } from "react-icons/im";
 import { RiAdminFill } from "react-icons/ri";
 import { BsGraphUp } from "react-icons/bs";
-import { MdOutlinePayment } from "react-icons/md"; 
+import { MdOutlinePayment } from "react-icons/md";
 
 const AdminNavigations = () => {
   const pathName = usePathname();
@@ -19,13 +19,13 @@ const AdminNavigations = () => {
         <ul className="space-y-2">
           <li>
             <Link
-              href="/admin-dashboard/statistics"
               className={`flex items-center space-x-4 p-2 rounded-full transition-colors duration-200 
                 ${
                   pathName === "/admin-dashboard/statistics"
                     ? "bg-blue-500 text-white hover:bg-blue-600"
                     : "text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700"
                 }`}
+              href="/admin-dashboard/statistics"
             >
               <div
                 className={`p-2 rounded-full flex items-center justify-center text-xl 
@@ -49,13 +49,13 @@ const AdminNavigations = () => {
 
           <li>
             <Link
-              href="/admin-dashboard/manage-posts"
               className={`flex items-center space-x-4 p-2 rounded-full transition-colors duration-200 
                 ${
                   pathName === "/admin-dashboard/manage-posts"
                     ? "bg-blue-500 text-white hover:bg-blue-600"
                     : "text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700"
                 }`}
+              href="/admin-dashboard/manage-posts"
             >
               <div
                 className={`p-2 rounded-full flex items-center justify-center text-xl 
@@ -79,13 +79,13 @@ const AdminNavigations = () => {
 
           <li>
             <Link
-              href="/admin-dashboard/manage-users"
               className={`flex items-center space-x-4 p-2 rounded-full transition-colors duration-200 
                 ${
                   pathName === "/admin-dashboard/manage-users"
                     ? "bg-blue-500 text-white hover:bg-blue-600"
                     : "text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700"
                 }`}
+              href="/admin-dashboard/manage-users"
             >
               <div
                 className={`p-2 rounded-full flex items-center justify-center text-xl 
@@ -109,13 +109,13 @@ const AdminNavigations = () => {
 
           <li>
             <Link
-              href="/admin-dashboard/manage-admins"
               className={`flex items-center space-x-4 p-2 rounded-full transition-colors duration-200 
                 ${
                   pathName === "/admin-dashboard/manage-admins"
                     ? "bg-blue-500 text-white hover:bg-blue-600"
                     : "text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700"
                 }`}
+              href="/admin-dashboard/manage-admins"
             >
               <div
                 className={`p-2 rounded-full flex items-center justify-center text-xl 
@@ -139,13 +139,13 @@ const AdminNavigations = () => {
 
           <li>
             <Link
-              href="/admin-dashboard/payment-history"
               className={`flex items-center space-x-4 p-2 rounded-full transition-colors duration-200 
                 ${
                   pathName === "/admin-dashboard/payment-history"
                     ? "bg-blue-500 text-white hover:bg-blue-600"
                     : "text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700"
                 }`}
+              href="/admin-dashboard/payment-history"
             >
               <div
                 className={`p-2 rounded-full flex items-center justify-center text-xl 
@@ -169,13 +169,13 @@ const AdminNavigations = () => {
 
           <li>
             <Link
-              href="/"
               className={`flex items-center space-x-4 p-2 rounded-full transition-colors duration-200 
                 ${
                   pathName === "/"
                     ? "bg-blue-500 text-white hover:bg-blue-600"
                     : "text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700"
                 }`}
+              href="/"
             >
               <div
                 className={`p-2 rounded-full flex items-center justify-center text-xl 
