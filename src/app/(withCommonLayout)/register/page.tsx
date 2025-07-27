@@ -29,48 +29,68 @@ export default function Register() {
   const onSubmit = async (data: FieldValues) => {
     setLoading(true);
 
-    const imageURL = await uploadImage(data.image);
+    try {
+      const imageFile = data.image?.[0];
+      if (!imageFile && !imagePreview) {
+        toast.error("Please select an image to upload.");
+        setLoading(false);
+        return;
+      }
 
-    if (!imageURL) {
-      toast.error("Image not uploaded");
+      const imageURL = imagePreview
+        ? await uploadImage(imageFile)
+        : await uploadImage(data.image[0]);
+
+      if (!imageURL) {
+        toast.error("Image upload failed. Please try again.");
+        setLoading(false);
+        return;
+      }
+
+      const userData = {
+        name: data.name,
+        email: data.email,
+        password: data.password,
+        image: imageURL,
+        role: "user",
+      };
+
+      const result: any = await signUp(userData);
+
+      if (result?.error) {
+        const errorMsg =
+          result.error.data?.message ||
+          result.error.error ||
+          "Registration failed. Please try again.";
+        toast.error(errorMsg);
+        setLoading(false);
+        return;
+      }
+
+      if (result?.data?.success) {
+        toast.success("Registered Successfully! Please Login");
+        router.push("/login");
+      } else {
+        toast.error("Something went wrong. Please try again.");
+      }
+    } catch (err: any) {
+      toast.error("Unexpected error occurred. Please try again.");
+    } finally {
       setLoading(false);
-
-      return;
     }
-
-    const userData = {
-      ...data,
-      role: "user",
-      image: imageURL,
-    };
-
-    const result: any = await signUp({
-      ...userData,
-      role: "user",
-    });
-
-    if (result?.error?.data?.message) {
-      toast.error("Email is already exist");
-      setLoading(false);
-
-      return;
-    } else if (result?.data?.success) {
-      toast.success("Registered Successfully! Please Login");
-      router.push("/login");
-    }
-    setLoading(false);
   };
-
   const handleImageChange = (e: ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
-
     if (file) {
       const reader = new FileReader();
-
       reader.onloadend = () => {
         setImagePreview(reader.result as string);
       };
       reader.readAsDataURL(file);
+
+      // Set the value for react-hook-form
+      const setValue = register("image").onChange; // Get the onChange from register
+      setValue(e);
     } else {
       setImagePreview("");
     }
@@ -92,7 +112,7 @@ export default function Register() {
               <div className="relative flex items-center">
                 <input
                   className="w-full py-3 pl-12 pr-4 outline-none border border-gray-300 dark:border-gray-600 rounded-xl bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors duration-200 placeholder-gray-400 dark:placeholder-gray-300"
-                  placeholder="Your Name"
+                  placeholder="Testa Model X"
                   type="text"
                   {...register("name", {
                     required: true,
@@ -108,9 +128,9 @@ export default function Register() {
                 <span className="text-red-500 text-sm mt-1 block">
                   {errors.name.type === "required" && "Name is required"}
                   {errors.name.type === "minLength" &&
-                    "Name Must Have 3 Characters"}
+                    "Name must have at least 3 characters"}
                   {errors.name.type === "maxLength" &&
-                    "Name Maximum 20 Characters"}
+                    "Name must be less than 20 characters"}
                 </span>
               )}
             </div>
@@ -120,7 +140,7 @@ export default function Register() {
               <div className="relative flex items-center">
                 <input
                   className="w-full py-3 pl-12 pr-4 outline-none border border-gray-300 dark:border-gray-600 rounded-xl bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors duration-200 placeholder-gray-400 dark:placeholder-gray-300"
-                  placeholder="Email"
+                  placeholder="ok@example.com"
                   type="email"
                   {...register("email", {
                     required: true,
@@ -136,7 +156,7 @@ export default function Register() {
                 <span className="text-red-500 text-sm mt-1 block">
                   {errors.email.type === "required" && "Email is required"}
                   {errors.email.type === "pattern" &&
-                    "Please input a valid email"}
+                    "Please enter a valid email"}
                 </span>
               )}
             </div>
@@ -150,8 +170,7 @@ export default function Register() {
                   type="password"
                   {...register("password", {
                     required: true,
-                    pattern:
-                      /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[#$@!%&*?])[A-Za-z\d#$@!%&*?]{6,8}$/,
+                    minLength: 6,
                   })}
                 />
                 <span className="text-xl absolute left-4 text-gray-500 dark:text-gray-400">
@@ -162,13 +181,13 @@ export default function Register() {
                 <span className="text-red-500 text-sm mt-1 block">
                   {errors.password.type === "required" &&
                     "Password is required"}
-                  {errors.password.type === "pattern" &&
-                    "Min 1 uppercase, 1 lowercase, 1 special char, 1 number, 6-8 chars."}
+                  {errors.password.type === "minLength" &&
+                    "Password must be at least 6 characters"}
                 </span>
               )}
             </div>
 
-            {/* Image Upload with Remove Option */}
+            {/* Image Upload */}
             <div>
               <div className="relative flex flex-col items-center justify-center border border-gray-300 dark:border-gray-600 rounded-xl bg-white dark:bg-gray-700 transition-colors duration-200 overflow-hidden p-4">
                 {imagePreview ? (
@@ -186,10 +205,14 @@ export default function Register() {
                       onClick={() => {
                         setImagePreview("");
                         const fileInput = document.getElementById(
-                          "image-upload",
+                          "image-upload"
                         ) as HTMLInputElement;
-
-                        if (fileInput) fileInput.value = ""; // Reset input
+                        if (fileInput) {
+                          fileInput.value = "";
+                          // Also clear the form value
+                          const setValue = register("image").onChange;
+                          setValue({ target: { files: [] } } as any);
+                        }
                       }}
                     >
                       Remove Image
@@ -206,21 +229,24 @@ export default function Register() {
                     </span>
                   </label>
                 )}
-
-                {/* Hidden File Input */}
                 <input
                   id="image-upload"
-                  {...register("image", { required: true })}
+                  {...register("image", {
+                    required: "Image is required",
+                    validate: {
+                      fileExists: (files) =>
+                        files?.length > 0 || "Image is required",
+                    },
+                  })}
                   accept="image/*"
                   className="hidden"
                   type="file"
                   onChange={handleImageChange}
                 />
               </div>
-
               {errors.image && (
                 <span className="text-red-500 text-sm mt-1 block">
-                  {errors.image.type === "required" && "Image is required"}
+                  {errors.image.message as string}
                 </span>
               )}
             </div>
@@ -233,7 +259,7 @@ export default function Register() {
                   type="checkbox"
                   {...register("terms", { required: true })}
                 />
-                I agree to the Terms and Conditions
+                Agree to the Terms and Conditions
               </label>
               {errors.terms && (
                 <span className="text-red-500 text-sm mt-1 block">
@@ -243,7 +269,7 @@ export default function Register() {
               )}
             </div>
 
-            {/* Submit Button */}
+            {/* Submit */}
             <div>
               <button
                 className="w-full justify-center py-3 px-4 text-base font-semibold rounded-full text-white bg-blue-500 hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition-colors duration-200 dark:bg-blue-600 dark:hover:bg-blue-700 disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-2"
@@ -252,7 +278,6 @@ export default function Register() {
               >
                 {loading ? (
                   <ClipLoader
-                    aria-label="Loading Spinner"
                     color="#ffffff"
                     loading={loading}
                     size={25}

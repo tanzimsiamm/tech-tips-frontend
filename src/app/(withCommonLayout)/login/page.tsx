@@ -80,7 +80,7 @@ export default function Login({ setOpen }: TProps) {
                 onClick={() =>
                   setDemoUser({
                     email: "demoUser@gmail.com",
-                    password: "12345En$",
+                    password: "1234567",
                   })
                 }
               >
@@ -91,7 +91,7 @@ export default function Login({ setOpen }: TProps) {
                 onClick={() =>
                   setDemoUser({
                     email: "demoAdmin@gmail.com",
-                    password: "12345En$",
+                    password: "1234567",
                   })
                 }
               >
