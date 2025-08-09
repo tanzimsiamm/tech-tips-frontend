@@ -1,21 +1,19 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
-"use client";
 
 import Image from "next/image";
 import { RiUserUnfollowLine } from "react-icons/ri";
-import { toast } from "sonner";
-import { ClipLoader } from "react-spinners";
-import { FaUserPlus } from "react-icons/fa6";
-import Link from "next/link";
-import { usePathname } from "next/navigation";
-
-import { useAppSelector } from "@/src/redux/hooks";
 import {
   useFollowUserMutation,
   useGetSingleUserQuery,
   useGetUsersQuery,
   useUnFollowUserMutation,
 } from "@/src/redux/features/user/userApi";
+import { useAppSelector } from "@/src/redux/hooks";
+import { toast } from "sonner";
+import { ClipLoader } from "react-spinners";
+import { FaUserPlus } from "react-icons/fa6";
+import Link from "next/link";
+import { usePathname } from "next/navigation";
 import { useSendNotificationMutation } from "@/src/redux/features/notification/notificationApi";
 import { TUser } from "@/src/types";
 
@@ -24,52 +22,54 @@ const RightSidebar = () => {
   const { data } = useGetSingleUserQuery(loggedUser?.email as string);
   const { data: allUserData } = useGetUsersQuery({ role: "user" });
 
+  // notifications dispatcher
   const [sendNotification, { isSuccess }] = useSendNotificationMutation();
 
-  const userDetails: TUser = data?.data || {
-    _id: "",
-    name: "",
-    email: "",
-    role: "",
-    image: "",
-    followers: [],
-    following: [],
-    memberShip: null,
-  };
+  const userDetails: TUser = data?.data || {};
 
+  // get the route for displaying the rightsidebar conditionally
   const pathName = usePathname();
 
+  // follow and unfollow
   const [followUser, { isLoading: followLoading }] = useFollowUserMutation();
   const [unfollowUser, { isLoading: unFollowLoading }] =
     useUnFollowUserMutation();
 
+  // remove the users who the logged user followed
   const totalUsers: TUser[] = allUserData?.data || [];
+  const filterUsers: TUser[] = totalUsers
+    .filter((user: TUser) => {
+      const result = userDetails?.following?.find(
+        (followingUser) => user?.email === followingUser?.email
+      );
 
-  // Find full user objects for the following list
-  const followingUsers =
-    userDetails?.following
-      ?.map((followingId) => {
-        return totalUsers.find((user) => user._id === followingId);
-      })
-      .filter((user): user is TUser => user !== undefined) || [];
+      if (!result) {
+        return user;
+      }
+      //    remove the logged user from the other users
+    })
+    .filter((user: TUser) => user.email !== loggedUser?.email);
 
-  const filterUsers: TUser[] = totalUsers.filter((user: TUser) => {
-    const isFollowing = followingUsers.some(
-      (followingUser) => user?._id === followingUser?._id,
-    );
+  const { email, image, memberShip, name, coverImg, followers, following } =
+    userDetails;
 
-    return !isFollowing && user.email !== loggedUser?.email;
-  });
-
-  const handleFollow = async (targetedId: string) => {
+  const handleFollow = async (targetedId) => {
     try {
-      const response: any = await followUser({
+      const response = await followUser({
         userId: loggedUser?._id as string,
         targetedUserId: targetedId,
       });
-
-      if (response?.data?.success) {
+      if (response?.success) {
         toast.success("You followed the user");
+
+        //   await sendNotification({
+        //     userEmail : authorInfo?.authorEmail,
+        //     text : `${loggedUser?.name} followed you!`,
+        //     commentedUserPic : user?.image as string,
+        //     commentedUser : user?.name as string,
+        //     date : new Date().toISOString(),
+        //     isRead : false,
+        // })
       }
     } catch (error) {
       toast.error("Something went wrong");
@@ -77,14 +77,13 @@ const RightSidebar = () => {
     }
   };
 
-  const handleUnfollow = async (targetedId: string) => {
+  const handleUnfollow = async (targetedId) => {
     try {
-      const response: any = await unfollowUser({
+      const response = await unfollowUser({
         userId: loggedUser?._id as string,
         targetedUserId: targetedId,
       });
-
-      if (response?.data?.success) {
+      if (response?.success) {
         toast.success("You unfollowed the user");
       }
     } catch (error) {
@@ -95,115 +94,119 @@ const RightSidebar = () => {
 
   return (
     <>
-      {(pathName?.includes("profile") || pathName === "/") && loggedUser && (
-        <div className="w-full lg:w-64 xl:w-72 space-y-4">
-          {followingUsers?.length > 0 && (
-            <div className="bg-white dark:bg-gray-800 p-4 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700">
-              <h2 className="text-lg font-bold text-gray-900 dark:text-white mb-4">
-                Following ({followingUsers?.length})
+      {(pathName?.includes("profile") || pathName === "/") && (
+        <>
+          <div className=" lg:w-60 xl:w-72  space-y-4 ">
+            {/* Following Section */}
+
+            {following?.length ? (
+              <div className="bg-white dark:bg-gray-800 p-4 rounded-lg ">
+                <h2 className="xl:text-lg text-gray-500 dark:text-gray-300 font-semibold mb-4">
+                  Following ({following?.length})
+                </h2>
+
+                <div className="space-y-4 max-h-64 overflow-y-scroll scrollbar-hide relative">
+                  {unFollowLoading && (
+                    <div className="w-full h-full absolute top-0 left-0 z-50 right-0 bottom-0 bg-white/80 dark:bg-gray-800/90 rounded-md flex justify-center items-center">
+                      <ClipLoader
+                        color="#3B82F6"
+                        size={38}
+                        aria-label="Loading Spinner"
+                        speedMultiplier={0.8}
+                      />
+                    </div>
+                  )}
+
+                  {following?.map((user) => (
+                    <div
+                      key={user?._id}
+                      className="flex items-center lg:space-x-2 xl:space-x-4 pb-2 border-b dark:border-gray-700 "
+                    >
+                      <Link href={`/profile/${user?.email}`}>
+                        <div className="size-9 xl:size-11 ">
+                          <Image
+                            width={50}
+                            height={50}
+                            src={user?.image}
+                            alt={user?.name}
+                            className=" w-full h-full rounded-full object-cover"
+                          />
+                        </div>
+                      </Link>
+
+                      <div className="w-full flex items-center justify-between gap-3">
+                        <p className="font-medium text-gray-500 dark:text-gray-300">
+                          {user?.name}
+                        </p>
+
+                        <button
+                          onClick={() => handleUnfollow(user?._id)}
+                          className=" bg-gray-200 hover:bg-gray-300  text-gray-600 py-1 lg:px-1 xl:px-2 rounded-md lg:text-sm xl:text-base font-semibold flex items-center gap-1 justify-center"
+                        >
+                          <RiUserUnfollowLine />
+                          Unfollow
+                        </button>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            ) : (
+              ""
+            )}
+
+            {/* All other users  */}
+            <div className="rounded-lg  bg-white dark:bg-gray-800 p-4">
+              <h2 className="xl:text-lg text-gray-500 dark:text-gray-300 font-semibold mb-4  ">
+                People you can follow
               </h2>
-              <div className="space-y-4 max-h-64 overflow-y-auto scrollbar-hide relative">
-                {unFollowLoading && (
-                  <div className="absolute inset-0 z-10 bg-white/80 dark:bg-gray-800/90 rounded-xl flex justify-center items-center">
+
+              <div className="space-y-4 max-h-[525px] overflow-y-scroll scrollbar-hide relative">
+                {followLoading && (
+                  <div className="w-full h-full absolute top-0 left-0 z-50 right-0 bottom-0 bg-white/80 dark:bg-gray-800/90  rounded-md flex justify-center items-center">
                     <ClipLoader
-                      aria-label="Loading Spinner"
                       color="#3B82F6"
                       size={38}
+                      aria-label="Loading Spinner"
                       speedMultiplier={0.8}
                     />
                   </div>
                 )}
-                {followingUsers?.map((user) => (
+
+                {filterUsers?.map((user: TUser) => (
                   <div
                     key={user?._id}
-                    className="flex items-center justify-between pb-3 border-b border-gray-100 dark:border-gray-700 last:border-b-0 last:pb-0"
+                    className="flex items-center lg:space-x-2 xl:space-x-4 pb-2 border-b dark:border-gray-700 "
                   >
-                    <Link
-                      className="flex items-center space-x-3 group"
-                      href={`/profile/${user?.email}`}
-                    >
-                      <div className="size-10 flex-shrink-0">
+                    <Link href={`/profile/${user?.email}`}>
+                      <div className="size-9 xl:size-11 ">
                         <Image
-                          alt={user?.name || "User"}
-                          className="w-full h-full rounded-full object-cover border border-gray-300 dark:border-gray-600 group-hover:scale-105 transition-transform duration-200"
-                          height={40}
-                          src={
-                            user?.image ||
-                            "https://i.ibb.co/VtP9tF6/default-user-image.png"
-                          }
-                          width={40}
+                          width={50}
+                          height={50}
+                          src={user?.image}
+                          alt={user?.name}
+                          className=" w-full h-full rounded-full object-cover"
                         />
                       </div>
-                      <p className="font-medium text-gray-800 dark:text-gray-200 group-hover:text-blue-500 dark:group-hover:text-blue-400 transition-colors duration-200">
+                    </Link>
+                    <div className="w-full flex items-center justify-between gap-3">
+                      <p className="font-medium text-gray-500 dark:text-gray-300">
                         {user?.name}
                       </p>
-                    </Link>
-                    <button
-                      className="bg-gray-100 dark:bg-gray-700 hover:bg-gray-200 dark:hover:bg-gray-600 text-gray-700 dark:text-gray-300 py-1 px-3 rounded-full text-sm font-semibold flex items-center gap-1 justify-center transition-colors duration-200"
-                      disabled={unFollowLoading}
-                      onClick={() => handleUnfollow(user?._id as string)}
-                    >
-                      <RiUserUnfollowLine />
-                      Unfollow
-                    </button>
+
+                      <button
+                        onClick={() => handleFollow(user?._id)}
+                        className=" bg-blue-500 hover:bg-blue-600 dark:bg-blue-600 dark:hover:bg-blue-700 text-white py-1 px-2 xl:px-3 rounded-md lg:text-sm xl:text-base font-semibold flex items-center gap-1 justify-center"
+                      >
+                        <FaUserPlus /> Follow
+                      </button>
+                    </div>
                   </div>
                 ))}
               </div>
             </div>
-          )}
-
-          <div className="rounded-xl bg-white dark:bg-gray-800 p-4 shadow-sm border border-gray-200 dark:border-gray-700">
-            <h2 className="text-lg font-bold text-gray-900 dark:text-white mb-4">
-              People you can follow
-            </h2>
-            <div className="space-y-4 max-h-[525px] overflow-y-auto scrollbar-hide relative">
-              {followLoading && (
-                <div className="absolute inset-0 z-10 bg-white/80 dark:bg-gray-800/90 rounded-xl flex justify-center items-center">
-                  <ClipLoader
-                    aria-label="Loading Spinner"
-                    color="#3B82F6"
-                    size={38}
-                    speedMultiplier={0.8}
-                  />
-                </div>
-              )}
-              {filterUsers?.map((user: TUser) => (
-                <div
-                  key={user?._id}
-                  className="flex items-center justify-between pb-3 border-b border-gray-100 dark:border-gray-700 last:border-b-0 last:pb-0"
-                >
-                  <Link
-                    className="flex items-center space-x-3 group"
-                    href={`/profile/${user?.email}`}
-                  >
-                    <div className="size-10 flex-shrink-0">
-                      <Image
-                        alt={user?.name || "User"}
-                        className="w-full h-full rounded-full object-cover border border-gray-300 dark:border-gray-600 group-hover:scale-105 transition-transform duration-200"
-                        height={40}
-                        src={
-                          user?.image ||
-                          "https://i.ibb.co/VtP9tF6/default-user-image.png"
-                        }
-                        width={40}
-                      />
-                    </div>
-                    <p className="font-medium text-gray-800 dark:text-gray-200 group-hover:text-blue-500 dark:group-hover:text-blue-400 transition-colors duration-200">
-                      {user?.name}
-                    </p>
-                  </Link>
-                  <button
-                    className="bg-blue-500 hover:bg-blue-600 dark:bg-blue-600 dark:hover:bg-blue-700 text-white py-1 px-3 rounded-full text-sm font-semibold flex items-center gap-1 justify-center transition-colors duration-200"
-                    disabled={followLoading}
-                    onClick={() => handleFollow(user?._id as string)}
-                  >
-                    <FaUserPlus /> Follow
-                  </button>
-                </div>
-              ))}
-            </div>
           </div>
-        </div>
+        </>
       )}
     </>
   );

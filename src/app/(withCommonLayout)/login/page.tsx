@@ -67,16 +67,16 @@ export default function Login({ setOpen }: TProps) {
   };
 
   return (
-    <div className="flex flex-col items-center justify-center p-4 min-h-[600px] md:min-h-[600px] bg-white dark:bg-gray-800 rounded-lg shadow-xl border border-gray-200 dark:border-gray-700">
+    <div className="flex flex-col items-center justify-center p-4 h-full bg-white dark:bg-gray-800 rounded-lg shadow-xl border border-gray-200 dark:border-gray-700">
       <div className="w-full max-w-lg p-0">
         <div className="text-center mb-6">
-          <div className="border rounded-xl p-2 bg-yellow-100 dark:bg-yellow-800 text-yellow-800 dark:text-yellow-200 border-yellow-300 dark:border-yellow-700 mb-6">
+          <div className="border rounded-xl p-2 bg-gray-100 dark:bg-gray-700 text-gray-800 dark:text-gray-200 border-gray-300 dark:border-gray-600 mb-6">
             <h1 className="text-lg lg:text-xl font-bold mb-2">
               Login With Demo For Testing
             </h1>
             <div className="flex flex-wrap items-center justify-center gap-4">
               <button
-                className="bg-yellow-500 hover:bg-yellow-600 p-2 rounded-full text-sm lg:text-base text-black font-semibold transition-colors duration-200 w-full sm:w-auto px-4"
+                className="bg-blue-500 hover:bg-blue-600 p-2 rounded-full text-sm lg:text-base text-white font-semibold transition-colors duration-200 w-full sm:w-auto px-4"
                 onClick={() =>
                   setDemoUser({
                     email: "demoUser@gmail.com",
@@ -87,7 +87,7 @@ export default function Login({ setOpen }: TProps) {
                 Login As User
               </button>
               <button
-                className="bg-yellow-500 hover:bg-yellow-600 p-2 rounded-full text-sm lg:text-base text-black font-semibold transition-colors duration-200 w-full sm:w-auto px-4"
+                className="bg-blue-500 hover:bg-blue-600 p-2 rounded-full text-sm lg:text-base text-white font-semibold transition-colors duration-200 w-full sm:w-auto px-4"
                 onClick={() =>
                   setDemoUser({
                     email: "demoAdmin@gmail.com",

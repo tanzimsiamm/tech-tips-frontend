@@ -8,7 +8,7 @@ import { useRef, useState } from "react";
 import Image from "next/image";
 import TimeAgo from "react-timeago";
 import { IoSendSharp } from "react-icons/io5";
-import { useForm } from "react-hook-form"; // Ensure useForm is imported
+import { useForm } from "react-hook-form";
 import { toast } from "sonner";
 import { ClipLoader } from "react-spinners";
 import { BiCommentDetail } from "react-icons/bi";
@@ -18,7 +18,7 @@ import { useReactToPrint } from "react-to-print";
 import { AiFillPrinter } from "react-icons/ai";
 import { FaPen } from "react-icons/fa";
 import { useRouter } from "next/navigation";
-import React from "react"; // Ensure React is imported for React.ChangeEvent
+import React from "react";
 
 import ImageGallery from "./ImageGallary";
 import VoteSection from "./VoteSection";
@@ -164,11 +164,10 @@ export default function PostCard({ post }: { post: TPost }) {
   };
 
   return (
-    // Make the entire card clickable, except for interactive elements
+    // Card container - removed the onClick and cursor-pointer
     <div
       ref={contentRef}
-      className="bg-white dark:bg-gray-800 rounded-xl shadow-sm p-4 sm:p-6 w-full mx-auto mb-4 border border-gray-200 dark:border-gray-700 cursor-pointer"
-      onClick={() => router.push(`/details/${_id}`)} // Navigate to details on card click
+      className="bg-white dark:bg-gray-800 rounded-xl shadow-sm p-4 sm:p-6 w-full mx-auto mb-4 border border-gray-200 dark:border-gray-700"
     >
       {openEditCommentModal && (
         <EditCommentModal
@@ -177,11 +176,13 @@ export default function PostCard({ post }: { post: TPost }) {
         />
       )}
 
-      <div className="flex items-start justify-between mb-4">
+      {/* This is the new clickable section - it now handles navigation */}
+      <div
+        className="flex items-start justify-between mb-4 cursor-pointer"
+        onClick={() => router.push(`/details/${_id}`)}
+      >
         <div className="flex items-center">
           <section className="group relative mr-3" onClick={stopPropagation}>
-            {" "}
-            {/* Stop propagation */}
             <Link href={`/profile/${authorInfo?.authorEmail}`}>
               <Image
                 alt="User Avatar"
@@ -201,7 +202,7 @@ export default function PostCard({ post }: { post: TPost }) {
             <Link
               className="font-bold text-gray-900 dark:text-white hover:underline text-lg"
               href={`/profile/${authorInfo?.authorEmail}`}
-              onClick={stopPropagation} // Stop propagation
+              onClick={stopPropagation}
             >
               {authorInfo?.name}
             </Link>
@@ -218,8 +219,6 @@ export default function PostCard({ post }: { post: TPost }) {
           className="flex items-center space-x-3 text-gray-600 dark:text-gray-400"
           onClick={stopPropagation}
         >
-          {" "}
-          {/* Stop propagation */}
           {isPremium && (
             <MdStars
               className="text-blue-500 text-2xl"
@@ -242,11 +241,12 @@ export default function PostCard({ post }: { post: TPost }) {
       />
 
       {images && images.length > 0 && (
-        <div /* Removed onClick here, as the parent div handles navigation */>
+        <div /* No onClick here */>
           <ImageGallery images={images} />
         </div>
       )}
 
+      {/* The rest of the card remains the same, with interactive elements stopping propagation */}
       <div className="flex justify-between items-center mt-4 pt-3 border-t border-gray-200 dark:border-gray-700">
         <div className="flex items-center space-x-6 text-gray-600 dark:text-gray-400">
           <VoteSection
@@ -259,7 +259,7 @@ export default function PostCard({ post }: { post: TPost }) {
           <Link
             className="flex items-center space-x-2 text-gray-600 dark:text-gray-400 hover:text-blue-500 dark:hover:text-blue-400 transition-colors duration-200"
             href={`/details/${_id}#comments`}
-            onClick={stopPropagation} // Stop propagation
+            onClick={stopPropagation}
           >
             <BiCommentDetail className="text-xl" />
             <span className="font-semibold">{comments?.length || 0}</span>
@@ -277,7 +277,7 @@ export default function PostCard({ post }: { post: TPost }) {
       <div className="flex flex-col space-y-4 mt-6 pt-4 border-t border-gray-100 dark:border-gray-700 relative">
         <h4
           className="font-semibold text-gray-700 dark:text-gray-300 cursor-pointer hover:text-blue-500 dark:hover:text-blue-400"
-          onClick={() => router.push(`/details/${_id}#comments`)} // Explicit link to comments section
+          onClick={() => router.push(`/details/${_id}#comments`)}
         >
           View all {comments?.length} comments
         </h4>
@@ -299,8 +299,6 @@ export default function PostCard({ post }: { post: TPost }) {
               href={`/profile/${comment?.userInfo?.email}`}
               onClick={stopPropagation}
             >
-              {" "}
-              {/* Stop propagation */}
               <Image
                 alt={comment?.userInfo?.name || "User"}
                 className="size-10 rounded-full object-cover border border-gray-200 dark:border-gray-600"
@@ -325,8 +323,6 @@ export default function PostCard({ post }: { post: TPost }) {
                       className="flex space-x-2 opacity-0 group-hover:opacity-100 transition-opacity duration-200"
                       onClick={stopPropagation}
                     >
-                      {" "}
-                      {/* Stop propagation */}
                       <button
                         className="text-gray-500 hover:text-blue-500 dark:hover:text-blue-400 transition-colors"
                         title="Edit Comment"
@@ -354,7 +350,6 @@ export default function PostCard({ post }: { post: TPost }) {
                 </p>
               </div>
 
-              {/* REMOVED: Like and Reply options from comments as requested */}
               <div className="flex items-center space-x-4 text-gray-500 dark:text-gray-400 text-xs mt-1 ml-2">
                 <span className="font-medium">
                   {comment.createdAt && <TimeAgo date={comment.createdAt} />}
@@ -368,7 +363,7 @@ export default function PostCard({ post }: { post: TPost }) {
       {user && (
         <form
           className="flex items-center gap-3 mt-6 pt-4 border-t border-gray-100 dark:border-gray-700"
-          onClick={stopPropagation} // Stop propagation for the form itself
+          onClick={stopPropagation}
           onSubmit={handleSubmit(onSubmit)}
         >
           <div>
@@ -393,12 +388,11 @@ export default function PostCard({ post }: { post: TPost }) {
                 e.target.style.height = "auto";
                 e.target.style.height = e.target.scrollHeight + "px";
               }}
-              onKeyDown={handleKeyDown} // Add onKeyDown for Enter submission
+              onKeyDown={handleKeyDown}
             />
             <button
               type="submit"
               className="absolute right-3 top-1/2 -translate-y-1/2 text-blue-500 hover:text-blue-600 dark:hover:text-blue-400 transition-colors duration-200 disabled:opacity-50 disabled:cursor-not-allowed"
-              // Disable if loading, or if the comment value is empty or just whitespace
               disabled={
                 addLoading || !newCommentValue || newCommentValue.trim() === ""
               }

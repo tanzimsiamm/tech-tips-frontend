@@ -1,67 +1,85 @@
 "use client";
-import { Editor } from "@tinymce/tinymce-react";
-import { useEffect, useState } from "react";
+import { useEffect, useRef } from "react";
 
 type TProps = {
   description?: string;
   setLatestDescription: React.Dispatch<React.SetStateAction<string>>;
 };
 
-const TextEditor = ({ description = "", setLatestDescription }: TProps) => {
-  const [isDarkMode, setIsDarkMode] = useState(false);
+export default function TextEditor({
+  description = "",
+  setLatestDescription,
+}: TProps) {
+  const editorRef = useRef<HTMLDivElement>(null);
 
+  // Update parent when content changes
+  const handleInput = () => {
+    setLatestDescription(editorRef.current?.innerHTML || "");
+  };
+
+  // Load initial content
   useEffect(() => {
-    const darkModeQuery = window.matchMedia("(prefers-color-scheme: dark)");
+    if (editorRef.current) {
+      editorRef.current.innerHTML = description || "";
+    }
+  }, [description]);
 
-    setIsDarkMode(darkModeQuery.matches);
-
-    const handleSystemThemeChange = (e: MediaQueryListEvent) =>
-      setIsDarkMode(e.matches);
-
-    darkModeQuery.addEventListener("change", handleSystemThemeChange);
-
-    return () =>
-      darkModeQuery.removeEventListener("change", handleSystemThemeChange);
-  }, []);
-
-  const handleEditorChange = (content: string) => {
-    setLatestDescription(content);
+  // Simple toolbar action handler
+  const format = (command: string, value?: string) => {
+    document.execCommand(command, false, value);
+    handleInput();
   };
 
   return (
-    <div className="w-full rounded-xl overflow-hidden border border-gray-300 dark:border-gray-600 focus-within:ring-2 focus-within:ring-blue-500 focus-within:border-blue-500 transition-all duration-200">
-      <Editor
-        apiKey="hse6jdzajyfw0s5hi3mxyt9ko0jbem1m7hgcyaqlwaymmany"
-        init={{
-          height: 250,
-          menubar: false,
-          plugins: [
-            "advlist autolink lists link image charmap preview anchor",
-            "searchreplace visualblocks code fullscreen",
-            "insertdatetime media table paste help wordcount",
-          ],
-          toolbar:
-            "undo redo | formatselect | bold italic backcolor | \
-            alignleft aligncenter alignright alignjustify | \
-            bullist numlist outdent indent | removeformat | help",
-          skin: isDarkMode ? "oxide-dark" : "oxide",
-          content_css: isDarkMode ? "dark" : "default",
-          content_style: `
-            body { 
-              font-family: 'Inter', sans-serif; 
-              font-size: 14px; 
-              color: ${isDarkMode ? "#E5E7EB" : "#1F2937"}; /* Tailwind gray-200 / gray-900 */
-            }
-            .mce-content-body[data-mce-placeholder]:not(.mce-visualblocks)::before {
-              color: ${isDarkMode ? "#9CA3AF" : "#6B7280"} !important; /* Tailwind gray-400 / gray-500 */
-            }
-          `,
-        }}
-        initialValue={`<p>${description || "Start writing your tech tip here..."}</p>`}
-        onEditorChange={handleEditorChange}
+    <div className="w-full border border-gray-300 dark:border-gray-600 rounded-xl overflow-hidden">
+      {/* Toolbar */}
+      <div className="flex flex-wrap gap-2 p-2 bg-gray-100 dark:bg-gray-700 border-b border-gray-300 dark:border-gray-600">
+        <button
+          type="button"
+          onClick={() => format("bold")}
+          className="px-2 py-1 bg-white dark:bg-gray-600 rounded hover:bg-gray-200 dark:hover:bg-gray-500"
+        >
+          <b>B</b>
+        </button>
+        <button
+          type="button"
+          onClick={() => format("italic")}
+          className="px-2 py-1 bg-white dark:bg-gray-600 rounded italic hover:bg-gray-200 dark:hover:bg-gray-500"
+        >
+          I
+        </button>
+        <button
+          type="button"
+          onClick={() => format("underline")}
+          className="px-2 py-1 bg-white dark:bg-gray-600 rounded underline hover:bg-gray-200 dark:hover:bg-gray-500"
+        >
+          U
+        </button>
+        <button
+          type="button"
+          onClick={() => format("insertUnorderedList")}
+          className="px-2 py-1 bg-white dark:bg-gray-600 rounded hover:bg-gray-200 dark:hover:bg-gray-500"
+        >
+          • List
+        </button>
+        <button
+          type="button"
+          onClick={() => format("createLink", prompt("Enter URL") || "")}
+          className="px-2 py-1 bg-white dark:bg-gray-600 rounded hover:bg-gray-200 dark:hover:bg-gray-500"
+        >
+          🔗 Link
+        </button>
+      </div>
+
+      {/* Editable area */}
+      <div
+        ref={editorRef}
+        contentEditable
+        suppressContentEditableWarning
+        onInput={handleInput}
+        className="min-h-[200px] p-3 bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100 focus:outline-none placeholder-editor"
+        data-placeholder="Start writing your post here..."
       />
     </div>
   );
-};
-
-export default TextEditor;
+}
