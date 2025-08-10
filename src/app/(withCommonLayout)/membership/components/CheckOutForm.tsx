@@ -1,7 +1,7 @@
 "use client";
 
 import { CardElement, useElements, useStripe } from "@stripe/react-stripe-js";
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 import { ClipLoader } from "react-spinners";
 import { toast } from "sonner";
 
@@ -10,11 +10,20 @@ import { useSavePaymentMutation } from "@/src/redux/features/payment/paymentApi"
 import { useUpdateUserMutation } from "@/src/redux/features/user/userApi";
 import envConfig from "@/src/config/envConfig";
 
+type MembersShipType = {
+  name?: string;
+  price?: number;
+  description?: string;
+  colorClass?: string;
+  features?: string[];
+  [k: string]: any;
+};
+
 export default function CheckoutForm({
   membersShip,
   setOpen,
 }: {
-  membersShip: { name: string; price: number };
+  membersShip: MembersShipType;
   setOpen: React.Dispatch<React.SetStateAction<boolean>>;
 }) {
   const [savePayment] = useSavePaymentMutation();
@@ -24,135 +33,205 @@ export default function CheckoutForm({
   const [loading, setLoading] = useState(false);
 
   const [clientSecret, setClientSecret] = useState<string | null>(null);
+  const [fetchError, setFetchError] = useState<string | null>(null);
   const stripe = useStripe();
   const elements = useElements();
+  const mountedRef = useRef(true);
 
   useEffect(() => {
-    if (membersShip?.price) {
-      fetch(`${envConfig.baseApi}/payments/create-payment-intent`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ totalCost: membersShip.price, currency: "usd" }),
-      })
-        .then((data) => data.json())
-        .then((res) => {
-          if (res.data?.clientSecret) {
-            setClientSecret(res.data.clientSecret);
-          } else {
-            toast.error("Failed to get client secret. Please try again.");
-            setOpen(false);
-          }
-        })
-        .catch((err) => {
-          // console.error("Error fetching client secret:", err); // Removed console.error
-          toast.error("Error connecting to payment gateway.");
-          setOpen(false);
-        });
-    }
-  }, [membersShip?.price, setOpen]);
+    mountedRef.current = true;
+    const controller = new AbortController();
 
-  const handleSubmit = async (e: any) => {
+    async function createPaymentIntent() {
+      if (!membersShip?.price) {
+        setClientSecret(null);
+        return;
+      }
+
+      setFetchError(null);
+      setClientSecret(null);
+
+      try {
+        const resp = await fetch(
+          `${envConfig.baseApi}/payments/create-payment-intent`,
+          {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify({
+              totalCost: membersShip.price,
+              currency: "usd",
+            }),
+            signal: controller.signal,
+          }
+        );
+
+        if (!resp.ok) {
+          // try to parse body for more info
+          let text = await resp.text().catch(() => "");
+          throw new Error(
+            `Payment server responded with status ${resp.status}: ${text}`
+          );
+        }
+
+        const res = await resp.json();
+
+        if (mountedRef.current) {
+          if (res?.data?.clientSecret) {
+            setClientSecret(res.data.clientSecret);
+            setFetchError(null);
+          } else {
+            // keep modal open but show an informative message
+            setClientSecret(null);
+            setFetchError(
+              "Failed to get client secret from payment server. Please check your Stripe backend configuration."
+            );
+            toast.error("Failed to get client secret. Payment not ready.");
+          }
+        }
+      } catch (err: any) {
+        if (controller.signal.aborted) return;
+        if (mountedRef.current) {
+          setClientSecret(null);
+          setFetchError(
+            "Error connecting to payment gateway. Please try again later."
+          );
+          toast.error("Error connecting to payment gateway.");
+          // you can log err to your server here if needed
+        }
+      }
+    }
+
+    createPaymentIntent();
+
+    return () => {
+      mountedRef.current = false;
+      controller.abort();
+    };
+  }, [membersShip?.price]);
+
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    if (loading) return;
     setLoading(true);
 
-    if (!stripe || !elements || !clientSecret) {
-      setLoading(false);
-      toast.error("Payment gateway not ready. Please try again.");
+    try {
+      if (!stripe || !elements) {
+        toast.error("Payment gateway not ready. Please try again.");
+        return;
+      }
 
-      return;
-    }
+      if (!clientSecret) {
+        toast.error("Payment is not initialized. Please try again later.");
+        return;
+      }
 
-    const card = elements.getElement(CardElement);
+      const card = elements.getElement(CardElement);
 
-    if (card === null) {
-      setLoading(false);
-      toast.error("Card details are missing.");
+      if (!card) {
+        toast.error("Card details are missing.");
+        return;
+      }
 
-      return;
-    }
-
-    const { paymentMethod, error: createPaymentMethodError } =
-      await stripe.createPaymentMethod({ type: "card", card });
-
-    if (createPaymentMethodError) {
-      setLoading(false);
-      toast.error(
-        createPaymentMethodError.message || "Failed to create payment method.",
-      );
-      // console.error(createPaymentMethodError); // Removed console.error
-
-      return;
-    }
-
-    const { paymentIntent, error: confirmError } =
-      await stripe.confirmCardPayment(clientSecret, {
-        payment_method: {
-          card: card,
+      // createPaymentMethod is optional; confirmCardPayment can take the card directly.
+      const { error: createPaymentMethodError } =
+        await stripe.createPaymentMethod({
+          type: "card",
+          card,
           billing_details: {
-            name: currentUser?.name,
-            email: currentUser?.email,
+            name: currentUser?.name ?? undefined,
+            email: currentUser?.email ?? undefined,
+          },
+        });
+
+      if (createPaymentMethodError) {
+        toast.error(
+          createPaymentMethodError.message || "Failed to create payment method."
+        );
+        return;
+      }
+
+      const {
+        paymentIntent,
+        error: confirmError,
+      }: any = await stripe.confirmCardPayment(clientSecret, {
+        payment_method: {
+          card,
+          billing_details: {
+            name: currentUser?.name ?? undefined,
+            email: currentUser?.email ?? undefined,
           },
         },
       });
 
-    if (confirmError) {
-      // console.error(confirmError); // Removed console.error
-      toast.error(confirmError.message || "Payment confirmation failed.");
-      setLoading(false);
-
-      return;
-    }
-
-    if (paymentIntent?.status === "succeeded") {
-      const today = new Date();
-
-      today.setDate(today.getDate() + 30);
-      const expiryMembershipDate = today.toISOString();
-
-      const payment = {
-        email: currentUser?.email,
-        cost: Number(membersShip.price),
-        membersShip: {
-          package: membersShip,
-          takenDate: new Date().toISOString(),
-          exp: expiryMembershipDate,
-        },
-        transactionId: paymentIntent.id,
-      };
-
-      const res: any = await savePayment(payment);
-
-      if (res.data?.success) {
-        await updateUser({
-          userId: currentUser?._id as string,
-          payload: {
-            memberShip: {
-              package: membersShip,
-              takenDate: new Date().toISOString(),
-              exp: expiryMembershipDate,
-            },
-          },
-        }).unwrap();
-
-        toast.success(`Successfully Purchased ${membersShip.name}`);
-        setLoading(false);
-        setOpen(false);
-      } else {
-        toast.error("Something went wrong saving payment info.");
-        setLoading(false);
+      if (confirmError) {
+        toast.error(confirmError.message || "Payment confirmation failed.");
+        return;
       }
-    } else {
-      toast.error(
-        "Payment was not successful. Status: " + paymentIntent?.status,
-      );
-      setLoading(false);
+
+      if (paymentIntent?.status === "succeeded") {
+        const today = new Date();
+        today.setDate(today.getDate() + 30);
+        const expiryMembershipDate = today.toISOString();
+
+        const payment = {
+          email: currentUser?.email,
+          cost: Number(membersShip?.price ?? 0),
+          membersShip: {
+            package: membersShip,
+            takenDate: new Date().toISOString(),
+            exp: expiryMembershipDate,
+          },
+          transactionId: paymentIntent.id,
+        };
+
+        const res: any = await savePayment(payment);
+
+        if (res?.data?.success) {
+          try {
+            await updateUser({
+              userId: currentUser?._id as string,
+              payload: {
+                memberShip: {
+                  package: membersShip,
+                  takenDate: new Date().toISOString(),
+                  exp: expiryMembershipDate,
+                },
+              },
+            }).unwrap();
+          } catch (updateErr) {
+            // If updating user fails, still consider payment succeeded but notify user
+            toast.error("Payment saved but failed to update user membership.");
+            setLoading(false);
+            setOpen(false);
+            return;
+          }
+
+          toast.success(`Successfully Purchased ${membersShip?.name ?? "plan"}`);
+          setOpen(false);
+        } else {
+          toast.error("Something went wrong saving payment info.");
+        }
+      } else {
+        toast.error("Payment was not successful. Status: " + paymentIntent?.status);
+      }
+    } catch (err: any) {
+      toast.error(err?.message || "Unexpected error during payment.");
+    } finally {
+      if (mountedRef.current) setLoading(false);
     }
   };
 
   return (
     <div className="p-4 bg-gray-50 dark:bg-gray-700 rounded-xl border border-gray-200 dark:border-gray-600">
+      {/* show helpful error when payment initialization failed */}
+      {fetchError && (
+        <div className="mb-4 p-3 rounded-md bg-yellow-50 dark:bg-yellow-900 text-yellow-800 dark:text-yellow-200 text-sm">
+          {fetchError}
+        </div>
+      )}
+
       <form className="space-y-6" onSubmit={handleSubmit}>
         <div className="p-4 border border-gray-300 dark:border-gray-600 rounded-xl bg-white dark:bg-gray-800">
           <CardElement
@@ -160,21 +239,15 @@ export default function CheckoutForm({
               style: {
                 base: {
                   fontSize: "16px",
-                  color: "#424770", // Default text color for light mode
+                  color: "#424770",
                   "::placeholder": {
-                    color: "#A0AEC0", // Tailwind gray-400
+                    color: "#A0AEC0",
                   },
-                  // Dark mode styles for CardElement
-                  // Note: Direct control over CardElement internal styles is limited.
-                  // This will apply to the wrapper. For internal elements, Stripe's theme handles it.
                 },
                 invalid: {
-                  color: "#EF4444", // Tailwind red-500
+                  color: "#EF4444",
                 },
               },
-              // Enable dark mode for Stripe elements if supported by Stripe.js
-              // This often needs to be configured when loading Stripe.js or in the Elements provider.
-              // For a simple toggle, you might need to re-render Elements with a new theme.
             }}
           />
         </div>
@@ -184,9 +257,11 @@ export default function CheckoutForm({
             className="px-6 py-2 text-base font-semibold rounded-full text-gray-700 dark:text-gray-300 bg-gray-200 dark:bg-gray-700 hover:bg-gray-300 dark:hover:bg-gray-600 transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-offset-2 dark:focus:ring-offset-gray-800"
             type="button"
             onClick={() => setOpen(false)}
+            disabled={loading}
           >
             Cancel
           </button>
+
           <button
             className="px-6 py-2 text-base font-semibold rounded-full text-white bg-blue-500 hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 dark:focus:ring-offset-gray-800 transition-colors duration-200 disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2"
             disabled={!stripe || !elements || !clientSecret || loading}

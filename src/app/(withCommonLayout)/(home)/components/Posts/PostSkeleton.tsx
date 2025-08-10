@@ -2,7 +2,7 @@ const PostSkeleton = () => {
   return (
     <div className="bg-white dark:bg-gray-800 rounded-xl shadow-sm p-4 sm:p-6 w-full mx-auto border border-gray-200 dark:border-gray-700 animate-pulse">
       <div className="flex items-start mb-4">
-        <div className="size-12 rounded-full bg-gray-200 dark:bg-gray-700 flex-shrink-0" />
+        <div className="w-12 h-12 rounded-full bg-gray-200 dark:bg-gray-700 flex-shrink-0" />
         <div className="ml-3 flex-1 space-y-2">
           <div className="h-4 bg-gray-200 dark:bg-gray-700 rounded-md w-3/4" />
           <div className="h-3 bg-gray-200 dark:bg-gray-700 rounded-md w-1/2" />
@@ -30,7 +30,7 @@ const PostSkeleton = () => {
       <div className="flex flex-col space-y-4 mt-6 pt-4 border-t border-gray-100 dark:border-gray-700">
         <div className="h-4 bg-gray-200 dark:bg-gray-700 rounded-md w-1/3" />
         <div className="flex space-x-3">
-          <div className="size-10 rounded-full bg-gray-200 dark:bg-gray-700 flex-shrink-0" />
+          <div className="w-10 h-10 rounded-full bg-gray-200 dark:bg-gray-700 flex-shrink-0" />
           <div className="flex-1 space-y-2">
             <div className="h-4 bg-gray-200 dark:bg-gray-700 rounded-md w-1/2" />
             <div className="h-3 bg-gray-200 dark:bg-gray-700 rounded-md w-3/4" />

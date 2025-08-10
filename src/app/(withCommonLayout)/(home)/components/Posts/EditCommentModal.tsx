@@ -23,26 +23,24 @@ export default function EditCommentModal({ setOpen, comment }: TModalProps) {
   });
   const [updateComment, { isLoading }] = useUpdateCommentMutation();
 
-  const onSubmit = async (data: any) => {
-    const modifiedComment = {
-      comment: data.modifiedComment,
-    };
+ const onSubmit = async (data: FormData) => {
+  const modifiedComment = { comment: data.modifiedComment };
 
-    try {
-      const response = await updateComment({
-        commentId: comment?._id as string,
-        payload: modifiedComment,
-      }).unwrap();
+  try {
+    const response = await updateComment({
+      commentId: comment?._id as string,
+      payload: modifiedComment,
+    }).unwrap();
 
-      if (response?._id) {
-        setOpen(false);
-        toast.success("Comment updated successfully!");
-      }
-    } catch (error) {
-      toast.error("Something went wrong");
-      console.log(error);
-    }
-  };
+    // Close the modal immediately after success
+    setOpen(false);
+
+    toast.success("Comment updated successfully!");
+  } catch (error) {
+    toast.error("Something went wrong");
+    console.error(error);
+  }
+};
 
   return (
     <section className="fixed inset-0 z-50 bg-black/40 dark:bg-black/70 backdrop-blur-sm flex justify-center items-center p-4 overflow-y-auto">

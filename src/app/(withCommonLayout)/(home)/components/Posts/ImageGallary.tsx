@@ -10,7 +10,7 @@ interface IProps {
 
 export default function ImageGallery({ images }: IProps) {
   return (
-    <div className="bg-gray-100 dark:bg-gray-800 rounded-xl p-2 sm:p-3 mt-4 border border-gray-200 dark:border-gray-700">
+    <div className="bg-gray-100 dark:bg-gray-800 rounded-xl p-2 sm:p-3 mt-4 border border-gray-200 dark:border-gray-700 transition-colors duration-200">
       <PhotoProvider>
         <div
           className={`grid gap-2 sm:gap-3 ${
@@ -20,7 +20,7 @@ export default function ImageGallery({ images }: IProps) {
           {images.map((image, index) => (
             <PhotoView key={index} src={image}>
               <div
-                className={`w-full block rounded-lg overflow-hidden group ${
+                className={`w-full block rounded-lg overflow-hidden group cursor-pointer shadow-sm dark:shadow-none ${
                   images.length === 3 && index === 0
                     ? "col-span-2"
                     : "col-span-1"
@@ -32,6 +32,9 @@ export default function ImageGallery({ images }: IProps) {
                   height={500}
                   src={image}
                   width={500}
+                  quality={75}
+                  loading="lazy"
+                  draggable={false}
                 />
               </div>
             </PhotoView>

@@ -35,7 +35,6 @@ import { useSendNotificationMutation } from "@/src/redux/features/notification/n
 import { useAppSelector } from "@/src/redux/hooks";
 
 export default function PostCard({ post }: { post: TPost }) {
-  // Destructure watch from useForm
   const { register, handleSubmit, reset, watch } = useForm();
   const user = useAppSelector((state) => state.auth.user);
   const [addComment, { isLoading: addLoading }] = useAddCommentMutation();
@@ -60,17 +59,17 @@ export default function PostCard({ post }: { post: TPost }) {
     voters,
     createdAt,
     isPremium,
-    title, // Make sure title is available in TPost for better share text
+    title,
   } = post;
 
-  if (!_id) return null; // Ensure post ID exists before proceeding
+  if (!_id) return null;
 
   const { data: commentsData } = useGetCommentsQuery({ postId: _id });
   const comments: TComment[] = commentsData?.data || [];
 
   const handleShare = async () => {
     const shareUrl = `${window.location.origin}/details/${_id}`;
-    const shareTitle = post.title || "Check out this post!"; // Use post title or fallback
+    const shareTitle = post.title || "Check out this post!";
     const shareText = description
       ? description.slice(0, 100) + "..."
       : "Find out more!";
@@ -84,7 +83,6 @@ export default function PostCard({ post }: { post: TPost }) {
     if (navigator.share) {
       try {
         await navigator.share(shareData);
-        // console.log("Post shared successfully");
       } catch (error: any) {
         if (error.name === "AbortError") {
           toast.info("Sharing cancelled.");
@@ -107,13 +105,11 @@ export default function PostCard({ post }: { post: TPost }) {
   const onSubmit = async (data: any) => {
     if (!user) {
       toast.error("Please log in to comment.");
-
       return;
     }
 
     if (!data.newComment || data.newComment.trim() === "") {
       toast.error("Comment cannot be empty.");
-
       return;
     }
 
@@ -131,7 +127,7 @@ export default function PostCard({ post }: { post: TPost }) {
       const response = await addComment(newComment as TComment).unwrap();
 
       if (response && response._id) {
-        reset(); // Clear the textarea
+        reset();
         await sendNotification({
           userEmail: authorInfo?.authorEmail,
           text: `${user?.name} commented on your post`,
@@ -147,27 +143,23 @@ export default function PostCard({ post }: { post: TPost }) {
     }
   };
 
-  // Function to handle Enter key press for comment submission
   const handleKeyDown = (e: React.KeyboardEvent<HTMLTextAreaElement>) => {
     if (e.key === "Enter" && !e.shiftKey) {
-      e.preventDefault(); // Prevent new line
-      handleSubmit(onSubmit)(); // Submit the form
+      e.preventDefault();
+      handleSubmit(onSubmit)();
     }
   };
 
-  // Watch the input value to disable/enable the submit button
   const newCommentValue = watch("newComment");
 
-  // Prevent click event from propagating to the parent div
   const stopPropagation = (e: React.MouseEvent) => {
     e.stopPropagation();
   };
 
   return (
-    // Card container - removed the onClick and cursor-pointer
     <div
       ref={contentRef}
-      className="bg-white dark:bg-gray-800 rounded-xl shadow-sm p-4 sm:p-6 w-full mx-auto mb-4 border border-gray-200 dark:border-gray-700"
+      className="bg-white dark:bg-gray-900 rounded-2xl shadow-lg p-6 sm:p-8 w-full mx-auto mb-6 border border-gray-300 dark:border-gray-700"
     >
       {openEditCommentModal && (
         <EditCommentModal
@@ -176,9 +168,8 @@ export default function PostCard({ post }: { post: TPost }) {
         />
       )}
 
-      {/* This is the new clickable section - it now handles navigation */}
       <div
-        className="flex items-start justify-between mb-4 cursor-pointer"
+        className="flex items-start justify-between mb-5 cursor-pointer"
         onClick={() => router.push(`/details/${_id}`)}
       >
         <div className="flex items-center">
@@ -186,7 +177,7 @@ export default function PostCard({ post }: { post: TPost }) {
             <Link href={`/profile/${authorInfo?.authorEmail}`}>
               <Image
                 alt="User Avatar"
-                className="size-12 rounded-full object-cover border border-gray-300 dark:border-gray-600"
+                className="w-14 h-14 rounded-full object-cover border border-gray-300 dark:border-gray-600"
                 height={56}
                 src={
                   authorInfo?.image ||
@@ -223,12 +214,15 @@ export default function PostCard({ post }: { post: TPost }) {
             <MdStars
               className="text-blue-500 text-2xl"
               title="Premium Content"
+              aria-label="Premium Content"
             />
           )}
           <button
-            className="p-2 rounded-full hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors duration-200"
+            className="p-2 rounded-full hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-1"
             title="Print Post"
             onClick={reactToPrintFn}
+            aria-label="Print Post"
+            type="button"
           >
             <AiFillPrinter className="text-xl" />
           </button>
@@ -237,17 +231,16 @@ export default function PostCard({ post }: { post: TPost }) {
 
       <div
         dangerouslySetInnerHTML={{ __html: description || "" }}
-        className="text-gray-800 dark:text-gray-200 text-base leading-relaxed mb-4"
+        className="text-gray-900 dark:text-gray-100 text-base leading-relaxed mb-5"
       />
 
       {images && images.length > 0 && (
-        <div /* No onClick here */>
+        <div>
           <ImageGallery images={images} />
         </div>
       )}
 
-      {/* The rest of the card remains the same, with interactive elements stopping propagation */}
-      <div className="flex justify-between items-center mt-4 pt-3 border-t border-gray-200 dark:border-gray-700">
+      <div className="flex justify-between items-center mt-6 pt-4 border-t border-gray-300 dark:border-gray-700">
         <div className="flex items-center space-x-6 text-gray-600 dark:text-gray-400">
           <VoteSection
             postId={_id as string}
@@ -257,7 +250,7 @@ export default function PostCard({ post }: { post: TPost }) {
           />
 
           <Link
-            className="flex items-center space-x-2 text-gray-600 dark:text-gray-400 hover:text-blue-500 dark:hover:text-blue-400 transition-colors duration-200"
+            className="flex items-center space-x-2 text-gray-600 dark:text-gray-400 hover:text-blue-600 dark:hover:text-blue-500 transition-colors duration-200"
             href={`/details/${_id}#comments`}
             onClick={stopPropagation}
           >
@@ -266,24 +259,26 @@ export default function PostCard({ post }: { post: TPost }) {
           </Link>
         </div>
         <button
-          className="flex items-center space-x-2 text-gray-600 dark:text-gray-400 hover:text-blue-500 dark:hover:text-blue-400 transition-colors duration-200"
+          className="flex items-center space-x-2 text-gray-600 dark:text-gray-400 hover:text-blue-600 dark:hover:text-blue-500 transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-1 rounded-md px-2 py-1"
           onClick={handleShare}
+          aria-label="Share Post"
+          type="button"
         >
           <FaShare className="text-lg" />
           <span className="text-sm font-medium">Share</span>
         </button>
       </div>
 
-      <div className="flex flex-col space-y-4 mt-6 pt-4 border-t border-gray-100 dark:border-gray-700 relative">
+      <div className="flex flex-col space-y-4 mt-6 pt-5 border-t border-gray-200 dark:border-gray-700 relative">
         <h4
-          className="font-semibold text-gray-700 dark:text-gray-300 cursor-pointer hover:text-blue-500 dark:hover:text-blue-400"
+          className="font-semibold text-gray-700 dark:text-gray-300 cursor-pointer hover:text-blue-600 dark:hover:text-blue-500"
           onClick={() => router.push(`/details/${_id}#comments`)}
         >
           View all {comments?.length} comments
         </h4>
 
         {(addLoading || deleteLoading) && (
-          <div className="absolute inset-0 z-10 bg-white/80 dark:bg-gray-800/90 rounded-xl flex justify-center items-center">
+          <div className="absolute inset-0 z-10 bg-white/90 dark:bg-gray-900/90 rounded-2xl flex justify-center items-center">
             <ClipLoader
               aria-label="Loading Spinner"
               color="#3B82F6"
@@ -301,7 +296,7 @@ export default function PostCard({ post }: { post: TPost }) {
             >
               <Image
                 alt={comment?.userInfo?.name || "User"}
-                className="size-10 rounded-full object-cover border border-gray-200 dark:border-gray-600"
+                className="w-10 h-10 rounded-full object-cover border border-gray-300 dark:border-gray-600"
                 height={40}
                 src={
                   comment?.userInfo?.image ||
@@ -312,7 +307,7 @@ export default function PostCard({ post }: { post: TPost }) {
             </Link>
 
             <div className="flex-1">
-              <div className="bg-gray-100 dark:bg-gray-700 rounded-xl px-4 py-2 relative group">
+              <div className="bg-gray-100 dark:bg-gray-800 rounded-2xl px-4 py-3 relative group">
                 <div className="flex items-center justify-between">
                   <h4 className="font-semibold text-gray-900 dark:text-white text-sm">
                     {comment?.userInfo?.name}
@@ -324,7 +319,7 @@ export default function PostCard({ post }: { post: TPost }) {
                       onClick={stopPropagation}
                     >
                       <button
-                        className="text-gray-500 hover:text-blue-500 dark:hover:text-blue-400 transition-colors"
+                        className="text-gray-500 hover:text-blue-600 dark:hover:text-blue-500 transition-colors focus:outline-none focus:ring-2 focus:ring-blue-500 rounded"
                         title="Edit Comment"
                         type="button"
                         onClick={() => {
@@ -335,7 +330,7 @@ export default function PostCard({ post }: { post: TPost }) {
                         <FaPen className="text-sm" />
                       </button>
                       <button
-                        className="text-gray-500 hover:text-red-500 dark:hover:text-red-400 transition-colors"
+                        className="text-gray-500 hover:text-red-600 dark:hover:text-red-500 transition-colors focus:outline-none focus:ring-2 focus:ring-red-600 rounded"
                         title="Delete Comment"
                         type="button"
                         onClick={() => deleteComment(comment?._id as string)}
@@ -345,7 +340,7 @@ export default function PostCard({ post }: { post: TPost }) {
                     </div>
                   )}
                 </div>
-                <p className="text-gray-800 dark:text-gray-200 text-sm mt-1">
+                <p className="text-gray-800 dark:text-gray-200 text-sm mt-1 whitespace-pre-wrap">
                   {comment?.comment}
                 </p>
               </div>
@@ -362,14 +357,14 @@ export default function PostCard({ post }: { post: TPost }) {
 
       {user && (
         <form
-          className="flex items-center gap-3 mt-6 pt-4 border-t border-gray-100 dark:border-gray-700"
+          className="flex items-center gap-3 mt-6 pt-5 border-t border-gray-200 dark:border-gray-700"
           onClick={stopPropagation}
           onSubmit={handleSubmit(onSubmit)}
         >
           <div>
             <Image
               alt="User Avatar"
-              className="size-10 rounded-full object-cover border border-gray-200 dark:border-gray-600"
+              className="w-10 h-10 rounded-full object-cover border border-gray-300 dark:border-gray-600"
               height={40}
               src={
                 user?.image || "https://i.ibb.co/VtP9tF6/default-user-image.png"
@@ -381,7 +376,7 @@ export default function PostCard({ post }: { post: TPost }) {
           <div className="relative flex-1">
             <textarea
               {...register("newComment", { required: true })}
-              className="w-full h-11 dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-full py-2 pl-4 pr-10 text-gray-900 dark:text-white placeholder-gray-500 dark:placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 resize-none overflow-hidden"
+              className="w-full h-11 dark:bg-gray-800 border border-gray-300 dark:border-gray-600 rounded-full py-2 pl-4 pr-10 text-gray-900 dark:text-gray-100 placeholder-gray-500 dark:placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-600 focus:border-blue-600 resize-none overflow-hidden transition-colors duration-200"
               placeholder="Post your reply..."
               rows={1}
               onInput={(e: React.ChangeEvent<HTMLTextAreaElement>) => {
@@ -389,18 +384,20 @@ export default function PostCard({ post }: { post: TPost }) {
                 e.target.style.height = e.target.scrollHeight + "px";
               }}
               onKeyDown={handleKeyDown}
+              aria-label="New comment"
             />
             <button
               type="submit"
-              className="absolute right-3 top-1/2 -translate-y-1/2 text-blue-500 hover:text-blue-600 dark:hover:text-blue-400 transition-colors duration-200 disabled:opacity-50 disabled:cursor-not-allowed"
+              className="absolute right-3 top-1/2 -translate-y-1/2 text-blue-600 hover:text-blue-700 dark:hover:text-blue-400 transition-colors duration-200 disabled:opacity-50 disabled:cursor-not-allowed focus:outline-none focus:ring-2 focus:ring-blue-600 focus:ring-offset-1 rounded"
               disabled={
                 addLoading || !newCommentValue || newCommentValue.trim() === ""
               }
+              aria-label="Submit comment"
             >
               {addLoading ? (
                 <ClipLoader
                   aria-label="Loading Spinner"
-                  color="#3B82F6"
+                  color="#2563EB"
                   loading={addLoading}
                   size={20}
                   speedMultiplier={0.8}

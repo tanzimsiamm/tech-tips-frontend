@@ -8,7 +8,7 @@ import { FaTimes, FaCheckCircle } from "react-icons/fa"; // Added FaTimes for cl
 import CheckoutForm from "./CheckOutForm";
 
 const stripePromise = loadStripe(
-  "pk_test_51OECRRFLaeRKmWHlOnS7nvYdRDI0mKR7gAbUTLpORBLigHEpLvbJEwY6qGjI3VqnLdaLkqLGA79jNs2d6PJEGSZZ00fp3AR825",
+  "pk_test_51RuezYHI1CPg2kAo4EfkdlyecNJ43e0ZmftT3wOsPCOt2lXA54ggtbfZ9gNznooa4q0lvBoFXw1byyr4yoKzxMm100oDLwdreT",
 );
 
 type TModalProps = {

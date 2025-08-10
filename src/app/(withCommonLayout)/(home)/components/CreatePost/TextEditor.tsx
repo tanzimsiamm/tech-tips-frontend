@@ -31,44 +31,32 @@ export default function TextEditor({
   };
 
   return (
-    <div className="w-full border border-gray-300 dark:border-gray-600 rounded-xl overflow-hidden">
+    <div className="w-full border border-gray-300 dark:border-gray-600 rounded-xl overflow-hidden transition-colors duration-200">
       {/* Toolbar */}
       <div className="flex flex-wrap gap-2 p-2 bg-gray-100 dark:bg-gray-700 border-b border-gray-300 dark:border-gray-600">
-        <button
-          type="button"
-          onClick={() => format("bold")}
-          className="px-2 py-1 bg-white dark:bg-gray-600 rounded hover:bg-gray-200 dark:hover:bg-gray-500"
-        >
-          <b>B</b>
-        </button>
-        <button
-          type="button"
-          onClick={() => format("italic")}
-          className="px-2 py-1 bg-white dark:bg-gray-600 rounded italic hover:bg-gray-200 dark:hover:bg-gray-500"
-        >
-          I
-        </button>
-        <button
-          type="button"
-          onClick={() => format("underline")}
-          className="px-2 py-1 bg-white dark:bg-gray-600 rounded underline hover:bg-gray-200 dark:hover:bg-gray-500"
-        >
-          U
-        </button>
-        <button
-          type="button"
-          onClick={() => format("insertUnorderedList")}
-          className="px-2 py-1 bg-white dark:bg-gray-600 rounded hover:bg-gray-200 dark:hover:bg-gray-500"
-        >
-          • List
-        </button>
-        <button
-          type="button"
-          onClick={() => format("createLink", prompt("Enter URL") || "")}
-          className="px-2 py-1 bg-white dark:bg-gray-600 rounded hover:bg-gray-200 dark:hover:bg-gray-500"
-        >
-          🔗 Link
-        </button>
+        {[
+          { label: <b>B</b>, command: "bold", style: "font-bold" },
+          { label: <i>I</i>, command: "italic", style: "italic" },
+          { label: <u>U</u>, command: "underline", style: "underline" },
+          { label: "• List", command: "insertUnorderedList" },
+          { label: "🔗 Link", command: "createLink" },
+        ].map(({ label, command, style }, idx) => (
+          <button
+            key={idx}
+            type="button"
+            onClick={() =>
+              command === "createLink"
+                ? format(command, prompt("Enter URL") || "")
+                : format(command)
+            }
+            className={`px-3 py-1 rounded bg-white dark:bg-gray-600 hover:bg-gray-200 dark:hover:bg-gray-500 transition-colors duration-200 ${
+              style ?? ""
+            }`}
+            aria-label={typeof label === "string" ? label : undefined}
+          >
+            {label}
+          </button>
+        ))}
       </div>
 
       {/* Editable area */}
@@ -77,9 +65,24 @@ export default function TextEditor({
         contentEditable
         suppressContentEditableWarning
         onInput={handleInput}
-        className="min-h-[200px] p-3 bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100 focus:outline-none placeholder-editor"
+        className="min-h-[200px] p-3 bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100 focus:outline-none focus:ring-2 focus:ring-blue-500 rounded-b-xl placeholder-editor"
         data-placeholder="Start writing your post here..."
+        role="textbox"
+        aria-multiline="true"
       />
+      <style jsx>{`
+        .placeholder-editor:empty:before {
+          content: attr(data-placeholder);
+          color: #9ca3af; /* Tailwind gray-400 */
+          pointer-events: none;
+          display: block;
+        }
+        @media (prefers-color-scheme: dark) {
+          .placeholder-editor:empty:before {
+            color: #d1d5db; /* Tailwind gray-300 */
+          }
+        }
+      `}</style>
     </div>
   );
 }

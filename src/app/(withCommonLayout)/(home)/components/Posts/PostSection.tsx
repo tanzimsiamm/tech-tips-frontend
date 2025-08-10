@@ -13,7 +13,7 @@ import { useGetPostsQuery } from "@/src/redux/features/posts/postApi";
 import { TPost } from "@/src/types";
 
 export default function PostSection() {
-  const [filterQuery, setFilterQuery] = useState({});
+  const [filterQuery, setFilterQuery] = useState<Record<string, any>>({});
   const [limit, setLimit] = useState(10);
   const { data, isFetching } = useGetPostsQuery({
     ...filterQuery,
@@ -39,19 +39,21 @@ export default function PostSection() {
   }, [inView, filterQuery, posts, totalPosts]);
 
   return (
-    <section className="bg-gray-50 dark:bg-black min-h-screen">
-      <div className="sticky top-0 z-10 bg-white dark:bg-gray-900 border-b border-gray-200 dark:border-gray-800 p-4">
+    <section className="bg-gray-50 dark:bg-gray-900 min-h-screen">
+      <div className="sticky top-0 z-10 bg-white dark:bg-gray-800 border-b border-gray-200 dark:border-gray-700 p-4">
         <div className="flex flex-col sm:flex-row items-center justify-between gap-3">
           {/* Search Input for larger screens */}
           <div className="relative flex-1 w-full hidden sm:flex items-center">
-            <span className="absolute left-4 text-gray-500 dark:text-gray-400">
+            <span className="absolute left-4 text-gray-400 dark:text-gray-500 pointer-events-none">
               <TfiSearch />
             </span>
             <input
               aria-label="Search posts"
-              className="w-full py-2 pl-10 pr-4 rounded-full bg-gray-100 dark:bg-gray-700 text-gray-900 dark:text-white placeholder-gray-500 dark:placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors duration-200"
+              className="w-full py-2 pl-10 pr-4 rounded-full bg-gray-100 dark:bg-gray-700 text-gray-900 dark:text-gray-100 placeholder-gray-500 dark:placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors duration-200"
               placeholder="Search posts..."
-              type="text"
+              type="search"
+              spellCheck={false}
+              autoComplete="off"
               onChange={(e) =>
                 setFilterQuery((prev) => ({
                   ...prev,
@@ -63,22 +65,24 @@ export default function PostSection() {
 
           {/* Search Dropdown for small screens */}
           <div className="relative w-full sm:hidden">
-            <details className="dropdown w-full">
+            <details className="dropdown w-full" role="region" aria-label="Search and filter posts">
               <summary
                 aria-expanded="false"
                 aria-haspopup="menu"
-                className="w-full flex items-center justify-center gap-2 p-3 rounded-full bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-300 shadow-sm border border-gray-200 dark:border-gray-600 cursor-pointer list-none"
+                className="w-full flex items-center justify-center gap-2 p-3 rounded-full bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-300 shadow-sm border border-gray-300 dark:border-gray-600 cursor-pointer list-none"
               >
-                <TfiSearch />{" "}
+                <TfiSearch aria-hidden="true" />{" "}
                 <span className="font-medium">Search & Filter</span>
               </summary>
               <div className="dropdown-content menu p-4 shadow-lg bg-white dark:bg-gray-800 rounded-xl w-full mt-2 space-y-3 border border-gray-200 dark:border-gray-700">
                 <div>
                   <input
                     aria-label="Search posts"
-                    className="w-full py-2 px-4 rounded-full bg-gray-100 dark:bg-gray-700 text-gray-900 dark:text-white placeholder-gray-500 dark:placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors duration-200"
+                    className="w-full py-2 px-4 rounded-full bg-gray-100 dark:bg-gray-700 text-gray-900 dark:text-gray-100 placeholder-gray-500 dark:placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors duration-200"
                     placeholder="Search posts..."
-                    type="text"
+                    type="search"
+                    spellCheck={false}
+                    autoComplete="off"
                     onChange={(e) =>
                       setFilterQuery((prev) => ({
                         ...prev,
@@ -89,8 +93,8 @@ export default function PostSection() {
                 </div>
                 <div>
                   <select
-                    aria-label="Sort by upvote"
-                    className="w-full p-2 rounded-full bg-gray-100 dark:bg-gray-700 text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors duration-200"
+                    aria-label="Sort posts by upvote"
+                    className="w-full p-2 rounded-full bg-gray-100 dark:bg-gray-700 text-gray-900 dark:text-gray-100 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors duration-200"
                     defaultValue=""
                     onChange={(e) =>
                       setFilterQuery((prev) => ({
@@ -108,8 +112,8 @@ export default function PostSection() {
                 </div>
                 <div>
                   <select
-                    aria-label="Select category"
-                    className="w-full p-2 rounded-full bg-gray-100 dark:bg-gray-700 text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors duration-200"
+                    aria-label="Select post category"
+                    className="w-full p-2 rounded-full bg-gray-100 dark:bg-gray-700 text-gray-900 dark:text-gray-100 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors duration-200"
                     defaultValue=""
                     onChange={(e) =>
                       setFilterQuery((prev) => ({
@@ -137,10 +141,10 @@ export default function PostSection() {
 
           {/* Filter and Sort for larger screens */}
           <div className="hidden sm:flex items-center gap-3">
-            <div className="flex items-center gap-2 bg-gray-100 dark:bg-gray-800 rounded-full px-3 py-2 text-gray-700 dark:text-gray-200 border border-gray-200 dark:border-gray-600">
-              <LuFilter className="text-lg" />
+            <div className="flex items-center gap-2 bg-gray-100 dark:bg-gray-800 rounded-full px-3 py-2 text-gray-700 dark:text-gray-200 border border-gray-300 dark:border-gray-600">
+              <LuFilter className="text-lg" aria-hidden="true" />
               <select
-                aria-label="Sort by upvote"
+                aria-label="Sort posts by upvote"
                 className="bg-transparent outline-none text-sm cursor-pointer dark:text-gray-200 dark:[&>option]:bg-gray-800"
                 defaultValue=""
                 onChange={(e) =>
@@ -158,10 +162,10 @@ export default function PostSection() {
               </select>
             </div>
 
-            <div className="flex items-center gap-2 bg-gray-100 dark:bg-gray-800 rounded-full px-3 py-2 text-gray-700 dark:text-gray-200 border border-gray-200 dark:border-gray-600">
-              <MdOutlineSort className="text-lg" />
+            <div className="flex items-center gap-2 bg-gray-100 dark:bg-gray-800 rounded-full px-3 py-2 text-gray-700 dark:text-gray-200 border border-gray-300 dark:border-gray-600">
+              <MdOutlineSort className="text-lg" aria-hidden="true" />
               <select
-                aria-label="Select category"
+                aria-label="Select post category"
                 className="bg-transparent outline-none text-sm cursor-pointer dark:text-gray-200 dark:[&>option]:bg-gray-800"
                 defaultValue=""
                 onChange={(e) =>
@@ -189,10 +193,12 @@ export default function PostSection() {
       </div>
 
       <div className="p-4 space-y-4">
-        {posts?.map((post: TPost) => <PostCard key={post._id} post={post} />)}
+        {posts?.map((post: TPost) => (
+          <PostCard key={post._id} post={post} />
+        ))}
 
         {isFetching && (
-          <div className="space-y-4">
+          <div className="space-y-4" aria-live="polite" aria-busy="true">
             <PostSkeleton />
             <PostSkeleton />
           </div>
@@ -202,7 +208,7 @@ export default function PostSection() {
           <div
             ref={ref}
             aria-live="polite"
-            className="text-center py-4 text-gray-500 dark:text-gray-400"
+            className="text-center py-4 text-gray-600 dark:text-gray-400"
           >
             Loading more posts...
           </div>
@@ -211,7 +217,7 @@ export default function PostSection() {
         {posts && posts.length === totalPosts && totalPosts > 0 && (
           <div
             aria-live="polite"
-            className="text-center py-4 text-gray-500 dark:text-gray-400"
+            className="text-center py-4 text-gray-600 dark:text-gray-400"
           >
             You&apos;ve reached the end of the feed!
           </div>
@@ -220,7 +226,7 @@ export default function PostSection() {
         {posts && totalPosts === 0 && (
           <div
             aria-live="polite"
-            className="text-center py-12 text-gray-500 dark:text-gray-400 text-lg"
+            className="text-center py-12 text-gray-600 dark:text-gray-400 text-lg"
           >
             No posts found matching your criteria.
           </div>

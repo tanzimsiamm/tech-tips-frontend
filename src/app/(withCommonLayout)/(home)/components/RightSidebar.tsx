@@ -96,7 +96,7 @@ const RightSidebar = () => {
     <>
       {(pathName?.includes("profile") || pathName === "/") && (
         <>
-          <div className=" lg:w-60 xl:w-72  space-y-4 ">
+          <div className=" lg:w-60 xl:w-72  space-y-4  ">
             {/* Following Section */}
 
             {following?.length ? (

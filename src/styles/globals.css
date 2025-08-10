@@ -8,3 +8,22 @@
   color: #9ca3af; /* Tailwind gray-400 */
   pointer-events: none;
 }
+
+
+:root {
+  --background: #ffffff;
+  --foreground: #111111;
+}
+
+.dark {
+  --background: #121212;
+  --foreground: #f0f0f0;
+}
+
+.bg-background {
+  background-color: var(--background);
+}
+
+.text-foreground {
+  color: var(--foreground);
+}
