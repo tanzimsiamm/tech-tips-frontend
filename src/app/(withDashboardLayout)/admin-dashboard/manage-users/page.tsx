@@ -100,13 +100,13 @@ export default function ManageUsers() {
   };
 
   return (
-    <section className="p-4 sm:p-6 lg:p-8 bg-gray-50 dark:bg-black min-h-screen">
-      <div className="max-w-4xl mx-auto bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700 overflow-hidden">
+    <section className="p-4 sm:p-6 lg:p-8 bg-white dark:bg-gray-900 min-h-screen">
+      <div className="max-w-4xl mx-auto bg-white dark:bg-gray-900 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700 overflow-hidden">
         <div className="p-4 sm:p-6 border-b border-gray-200 dark:border-gray-700 flex justify-between items-center">
           <h2 className="text-xl sm:text-2xl font-bold text-gray-900 dark:text-white">
             Manage Users
           </h2>
-          {/* Add user button if needed, similar to Manage Admins */}
+          {/* Add user button if needed */}
         </div>
 
         {openUpdateModal && (
@@ -119,7 +119,7 @@ export default function ManageUsers() {
 
         <div className="overflow-x-auto relative min-h-[200px]">
           {isLoading && (
-            <div className="absolute inset-0 flex items-center justify-center bg-white/80 dark:bg-gray-800/80 z-10">
+            <div className="absolute inset-0 flex items-center justify-center bg-white/80 dark:bg-gray-900/80 z-10">
               <PulseLoader
                 aria-label="Loading Spinner"
                 color="#2563EB"
@@ -130,7 +130,7 @@ export default function ManageUsers() {
           )}
 
           <table className="min-w-full text-left text-sm text-gray-700 dark:text-gray-300">
-            <thead className="bg-gray-100 dark:bg-gray-700 uppercase text-xs font-semibold tracking-wider">
+            <thead className="bg-gray-100 dark:bg-gray-800 uppercase text-xs font-semibold tracking-wider">
               <tr>
                 <th
                   className="px-4 py-3 border-b border-gray-200 dark:border-gray-600 rounded-tl-xl"

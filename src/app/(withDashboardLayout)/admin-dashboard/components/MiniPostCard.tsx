@@ -53,7 +53,7 @@ export default function MiniPostCard({ post }: { post: TPost }) {
   };
 
   return (
-    <div className="bg-white dark:bg-gray-800 rounded-xl shadow-sm p-4 sm:p-6 w-full mx-auto mb-4 border border-gray-200 dark:border-gray-700">
+    <div className="bg-white dark:bg-gray-900 rounded-xl shadow-sm p-4 sm:p-6 w-full mx-auto mb-4 border border-gray-200 dark:border-gray-700">
       {updateModal && (
         <UpdatePostModal
           open={updateModal}
@@ -108,14 +108,14 @@ export default function MiniPostCard({ post }: { post: TPost }) {
             user?.role === "admin") && (
             <>
               <button
-                className="p-2 rounded-full hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors duration-200"
+                className="p-2 rounded-full hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors duration-200"
                 title="Edit Post"
                 onClick={() => setUpdateModal(true)}
               >
                 <MdModeEdit className="text-xl" />
               </button>
               <button
-                className="p-2 rounded-full hover:bg-gray-100 dark:hover:bg-gray-700 text-red-500 transition-colors duration-200"
+                className="p-2 rounded-full hover:bg-gray-100 dark:hover:bg-gray-800 text-red-500 transition-colors duration-200"
                 title="Delete Post"
                 onClick={() => handleDelete(_id!)}
               >

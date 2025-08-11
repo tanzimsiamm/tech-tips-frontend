@@ -13,7 +13,13 @@ const CommonLayout = ({ children }: { children: ReactNode }) => {
   const pathname = usePathname();
 
   // Routes where right sidebar should be hidden
-  const hideRightSidebarRoutes = ["/membership", "/details"];
+  const hideRightSidebarRoutes = [
+    "/membership",
+    "/details",
+    "/about",
+    "/contact",
+    "/latest-event",
+  ];
 
   // Show right sidebar only if user exists and current route is not hidden
   const shouldShowRightSidebar =

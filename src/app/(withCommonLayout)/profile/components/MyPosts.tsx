@@ -11,9 +11,11 @@ const MyPosts = ({ userEmail }: { userEmail: string }) => {
   const { posts } = data?.data || {};
 
   return (
-    <div className="p-4 sm:p-6 bg-gray-50 dark:bg-black min-h-screen">
+    <div className="p-4 sm:p-6 bg-white dark:bg-gray-900 min-h-screen">
       <div className="space-y-4">
-        {posts?.map((post: TPost) => <PostCard key={post._id} post={post} />)}
+        {posts?.map((post: TPost) => (
+          <PostCard key={post._id} post={post} />
+        ))}
 
         {isFetching && (
           <div className="space-y-4">
@@ -25,7 +27,7 @@ const MyPosts = ({ userEmail }: { userEmail: string }) => {
         )}
 
         {!isFetching && (!posts || posts.length === 0) && (
-          <div className="text-center py-12 text-gray-500 dark:text-gray-400 text-lg">
+          <div className="text-center py-12 text-gray-600 dark:text-gray-400 text-lg">
             No posts found.
           </div>
         )}

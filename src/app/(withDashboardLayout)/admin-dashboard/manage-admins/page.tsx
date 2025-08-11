@@ -51,7 +51,7 @@ export default function ManageAdmins() {
               text: `The Admin has been ${actionText}ed.`,
               icon: "success",
             });
-            refetch(); // Refetch data after successful update
+            refetch();
           }
         } catch (error) {
           Swal.fire({
@@ -85,7 +85,7 @@ export default function ManageAdmins() {
               text: "Admin has been deleted.",
               icon: "success",
             });
-            refetch(); // Refetch data after successful deletion
+            refetch();
           }
         } catch (error) {
           Swal.fire({
@@ -100,14 +100,14 @@ export default function ManageAdmins() {
   };
 
   return (
-    <section className="p-4 sm:p-6 lg:p-8 bg-gray-50 dark:bg-black min-h-screen">
-      <div className="max-w-4xl mx-auto bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700 overflow-hidden">
-        <div className="p-4 sm:p-6 border-b border-gray-200 dark:border-gray-700 flex justify-between items-center">
+    <section className="p-4 sm:p-6 lg:p-8 bg-gray-50 dark:bg-gray-900 min-h-screen">
+      <div className="max-w-4xl mx-auto bg-white dark:bg-gray-900 rounded-xl shadow-sm border border-gray-300 dark:border-gray-700 overflow-hidden">
+        <div className="p-4 sm:p-6 border-b border-gray-300 dark:border-gray-700 flex justify-between items-center">
           <h2 className="text-xl sm:text-2xl font-bold text-gray-900 dark:text-white">
             Manage Admins
           </h2>
           <button
-            className="px-4 py-2 bg-blue-500 text-white rounded-full text-sm font-semibold hover:bg-blue-600 transition-colors duration-200"
+            className="px-4 py-2 bg-blue-600 text-white rounded-full text-sm font-semibold hover:bg-blue-700 transition-colors duration-200"
             onClick={() => {
               setUpdateUserEmail("");
               setOpenUpdateModal(true);
@@ -127,7 +127,7 @@ export default function ManageAdmins() {
 
         <div className="overflow-x-auto relative min-h-[200px]">
           {isLoading && (
-            <div className="absolute inset-0 flex items-center justify-center bg-white/80 dark:bg-gray-800/80 z-10">
+            <div className="absolute inset-0 flex items-center justify-center bg-white/90 dark:bg-gray-900/90 z-10">
               <PulseLoader
                 aria-label="Loading Spinner"
                 color="#2563EB"
@@ -137,47 +137,47 @@ export default function ManageAdmins() {
             </div>
           )}
 
-          <table className="min-w-full text-left text-sm text-gray-700 dark:text-gray-300">
-            <thead className="bg-gray-100 dark:bg-gray-700 uppercase text-xs font-semibold tracking-wider">
+          <table className="min-w-full text-left text-sm text-gray-800 dark:text-gray-300">
+            <thead className="bg-gray-100 dark:bg-gray-800 uppercase text-xs font-semibold tracking-wider">
               <tr>
                 <th
-                  className="px-4 py-3 border-b border-gray-200 dark:border-gray-600 rounded-tl-xl"
+                  className="px-4 py-3 border-b border-gray-300 dark:border-gray-600 rounded-tl-xl"
                   scope="col"
                 >
                   Image
                 </th>
                 <th
-                  className="px-4 py-3 border-b border-gray-200 dark:border-gray-600"
+                  className="px-4 py-3 border-b border-gray-300 dark:border-gray-600"
                   scope="col"
                 >
                   Name
                 </th>
                 <th
-                  className="px-4 py-3 border-b border-gray-200 dark:border-gray-600"
+                  className="px-4 py-3 border-b border-gray-300 dark:border-gray-600"
                   scope="col"
                 >
                   Email
                 </th>
                 <th
-                  className="px-4 py-3 border-b border-gray-200 dark:border-gray-600"
+                  className="px-4 py-3 border-b border-gray-300 dark:border-gray-600"
                   scope="col"
                 >
                   Role
                 </th>
                 <th
-                  className="px-4 py-3 border-b border-gray-200 dark:border-gray-600 text-center"
+                  className="px-4 py-3 border-b border-gray-300 dark:border-gray-600 text-center"
                   scope="col"
                 >
                   Edit
                 </th>
                 <th
-                  className="px-4 py-3 border-b border-gray-200 dark:border-gray-600 text-center"
+                  className="px-4 py-3 border-b border-gray-300 dark:border-gray-600 text-center"
                   scope="col"
                 >
                   Status
                 </th>
                 <th
-                  className="px-4 py-3 border-b border-gray-200 dark:border-gray-600 rounded-tr-xl text-center"
+                  className="px-4 py-3 border-b border-gray-300 dark:border-gray-600 rounded-tr-xl text-center"
                   scope="col"
                 >
                   Delete
@@ -188,12 +188,12 @@ export default function ManageAdmins() {
               {users?.map((user) => (
                 <tr
                   key={user._id}
-                  className="border-b border-gray-100 dark:border-gray-700 last:border-b-0 hover:bg-gray-50 dark:hover:bg-gray-700/50 transition-colors duration-150"
+                  className="border-b border-gray-200 dark:border-gray-700 last:border-b-0 hover:bg-gray-50 dark:hover:bg-gray-700/50 transition-colors duration-150"
                 >
                   <td className="px-4 py-3 flex items-center justify-center">
                     <Image
                       alt="profile"
-                      className="size-9 rounded-full object-cover border border-gray-200 dark:border-gray-600"
+                      className="size-9 rounded-full object-cover border border-gray-300 dark:border-gray-600"
                       height={40}
                       src={
                         user.image ||
@@ -214,7 +214,7 @@ export default function ManageAdmins() {
 
                   <td className="px-4 py-3 text-center">
                     <button
-                      className="p-2 rounded-full text-blue-500 hover:bg-blue-100 dark:hover:bg-blue-900/30 transition-colors duration-200"
+                      className="p-2 rounded-full text-blue-600 hover:bg-blue-100 dark:hover:bg-blue-900/30 transition-colors duration-200"
                       title="Edit Admin"
                       onClick={() => {
                         setUpdateUserEmail(user.email!);
@@ -247,7 +247,7 @@ export default function ManageAdmins() {
 
                   <td className="px-4 py-3 text-center">
                     <button
-                      className="p-2 rounded-full text-red-500 hover:bg-red-100 dark:hover:bg-red-900/30 transition-colors duration-200"
+                      className="p-2 rounded-full text-red-600 hover:bg-red-100 dark:hover:bg-red-900/30 transition-colors duration-200"
                       title="Delete Admin"
                       onClick={() => deleteUser(user._id!)}
                     >

@@ -173,7 +173,7 @@ const Membership = () => {
   };
 
   return (
-    <div className="min-h-screen flex flex-col items-center justify-center bg-gray-50 dark:bg-black p-4 sm:p-6 lg:p-8">
+    <div className="min-h-screen flex flex-col items-center justify-center bg-gray-50 dark:bg-gray-900 p-4 sm:p-6 lg:p-8">
       <h1 className="text-2xl sm:text-4xl md:text-5xl font-extrabold text-gray-900 dark:text-white mb-6 sm:mb-10 md:mb-14 text-center">
         Choose Your Tech Mastery Plan
       </h1>
@@ -203,7 +203,9 @@ const Membership = () => {
                   {pack.description}
                 </p>
                 <div className="my-4">
-                  <span className={`text-5xl font-extrabold ${pack.colorClass}`}>
+                  <span
+                    className={`text-5xl font-extrabold ${pack.colorClass}`}
+                  >
                     ${pack.price}
                   </span>
                   <span className="text-gray-600 dark:text-gray-400 text-lg ml-2">

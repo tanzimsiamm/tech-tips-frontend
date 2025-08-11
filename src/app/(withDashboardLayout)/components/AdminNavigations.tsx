@@ -11,185 +11,45 @@ const AdminNavigations = () => {
   const pathName = usePathname();
 
   return (
-    <div className="w-full h-full p-4 space-y-6 bg-white dark:bg-gray-800 text-gray-700 dark:text-gray-300">
+    <div className="w-full h-full p-4 space-y-6 bg-white dark:bg-gray-900 text-gray-800 dark:text-gray-300">
       <div className="space-y-4">
         <h2 className="text-gray-500 dark:text-gray-400 text-sm font-semibold tracking-wide uppercase">
           Admin Routes
         </h2>
         <ul className="space-y-2">
-          <li>
-            <Link
-              className={`flex items-center space-x-4 p-2 rounded-full transition-colors duration-200 
-                ${
-                  pathName === "/admin-dashboard/statistics"
-                    ? "bg-blue-500 text-white hover:bg-blue-600"
-                    : "text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700"
-                }`}
-              href="/admin-dashboard/statistics"
-            >
-              <div
-                className={`p-2 rounded-full flex items-center justify-center text-xl 
-                  ${
-                    pathName === "/admin-dashboard/statistics"
-                      ? "bg-transparent"
-                      : "bg-gray-200 dark:bg-gray-700 text-gray-500 dark:text-gray-400"
+          {[
+            { href: "/admin-dashboard/statistics", label: "Statistics", icon: BsGraphUp },
+            { href: "/admin-dashboard/manage-posts", label: "Manage Posts", icon: ImBooks },
+            { href: "/admin-dashboard/manage-users", label: "Manage Users", icon: FaUsers },
+            { href: "/admin-dashboard/manage-admins", label: "Admins", icon: RiAdminFill },
+            { href: "/admin-dashboard/payment-history", label: "Payment History", icon: MdOutlinePayment },
+            { href: "/", label: "Home", icon: FaHome },
+          ].map(({ href, label, icon: Icon }) => {
+            const active = pathName === href;
+            return (
+              <li key={href}>
+                <Link
+                  href={href}
+                  className={`flex items-center space-x-4 p-2 rounded-full transition-colors duration-200 ${
+                    active
+                      ? "bg-blue-500 text-white hover:bg-blue-600"
+                      : "text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700"
                   }`}
-              >
-                <BsGraphUp
-                  className={
-                    pathName === "/admin-dashboard/statistics"
-                      ? "text-white"
-                      : ""
-                  }
-                />
-              </div>
-              <span className="font-medium">Statistics</span>
-            </Link>
-          </li>
-
-          <li>
-            <Link
-              className={`flex items-center space-x-4 p-2 rounded-full transition-colors duration-200 
-                ${
-                  pathName === "/admin-dashboard/manage-posts"
-                    ? "bg-blue-500 text-white hover:bg-blue-600"
-                    : "text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700"
-                }`}
-              href="/admin-dashboard/manage-posts"
-            >
-              <div
-                className={`p-2 rounded-full flex items-center justify-center text-xl 
-                  ${
-                    pathName === "/admin-dashboard/manage-posts"
-                      ? "bg-transparent"
-                      : "bg-gray-200 dark:bg-gray-700 text-gray-500 dark:text-gray-400"
-                  }`}
-              >
-                <ImBooks
-                  className={
-                    pathName === "/admin-dashboard/manage-posts"
-                      ? "text-white"
-                      : ""
-                  }
-                />
-              </div>
-              <span className="font-medium">Manage Posts</span>
-            </Link>
-          </li>
-
-          <li>
-            <Link
-              className={`flex items-center space-x-4 p-2 rounded-full transition-colors duration-200 
-                ${
-                  pathName === "/admin-dashboard/manage-users"
-                    ? "bg-blue-500 text-white hover:bg-blue-600"
-                    : "text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700"
-                }`}
-              href="/admin-dashboard/manage-users"
-            >
-              <div
-                className={`p-2 rounded-full flex items-center justify-center text-xl 
-                  ${
-                    pathName === "/admin-dashboard/manage-users"
-                      ? "bg-transparent"
-                      : "bg-gray-200 dark:bg-gray-700 text-gray-500 dark:text-gray-400"
-                  }`}
-              >
-                <FaUsers
-                  className={
-                    pathName === "/admin-dashboard/manage-users"
-                      ? "text-white"
-                      : ""
-                  }
-                />
-              </div>
-              <span className="font-medium">Manage Users</span>
-            </Link>
-          </li>
-
-          <li>
-            <Link
-              className={`flex items-center space-x-4 p-2 rounded-full transition-colors duration-200 
-                ${
-                  pathName === "/admin-dashboard/manage-admins"
-                    ? "bg-blue-500 text-white hover:bg-blue-600"
-                    : "text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700"
-                }`}
-              href="/admin-dashboard/manage-admins"
-            >
-              <div
-                className={`p-2 rounded-full flex items-center justify-center text-xl 
-                  ${
-                    pathName === "/admin-dashboard/manage-admins"
-                      ? "bg-transparent"
-                      : "bg-gray-200 dark:bg-gray-700 text-gray-500 dark:text-gray-400"
-                  }`}
-              >
-                <RiAdminFill
-                  className={
-                    pathName === "/admin-dashboard/manage-admins"
-                      ? "text-white"
-                      : ""
-                  }
-                />
-              </div>
-              <span className="font-medium">Admins</span>
-            </Link>
-          </li>
-
-          <li>
-            <Link
-              className={`flex items-center space-x-4 p-2 rounded-full transition-colors duration-200 
-                ${
-                  pathName === "/admin-dashboard/payment-history"
-                    ? "bg-blue-500 text-white hover:bg-blue-600"
-                    : "text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700"
-                }`}
-              href="/admin-dashboard/payment-history"
-            >
-              <div
-                className={`p-2 rounded-full flex items-center justify-center text-xl 
-                  ${
-                    pathName === "/admin-dashboard/payment-history"
-                      ? "bg-transparent"
-                      : "bg-gray-200 dark:bg-gray-700 text-gray-500 dark:text-gray-400"
-                  }`}
-              >
-                <MdOutlinePayment
-                  className={
-                    pathName === "/admin-dashboard/payment-history"
-                      ? "text-white"
-                      : ""
-                  }
-                />
-              </div>
-              <span className="font-medium">Payment History</span>
-            </Link>
-          </li>
-
-          <li>
-            <Link
-              className={`flex items-center space-x-4 p-2 rounded-full transition-colors duration-200 
-                ${
-                  pathName === "/"
-                    ? "bg-blue-500 text-white hover:bg-blue-600"
-                    : "text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700"
-                }`}
-              href="/"
-            >
-              <div
-                className={`p-2 rounded-full flex items-center justify-center text-xl 
-                  ${
-                    pathName === "/"
-                      ? "bg-transparent"
-                      : "bg-gray-200 dark:bg-gray-700 text-gray-500 dark:text-gray-400"
-                  }`}
-              >
-                <FaHome className={pathName === "/" ? "text-white" : ""} />
-              </div>
-              <span className="font-medium">Home</span>
-            </Link>
-          </li>
+                >
+                  <div
+                    className={`p-2 rounded-full flex items-center justify-center text-xl ${
+                      active
+                        ? "bg-transparent text-white"
+                        : "bg-gray-200 dark:bg-gray-700 text-gray-500 dark:text-gray-400"
+                    }`}
+                  >
+                    <Icon />
+                  </div>
+                  <span className="font-medium">{label}</span>
+                </Link>
+              </li>
+            );
+          })}
         </ul>
       </div>
     </div>

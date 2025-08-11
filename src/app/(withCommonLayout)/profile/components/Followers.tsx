@@ -2,7 +2,7 @@ import Image from "next/image";
 import { RiUserUnfollowLine } from "react-icons/ri";
 import { ClipLoader } from "react-spinners";
 import { toast } from "sonner";
-import Link from "next/link"; // Import Link for navigation
+import Link from "next/link";
 
 import { useAppSelector } from "@/src/redux/hooks";
 import { TUser } from "@/src/types";
@@ -39,9 +39,9 @@ const Followers = ({ followers, following, ranDomUserEmail }: TProps) => {
     <div className="flex flex-col gap-4 mt-4">
       {/* Following Section */}
       {following?.length > 0 && (
-        <div className="bg-white dark:bg-gray-800 p-4 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700 relative">
+        <div className="bg-white dark:bg-gray-900 p-4 rounded-xl shadow-sm border border-gray-300 dark:border-gray-700 relative">
           {unFollowLoading && (
-            <div className="absolute inset-0 z-10 bg-white/80 dark:bg-gray-800/90 rounded-xl flex justify-center items-center">
+            <div className="absolute inset-0 z-10 bg-white/80 dark:bg-gray-900/90 rounded-xl flex justify-center items-center">
               <ClipLoader
                 aria-label="Loading Spinner"
                 color="#3B82F6"
@@ -58,13 +58,13 @@ const Followers = ({ followers, following, ranDomUserEmail }: TProps) => {
             {following?.map((user) => (
               <div
                 key={user?._id}
-                className="flex items-center justify-between pb-3 border-b border-gray-100 dark:border-gray-700 last:border-b-0 last:pb-0"
+                className="flex items-center justify-between pb-3 border-b border-gray-200 dark:border-gray-700 last:border-b-0 last:pb-0"
               >
                 <Link
                   className="flex items-center space-x-3 group"
                   href={`/profile/${user?.email}`}
                 >
-                  <div className="size-10 flex-shrink-0">
+                  <div className="w-10 h-10 flex-shrink-0">
                     <Image
                       alt={user?.name || "User"}
                       className="w-full h-full rounded-full object-cover border border-gray-300 dark:border-gray-600 group-hover:scale-105 transition-transform duration-200"
@@ -83,9 +83,10 @@ const Followers = ({ followers, following, ranDomUserEmail }: TProps) => {
 
                 {loggedUser?.email === ranDomUserEmail && (
                   <button
-                    className="bg-gray-100 dark:bg-gray-700 hover:bg-gray-200 dark:hover:bg-gray-600 text-gray-700 dark:text-gray-300 py-1 px-3 rounded-full text-sm font-semibold flex items-center gap-1 justify-center transition-colors duration-200"
+                    className="bg-gray-100 dark:bg-gray-800 hover:bg-gray-200 dark:hover:bg-gray-700 text-gray-700 dark:text-gray-300 py-1 px-3 rounded-full text-sm font-semibold flex items-center gap-1 justify-center transition-colors duration-200"
                     disabled={unFollowLoading}
                     onClick={() => handleUnfollow(user?._id as string)}
+                    aria-label={`Unfollow ${user?.name}`}
                   >
                     <RiUserUnfollowLine />
                     Unfollow
@@ -99,7 +100,7 @@ const Followers = ({ followers, following, ranDomUserEmail }: TProps) => {
 
       {/* Followers Section */}
       {followers?.length > 0 && (
-        <div className="bg-white dark:bg-gray-800 p-4 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700">
+        <div className="bg-white dark:bg-gray-900 p-4 rounded-xl shadow-sm border border-gray-300 dark:border-gray-700">
           <h2 className="text-lg font-bold text-gray-900 dark:text-white mb-4">
             Followers ({followers?.length})
           </h2>
@@ -107,13 +108,13 @@ const Followers = ({ followers, following, ranDomUserEmail }: TProps) => {
             {followers?.map((follower) => (
               <div
                 key={follower?._id}
-                className="flex items-center justify-between pb-3 border-b border-gray-100 dark:border-gray-700 last:border-b-0 last:pb-0"
+                className="flex items-center justify-between pb-3 border-b border-gray-200 dark:border-gray-700 last:border-b-0 last:pb-0"
               >
                 <Link
                   className="flex items-center space-x-3 group"
                   href={`/profile/${follower?.email}`}
                 >
-                  <div className="size-10 flex-shrink-0">
+                  <div className="w-10 h-10 flex-shrink-0">
                     <Image
                       alt={follower?.name || "User"}
                       className="w-full h-full rounded-full object-cover border border-gray-300 dark:border-gray-600 group-hover:scale-105 transition-transform duration-200"
@@ -129,7 +130,7 @@ const Followers = ({ followers, following, ranDomUserEmail }: TProps) => {
                     {follower?.name}
                   </p>
                 </Link>
-                {/* No follow/unfollow button for followers list, as per typical X UI */}
+                {/* No follow/unfollow button for followers list */}
               </div>
             ))}
           </div>

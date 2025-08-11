@@ -146,19 +146,22 @@ export default function PostDetails() {
     );
 
   return (
-    <motion.div
+     <motion.div
       ref={contentRef}
       initial={{ opacity: 0, y: 15 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.3 }}
       className="
+        relative
         bg-white dark:bg-gray-900
-        shadow-md dark:shadow-xl
+        shadow-md dark:shadow-lg
         p-6 sm:p-8
         w-full mx-auto mb-8
-        border border-gray-300 dark:border-gray-700
-        hover:bg-gray-50 dark:hover:bg-gray-800
-        transition-colors duration-300
+        border border-gray-200 dark:border-gray-700
+        transition-all duration-300
+        hover:scale-[1.02]
+        hover:shadow-2xl
+        hover:border-blue-400 dark:hover:border-blue-500
       "
     >
       {openEditCommentModal && (

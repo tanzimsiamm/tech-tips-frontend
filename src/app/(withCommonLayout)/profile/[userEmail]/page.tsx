@@ -61,12 +61,12 @@ const Profile = ({ params }: { params: { userEmail: string } }) => {
   };
 
   return (
-    <div className="md:bg-white dark:bg-gray-800/50 p-4 rounded-lg shadow-sm max-w-4xl mx-auto">
+    <div className="md:bg-white dark:bg-gray-900 p-4 rounded-lg shadow-sm max-w-4xl mx-auto">
       {/* Cover Photo */}
       <div className="relative rounded-t-lg overflow-hidden">
         <div className="absolute inset-0 bg-gradient-to-t from-black/30 to-transparent z-10" />
         <Image
-          src={coverImg || 'https://i.ibb.co.com/mqccxqc/minimalist-purple-mountains-sunset-wallpaper.jpg'}
+          src={coverImg || 'https://i.ibb.co/mqccxqc/minimalist-purple-mountains-sunset-wallpaper.jpg'}
           alt="Cover"
           width={1200}
           height={400}
@@ -80,15 +80,15 @@ const Profile = ({ params }: { params: { userEmail: string } }) => {
               alt="Profile"
               width={144}
               height={144}
-              className="size-20 md:size-32 rounded-full border-4 border-white dark:border-gray-800 object-cover shadow-md"
+              className="w-36 h-36 md:w-40 md:h-40 rounded-full border-4 border-white dark:border-gray-900 object-cover shadow-md"
             />
           </div>
           <div className="pb-2 md:pb-4">
-            <h1 className="text-xl md:text-3xl font-bold text-white dark:text-white flex items-center">
+            <h1 className="text-xl md:text-3xl font-bold text-gray-900 dark:text-white flex items-center">
               {name}
               {memberShip && <FaCheckCircle className="text-blue-400 ml-2" />}
             </h1>
-            <p className="text-gray-200 dark:text-gray-300">{email}</p>
+            <p className="text-gray-700 dark:text-gray-300">{email}</p>
           </div>
         </div>
       </div>
@@ -103,7 +103,7 @@ const Profile = ({ params }: { params: { userEmail: string } }) => {
             {userDetails?.followers?.find(follower => follower?.email === loggedUser?.email) ? (
               <button
                 onClick={handleUnfollow}
-                className="bg-gray-100 hover:bg-gray-200 dark:bg-gray-700 dark:hover:bg-gray-600 px-4 py-2 rounded-lg flex items-center font-medium gap-2 transition-colors duration-200"
+                className="bg-gray-100 hover:bg-gray-200 dark:bg-gray-700 dark:hover:bg-gray-600 px-4 py-2 rounded-lg flex items-center font-medium gap-2 transition-colors duration-200 text-gray-900 dark:text-gray-200"
                 disabled={followLoading || unFollowLoading}
               >
                 {!(followLoading || unFollowLoading) && <RiUserUnfollowLine />}
@@ -119,7 +119,7 @@ const Profile = ({ params }: { params: { userEmail: string } }) => {
             ) : (
               <button
                 onClick={handleFollow}
-                className="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded-lg flex items-center font-medium gap-2 transition-colors duration-200"
+                className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg flex items-center font-medium gap-2 transition-colors duration-200"
                 disabled={followLoading || unFollowLoading}
               >
                 {(followLoading || unFollowLoading) ? (
@@ -159,7 +159,7 @@ const Profile = ({ params }: { params: { userEmail: string } }) => {
 
       {/* Membership Section */}
       {memberShip && (
-        <div className={`mt-6 mb-6 p-4 bg-gradient-to-r from-orange-50 to-orange-100 dark:from-orange-900/50 dark:to-orange-800/50 rounded-lg shadow-inner`}>
+        <div className="mt-6 mb-6 p-4 bg-gradient-to-r from-orange-50 to-orange-100 dark:from-orange-900/50 dark:to-orange-800/50 rounded-lg shadow-inner">
           <div className="flex items-center justify-between">
             <div>
               <h2 className="text-lg font-bold text-orange-800 dark:text-orange-200">Premium Membership</h2>

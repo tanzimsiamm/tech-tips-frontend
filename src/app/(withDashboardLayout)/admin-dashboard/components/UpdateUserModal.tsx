@@ -72,7 +72,7 @@ export default function UpdateUserModal({ setOpen, userEmail }: TModalProps) {
   return (
     <section className="fixed inset-0 z-50 bg-black/40 dark:bg-black/70 backdrop-blur-sm flex justify-center items-center p-4 overflow-y-auto">
       <form
-        className="w-full max-w-md bg-white dark:bg-gray-800 rounded-2xl shadow-2xl relative flex flex-col"
+        className="w-full max-w-md bg-white dark:bg-gray-900 rounded-2xl shadow-2xl relative flex flex-col"
         onSubmit={handleSubmit(onSubmit)}
       >
         {(dataLoading || updateLoading) && (
@@ -92,7 +92,7 @@ export default function UpdateUserModal({ setOpen, userEmail }: TModalProps) {
             Edit User
           </h2>
           <button
-            className="p-2 rounded-full hover:bg-gray-100 dark:hover:bg-gray-700 text-gray-500 dark:text-gray-400 transition-colors duration-200"
+            className="p-2 rounded-full hover:bg-gray-100 dark:hover:bg-gray-800 text-gray-500 dark:text-gray-400 transition-colors duration-200"
             type="button"
             onClick={() => setOpen(false)}
           >
@@ -115,17 +115,17 @@ export default function UpdateUserModal({ setOpen, userEmail }: TModalProps) {
 
           <div>
             <label
-              className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1"
               htmlFor="name"
+              className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1"
             >
               Name
             </label>
             <div className="relative flex items-center">
               <input
-                className="w-full py-3 pl-12 pr-4 outline-none border border-gray-300 dark:border-gray-600 rounded-xl bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors duration-200 placeholder-gray-500 dark:placeholder-gray-400"
                 id="name"
                 type="text"
                 {...register("name")}
+                className="w-full py-3 pl-12 pr-4 outline-none border border-gray-300 dark:border-gray-600 rounded-xl bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors duration-200 placeholder-gray-500 dark:placeholder-gray-400"
               />
               <span className="text-xl absolute left-4 text-gray-500 dark:text-gray-400">
                 <FaUser />
@@ -135,18 +135,18 @@ export default function UpdateUserModal({ setOpen, userEmail }: TModalProps) {
 
           <div>
             <label
-              className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1"
               htmlFor="email"
+              className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1"
             >
               Email
             </label>
             <div className="relative flex items-center">
               <input
-                className="w-full py-3 pl-12 pr-4 outline-none border border-gray-300 dark:border-gray-600 rounded-xl bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors duration-200 placeholder-gray-500 dark:placeholder-gray-400"
                 id="email"
                 type="text"
                 {...register("email")}
                 disabled
+                className="w-full py-3 pl-12 pr-4 outline-none border border-gray-300 dark:border-gray-600 rounded-xl bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors duration-200 placeholder-gray-500 dark:placeholder-gray-400"
               />
               <span className="text-xl absolute left-4 text-gray-500 dark:text-gray-400">
                 <FaEnvelope />
@@ -156,16 +156,16 @@ export default function UpdateUserModal({ setOpen, userEmail }: TModalProps) {
 
           <div>
             <label
-              className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1"
               htmlFor="role"
+              className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1"
             >
               Role
             </label>
             <div className="relative flex items-center">
               <select
-                className="w-full p-3 border border-gray-300 dark:border-gray-600 rounded-xl bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors duration-200"
                 id="role"
                 {...register("role")}
+                className="w-full p-3 border border-gray-300 dark:border-gray-600 rounded-xl bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors duration-200"
               >
                 <option value="user">User</option>
                 <option value="admin">Admin</option>
@@ -178,17 +178,17 @@ export default function UpdateUserModal({ setOpen, userEmail }: TModalProps) {
 
           <div>
             <label
-              className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1"
               htmlFor="image"
+              className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1"
             >
               Profile Image URL
             </label>
             <div className="relative flex items-center">
               <input
-                className="w-full py-3 pl-12 pr-4 outline-none border border-gray-300 dark:border-gray-600 rounded-xl bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors duration-200 placeholder-gray-500 dark:placeholder-gray-400"
                 id="image"
                 type="text"
                 {...register("image")}
+                className="w-full py-3 pl-12 pr-4 outline-none border border-gray-300 dark:border-gray-600 rounded-xl bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors duration-200 placeholder-gray-500 dark:placeholder-gray-400"
               />
               <span className="text-xl absolute left-4 text-gray-500 dark:text-gray-400">
                 <FaImage />
@@ -199,16 +199,16 @@ export default function UpdateUserModal({ setOpen, userEmail }: TModalProps) {
 
         <div className="p-4 flex justify-end space-x-4 border-t border-gray-200 dark:border-gray-700">
           <button
-            className="px-6 py-2 text-base font-semibold rounded-full text-gray-700 dark:text-gray-300 bg-gray-200 dark:bg-gray-700 hover:bg-gray-300 dark:hover:bg-gray-600 transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-offset-2 dark:focus:ring-offset-gray-800"
             type="button"
             onClick={() => setOpen(false)}
+            className="px-6 py-2 text-base font-semibold rounded-full text-gray-700 dark:text-gray-300 bg-gray-200 dark:bg-gray-700 hover:bg-gray-300 dark:hover:bg-gray-600 transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-offset-2 dark:focus:ring-offset-gray-800"
           >
             Cancel
           </button>
           <button
-            className="px-6 py-2 text-base font-semibold rounded-full text-white bg-blue-500 hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 dark:focus:ring-offset-gray-800 transition-colors duration-200 disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-2"
-            disabled={dataLoading || updateLoading}
             type="submit"
+            disabled={dataLoading || updateLoading}
+            className="px-6 py-2 text-base font-semibold rounded-full text-white bg-blue-500 hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 dark:focus:ring-offset-gray-800 transition-colors duration-200 disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-2"
           >
             {dataLoading || updateLoading ? (
               <ClipLoader
