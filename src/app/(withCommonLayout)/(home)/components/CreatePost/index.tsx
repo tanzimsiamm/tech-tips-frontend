@@ -16,7 +16,7 @@ export default function CreatePost() {
     <div
       className="
         bg-white dark:bg-gray-900
-        p-4 rounded-xl shadow-md
+        p-4 shadow-md
         w-full mx-auto mb-4
         border border-gray-200 dark:border-gray-700
         transition-colors duration-300

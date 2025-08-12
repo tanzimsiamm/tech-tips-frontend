@@ -16,9 +16,9 @@ const MyMembership = () => {
   const expDateFormatted = exp ? new Date(exp).toLocaleDateString() : "N/A";
 
   return (
-    <div className="p-4 sm:p-6 lg:p-8 bg-gray-50 dark:bg-black min-h-screen">
+    <div className="p-4 sm:p-6 lg:p-8 bg-white dark:bg-gray-900 min-h-screen">
       {memberShip ? (
-        <div className="max-w-xl mx-auto bg-white dark:bg-gray-800 rounded-2xl shadow-xl border border-gray-200 dark:border-gray-700 overflow-hidden">
+        <div className="max-w-xl mx-auto bg-white dark:bg-gray-900 rounded-2xl shadow-xl border border-gray-200 dark:border-gray-700 overflow-hidden">
           {pkg?.bgColor && (
             <div
               className={`w-full h-4`}
@@ -80,7 +80,7 @@ const MyMembership = () => {
           </div>
         </div>
       ) : (
-        <section className="max-w-xl mx-auto p-6 sm:p-8 bg-white dark:bg-gray-800 rounded-2xl shadow-xl border border-gray-200 dark:border-gray-700 text-center">
+        <section className="max-w-xl mx-auto p-6 sm:p-8 bg-white dark:bg-gray-900 rounded-2xl shadow-xl border border-gray-200 dark:border-gray-700 text-center">
           <Image
             alt="No Membership"
             className="mx-auto mb-6 rounded-lg"

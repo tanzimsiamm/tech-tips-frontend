@@ -16,13 +16,13 @@ const MyFollowers = () => {
   const { followers, following } = userDetails;
 
   return (
-    <div className="p-4 sm:p-6 lg:p-8 bg-gray-50 dark:bg-black min-h-screen">
+    <div className="p-4 sm:p-6 lg:p-8 bg-white dark:bg-gray-900 min-h-screen">
       <h1 className="text-2xl sm:text-3xl font-extrabold text-gray-900 dark:text-white mb-6">
         Your Network
       </h1>
 
       {/* Followers Table */}
-      <div className="bg-white dark:bg-gray-800 shadow-sm rounded-xl p-4 sm:p-6 mb-6 border border-gray-200 dark:border-gray-700">
+      <div className="bg-white dark:bg-gray-900 shadow-sm rounded-xl p-4 sm:p-6 mb-6 border border-gray-200 dark:border-gray-700">
         <h2 className="text-xl sm:text-2xl font-bold text-gray-900 dark:text-white flex items-center mb-4">
           <FaUserFriends className="mr-3 text-blue-500" />
           Followers ({followers?.length || 0})
@@ -88,7 +88,7 @@ const MyFollowers = () => {
       </div>
 
       {/* Following Table */}
-      <div className="bg-white dark:bg-gray-800 shadow-sm rounded-xl p-4 sm:p-6 border border-gray-200 dark:border-gray-700">
+      <div className="bg-white dark:bg-gray-900 shadow-sm rounded-xl p-4 sm:p-6 border border-gray-200 dark:border-gray-700">
         <h2 className="text-xl sm:text-2xl font-bold text-gray-900 dark:text-white flex items-center mb-4">
           <FaUserPlus className="mr-3 text-blue-500" />
           Following ({following?.length || 0})

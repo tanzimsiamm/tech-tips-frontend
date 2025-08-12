@@ -19,7 +19,7 @@ export default function MyPostsSection() {
   const { posts } = data?.data || {};
 
   return (
-    <section className="bg-gray-50 dark:bg-black min-h-screen">
+    <section className="bg-white dark:bg-gray-900 min-h-screen">
       <div className="sticky top-0 z-10 bg-white dark:bg-gray-900 border-b border-gray-200 dark:border-gray-800 p-4">
         <div className="flex flex-col sm:flex-row items-center justify-between gap-3">
           <div className="relative flex-1 w-full hidden sm:flex items-center">
@@ -27,7 +27,7 @@ export default function MyPostsSection() {
               <TfiSearch />
             </span>
             <input
-              className="w-full py-2 pl-10 pr-4 rounded-full bg-gray-100 dark:bg-gray-700 text-gray-900 dark:text-white placeholder-gray-500 dark:placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors duration-200"
+              className="w-full py-2 pl-10 pr-4 rounded-full bg-gray-50 dark:bg-gray-800 text-gray-900 dark:text-white placeholder-gray-500 dark:placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors duration-200 border border-gray-200 dark:border-gray-700"
               placeholder="Search your posts..."
               type="text"
               onChange={(e) =>
@@ -42,7 +42,7 @@ export default function MyPostsSection() {
           <div className="relative w-full sm:hidden">
             <div className="dropdown w-full">
               <div
-                className="w-full flex items-center justify-center gap-2 p-3 rounded-full bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-300 shadow-sm border border-gray-200 dark:border-gray-600"
+                className="w-full flex items-center justify-center gap-2 p-3 rounded-full bg-gray-50 dark:bg-gray-800 text-gray-700 dark:text-gray-300 shadow-sm border border-gray-200 dark:border-gray-700"
                 role="button"
                 tabIndex={0}
               >
@@ -55,7 +55,7 @@ export default function MyPostsSection() {
               >
                 <li>
                   <input
-                    className="w-full py-2 px-4 rounded-full bg-gray-100 dark:bg-gray-700 text-gray-900 dark:text-white placeholder-gray-500 dark:placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors duration-200"
+                    className="w-full py-2 px-4 rounded-full bg-gray-50 dark:bg-gray-800 text-gray-900 dark:text-white placeholder-gray-500 dark:placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors duration-200 border border-gray-200 dark:border-gray-700"
                     placeholder="Search your posts..."
                     type="text"
                     onChange={(e) =>
@@ -68,7 +68,7 @@ export default function MyPostsSection() {
                 </li>
                 <li>
                   <select
-                    className="w-full p-2 rounded-full bg-gray-100 dark:bg-gray-700 text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors duration-200"
+                    className="w-full p-2 rounded-full bg-white dark:bg-gray-800 text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors duration-200 border border-gray-200 dark:border-gray-700"
                     defaultValue=""
                     onChange={(e) =>
                       setFilterQuery((prev) => ({
@@ -86,7 +86,7 @@ export default function MyPostsSection() {
                 </li>
                 <li>
                   <select
-                    className="w-full p-2 rounded-full bg-gray-100 dark:bg-gray-700 text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors duration-200"
+                    className="w-full p-2 rounded-full bg-white dark:bg-gray-800 text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors duration-200 border border-gray-200 dark:border-gray-700"
                     defaultValue=""
                     onChange={(e) =>
                       setFilterQuery((prev) => ({
@@ -113,10 +113,10 @@ export default function MyPostsSection() {
           </div>
 
           <div className="hidden sm:flex items-center gap-3">
-            <div className="flex items-center gap-2 bg-gray-100 dark:bg-gray-700 rounded-full px-3 py-2 text-gray-700 dark:text-gray-300 border border-gray-200 dark:border-gray-600">
+            <div className="flex items-center gap-2 bg-gray-50 dark:bg-gray-800 rounded-full px-3 py-2 text-gray-700 dark:text-gray-300 border border-gray-200 dark:border-gray-700">
               <LuFilter className="text-lg" />
               <select
-                className="bg-transparent outline-none text-sm cursor-pointer dark:text-gray-300"
+                className="bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-300 outline-none text-sm cursor-pointer rounded px-2 py-1 border border-gray-200 dark:border-gray-600"
                 defaultValue=""
                 onChange={(e) =>
                   setFilterQuery((prev) => ({
@@ -133,10 +133,10 @@ export default function MyPostsSection() {
               </select>
             </div>
 
-            <div className="flex items-center gap-2 bg-gray-100 dark:bg-gray-700 rounded-full px-3 py-2 text-gray-700 dark:text-gray-300 border border-gray-200 dark:border-gray-600">
+            <div className="flex items-center gap-2 bg-gray-50 dark:bg-gray-800 rounded-full px-3 py-2 text-gray-700 dark:text-gray-300 border border-gray-200 dark:border-gray-700">
               <MdOutlineSort className="text-lg" />
               <select
-                className="bg-transparent outline-none text-sm cursor-pointer dark:text-gray-300"
+                className="bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-300 outline-none text-sm cursor-pointer rounded px-2 py-1 border border-gray-200 dark:border-gray-600"
                 defaultValue=""
                 onChange={(e) =>
                   setFilterQuery((prev) => ({

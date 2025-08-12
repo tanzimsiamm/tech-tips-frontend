@@ -40,7 +40,10 @@ const RightSidebar = () => {
   const filterUsers: TUser[] = totalUsers
     .filter((user: TUser) => {
       const result = userDetails?.following?.find(
-        (followingUser) => user?.email === followingUser?.email
+        (followingUser: string | TUser) =>
+          typeof followingUser === "string"
+            ? user?.email === followingUser
+            : user?.email === (followingUser as TUser)?.email
       );
 
       if (!result) {
@@ -53,13 +56,13 @@ const RightSidebar = () => {
   const { email, image, memberShip, name, coverImg, followers, following } =
     userDetails;
 
-  const handleFollow = async (targetedId) => {
+  const handleFollow = async (targetedId: any) => {
     try {
       const response = await followUser({
         userId: loggedUser?._id as string,
         targetedUserId: targetedId,
       });
-      if (response?.success) {
+      if (response && 'data' in response && response.data?.success) {
         toast.success("You followed the user");
 
         //   await sendNotification({
@@ -77,13 +80,13 @@ const RightSidebar = () => {
     }
   };
 
-  const handleUnfollow = async (targetedId) => {
+  const handleUnfollow = async (targetedId: any) => {
     try {
       const response = await unfollowUser({
         userId: loggedUser?._id as string,
         targetedUserId: targetedId,
       });
-      if (response?.success) {
+      if (response && 'data' in response && response.data?.success) {
         toast.success("You unfollowed the user");
       }
     } catch (error) {
@@ -100,7 +103,7 @@ const RightSidebar = () => {
             {/* Following Section */}
 
             {following?.length ? (
-              <div className="bg-white dark:bg-gray-800 p-4 rounded-lg ">
+              <div className="bg-white dark:bg-gray-900 p-4 rounded-lg border border-gray-300 dark:border-gray-700">
                 <h2 className="xl:text-lg text-gray-500 dark:text-gray-300 font-semibold mb-4">
                   Following ({following?.length})
                 </h2>
@@ -156,7 +159,7 @@ const RightSidebar = () => {
             )}
 
             {/* All other users  */}
-            <div className="rounded-lg  bg-white dark:bg-gray-800 p-4">
+            <div className="rounded-lg  bg-white dark:bg-gray-900 p-4 border border-gray-300 dark:border-gray-700 ">
               <h2 className="xl:text-lg text-gray-500 dark:text-gray-300 font-semibold mb-4  ">
                 People you can follow
               </h2>

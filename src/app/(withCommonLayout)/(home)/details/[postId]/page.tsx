@@ -161,7 +161,6 @@ export default function PostDetails() {
         transition-all duration-300
         hover:scale-[1.02]
         hover:shadow-2xl
-        hover:border-blue-400 dark:hover:border-blue-500
       "
     >
       {openEditCommentModal && (
@@ -297,7 +296,7 @@ export default function PostDetails() {
             <Link href={`/profile/${comment?.userInfo?.email}`}>
               <Image
                 alt={comment?.userInfo?.name || "User"}
-                className="size-10 rounded-full object-cover border border-gray-300 dark:border-gray-600 shadow-sm"
+                className="size-10 rounded-full object-cover border border-gray-300 dark:border-gray-700 shadow-sm"
                 height={40}
                 src={
                   comment?.userInfo?.image ||
@@ -307,7 +306,7 @@ export default function PostDetails() {
               />
             </Link>
             <div className="flex-1">
-              <div className="bg-gray-100 dark:bg-gray-700 rounded-xl px-5 py-3 relative group shadow-sm transition-colors duration-300">
+              <div className="bg-gray-100 dark:bg-gray-800 rounded-xl px-5 py-3 relative group shadow-sm transition-colors duration-300">
                 <div className="flex items-center justify-between">
                   <h4 className="font-semibold text-gray-900 dark:text-white text-sm">
                     {comment?.userInfo?.name}
@@ -349,7 +348,7 @@ export default function PostDetails() {
       {/* Add Comment Form */}
       {user && (
         <form
-          className="flex items-center gap-4 mt-8 pt-6 border-t border-gray-200 dark:border-gray-700"
+          className="flex items-center gap-4 mt-8 pt-6 border-t border-gray-200 dark:border-gray-800"
           onSubmit={handleSubmit(onSubmit)}
         >
           <Image

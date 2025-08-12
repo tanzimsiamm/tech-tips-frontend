@@ -40,7 +40,7 @@ export default function PostSection() {
 
   return (
     <section className="bg-gray-50 dark:bg-gray-900 min-h-screen">
-      <div className="sticky top-0 z-10 bg-white dark:bg-gray-800 border-b border-gray-200 dark:border-gray-700 p-4">
+      <div className="sticky top-0 z-10 bg-white dark:bg-gray-900 border-b border-gray-200 dark:border-gray-700 p-4">
         <div className="flex flex-col sm:flex-row items-center justify-between gap-3">
           {/* Search Input for larger screens */}
           <div className="relative flex-1 w-full hidden sm:flex items-center">
@@ -49,7 +49,7 @@ export default function PostSection() {
             </span>
             <input
               aria-label="Search posts"
-              className="w-full py-2 pl-10 pr-4 rounded-full bg-gray-100 dark:bg-gray-700 text-gray-900 dark:text-gray-100 placeholder-gray-500 dark:placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors duration-200"
+              className="w-full py-2 pl-10 pr-4 rounded-full bg-gray-100 dark:bg-gray-800 text-gray-900 dark:text-gray-100 placeholder-gray-500 dark:placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors duration-200"
               placeholder="Search posts..."
               type="search"
               spellCheck={false}
