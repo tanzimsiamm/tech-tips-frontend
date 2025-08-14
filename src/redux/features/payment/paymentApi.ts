@@ -1,11 +1,12 @@
 import baseApi from "../../api/baseApi";
 
-const userApi = baseApi.injectEndpoints({
+const paymentApi = baseApi.injectEndpoints({
   endpoints: (builder) => ({
-    getPaymentHistories: builder.query({
-      query: (email: string) => ({
-        url: `/payments/?userEmail=${email}`,
-        method: "GET",
+    getPaymentIntent: builder.mutation({
+      query: (payload: { totalCost: number; currency: string }) => ({
+        url: `/payments/create-payment-intent`,
+        method: "POST",
+        body: payload,
       }),
     }),
 
@@ -17,7 +18,15 @@ const userApi = baseApi.injectEndpoints({
       }),
       invalidatesTags: ["User", "Users"],
     }),
+
+     getPaymentHistories: builder.query({
+      query: (email: string) => ({
+        url: `/payments?userEmail=${email}`,
+        method: "GET",
+      }),
+    }),
   }),
 });
 
-export const { useSavePaymentMutation, useGetPaymentHistoriesQuery } = userApi;
+export const { useGetPaymentIntentMutation, useSavePaymentMutation, useGetPaymentHistoriesQuery } = paymentApi;
+export default paymentApi;
