@@ -1,6 +1,7 @@
 const envConfig = {
-  baseApi:
-    process.env.NEXT_PUBLIC_BACKEND_API_URL || "http://localhost:5000/api",
+  baseApi: process.env.NEXT_PUBLIC_BACKEND_VERCEL_API_URL,
+    // process.env.NEXT_PUBLIC_BACKEND_API_URL || "http://localhost:5000/api",
+    
 };
 
 export default envConfig;

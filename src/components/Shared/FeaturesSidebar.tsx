@@ -18,6 +18,7 @@ import Cookies from "js-cookie";
 import { toast } from "sonner";
 import { useRouter } from "next/navigation";
 
+import Image from "next/image";
 import { ThemeSwitch } from "../theme-switch";
 
 import { logout } from "@/src/redux/features/authentication/authSlice";
@@ -54,11 +55,22 @@ const FeaturesSidebar = ({ showAllText = false }: FeaturesSidebarProps) => {
       className="w-full h-full p-3 lg:p-4 space-y-6 bg-white dark:bg-gray-900 text-gray-900 dark:text-gray-100"
       aria-label="Sidebar navigation"
     >
+      {/* ---- LOGO ---- */}
+      <div className="flex justify-start ml-3 mb-6">
+        <Link href="/" className="flex items-center space-x-2">
+          <Image
+            src="/logo.png"
+            alt="Logo"
+            width={40}
+            height={40}
+            className="rounded-full"
+          />
+          {showAllText}
+        </Link>
+      </div>
+
       {/* ---- NEW FEEDS ---- */}
       <section className="space-y-4">
-        <h2 className="text-gray-500 dark:text-gray-400 text-xs sm:text-sm font-semibold tracking-wider uppercase">
-          New Feeds
-        </h2>
         <ul className="space-y-2">
           <li>
             <Link href="/" className={menuItemClasses}>
@@ -80,7 +92,10 @@ const FeaturesSidebar = ({ showAllText = false }: FeaturesSidebarProps) => {
           {user ? (
             <>
               <li>
-                <Link href={`/profile/${user.email}`} className={menuItemClasses}>
+                <Link
+                  href={`/profile/${user.email}`}
+                  className={menuItemClasses}
+                >
                   <div className={iconBg("bg-blue-600")}>
                     <FaUserCircle className="text-white" />
                   </div>
@@ -116,20 +131,21 @@ const FeaturesSidebar = ({ showAllText = false }: FeaturesSidebarProps) => {
 
           {/* Theme Switch */}
           <li>
-            <div
-              className={`${menuItemClasses} justify-between cursor-pointer select-none`}
-            >
-              <div className="flex items-center gap-3">
-                <div className={iconBg("bg-purple-600")}>
-                  <FaMoon className="text-white" />
-                </div>
-                <span className={textClass}>Theme</span>
-              </div>
-              <div className="ml-2 pt-1">
-                <ThemeSwitch />
-              </div>
-            </div>
-          </li>
+  <div className={`${menuItemClasses} justify-between select-none`}>
+    <div className="flex items-center gap-3">
+      <div
+        className={`${iconBg("bg-purple-600")} cursor-pointer hover:bg-purple-700 transition`}
+      >
+        <FaMoon className="text-white" />
+      </div>
+      <span className={textClass}>Theme</span>
+    </div>
+    <div className="ml-2 pt-1">
+      <ThemeSwitch />
+    </div>
+  </div>
+</li>
+
         </ul>
       </section>
 

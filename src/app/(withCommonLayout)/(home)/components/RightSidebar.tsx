@@ -103,7 +103,7 @@ const RightSidebar = () => {
             {/* Following Section */}
 
             {following?.length ? (
-              <div className="bg-white dark:bg-gray-900 p-4 rounded-lg border border-gray-300 dark:border-gray-700">
+              <div className="bg-white dark:bg-gray-900 p-4 rounded-lg ">
                 <h2 className="xl:text-lg text-gray-500 dark:text-gray-300 font-semibold mb-4">
                   Following ({following?.length})
                 </h2>
@@ -159,14 +159,14 @@ const RightSidebar = () => {
             )}
 
             {/* All other users  */}
-            <div className="rounded-lg  bg-white dark:bg-gray-900 p-4 border border-gray-300 dark:border-gray-700 ">
+            <div className="rounded-lg  bg-white dark:bg-gray-900 p-4 ">
               <h2 className="xl:text-lg text-gray-500 dark:text-gray-300 font-semibold mb-4  ">
                 People you can follow
               </h2>
 
               <div className="space-y-4 max-h-[525px] overflow-y-scroll scrollbar-hide relative">
                 {followLoading && (
-                  <div className="w-full h-full absolute top-0 left-0 z-50 right-0 bottom-0 bg-white/80 dark:bg-gray-800/90  rounded-md flex justify-center items-center">
+                  <div className="w-full h-full absolute top-0 left-0 z-50 right-0 bottom-0  rounded-md flex justify-center items-center">
                     <ClipLoader
                       color="#3B82F6"
                       size={38}

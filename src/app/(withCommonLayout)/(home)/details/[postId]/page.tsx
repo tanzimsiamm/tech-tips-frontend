@@ -4,7 +4,7 @@ import { FaShare, FaPen } from "react-icons/fa";
 import { RiDeleteBin4Line } from "react-icons/ri";
 import Image from "next/image";
 import TimeAgo from "react-timeago";
-import { IoSendSharp } from "react-icons/io5";
+import { IoSendSharp, IoArrowBack } from "react-icons/io5"; // ⬅️ Back Icon
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
 import { ClipLoader } from "react-spinners";
@@ -14,7 +14,7 @@ import { AiFillPrinter } from "react-icons/ai";
 import React, { useRef, useState } from "react";
 import { useReactToPrint } from "react-to-print";
 import Link from "next/link";
-import { useParams } from "next/navigation";
+import { useParams, useRouter } from "next/navigation"; // ⬅️ useRouter added
 import { motion } from "framer-motion";
 
 import EditCommentModal from "../../components/Posts/EditCommentModal";
@@ -33,6 +33,7 @@ import { useAppSelector } from "@/src/redux/hooks";
 
 export default function PostDetails() {
   const params = useParams();
+  const router = useRouter(); // ⬅️ Initialize router
   const postId = params?.postId as string;
 
   const { data, isLoading, error } = useGetSinglePostQuery(postId, {
@@ -146,7 +147,7 @@ export default function PostDetails() {
     );
 
   return (
-     <motion.div
+    <motion.div
       ref={contentRef}
       initial={{ opacity: 0, y: 15 }}
       animate={{ opacity: 1, y: 0 }}
@@ -169,6 +170,21 @@ export default function PostDetails() {
           setOpen={setEditCommentModal}
         />
       )}
+
+      {/* 🔙 Back Button */}
+<div className="mb-2 -mt-3"> 
+  <button
+    onClick={() => router.back()}
+    className="flex items-center gap-2 text-gray-700 dark:text-gray-300 
+               hover:text-blue-600 dark:hover:text-blue-400 
+               bg-gray-100 dark:bg-gray-800 px-3 py-2 
+               rounded-full shadow-md transition"
+  >
+    <IoArrowBack className="text-lg" />
+    <span className="text-sm font-medium">Post</span>
+  </button>
+</div>
+
 
       {/* Post Header */}
       <div
