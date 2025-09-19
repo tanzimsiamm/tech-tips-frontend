@@ -5,6 +5,7 @@ import { FaBars, FaTimes } from "react-icons/fa";
 import { motion, AnimatePresence } from "framer-motion";
 
 import FeaturesSidebar from "@/src/components/Shared/FeaturesSidebar";
+import Link from "next/link";
 
 const DrawerNavbar = () => {
   const [isDrawerOpen, setIsDrawerOpen] = useState(false);
@@ -35,13 +36,11 @@ const DrawerNavbar = () => {
       if (e.key !== "Tab" || !focusableElements) return;
 
       if (e.shiftKey) {
-        // Shift + Tab
         if (document.activeElement === firstElem) {
           e.preventDefault();
           lastElem?.focus();
         }
       } else {
-        // Tab
         if (document.activeElement === lastElem) {
           e.preventDefault();
           firstElem?.focus();
@@ -62,17 +61,17 @@ const DrawerNavbar = () => {
       {/* Top Navbar for Small Devices */}
       <div className="lg:hidden fixed top-0 left-0 right-0 z-50 flex items-center justify-between p-3 bg-white dark:bg-gray-900 shadow-md border-b border-gray-200 dark:border-gray-700">
         <button
-          className="p-2 text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 rounded transition"
+          className="p-2 text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-md transition"
           onClick={() => setIsDrawerOpen(true)}
           aria-label="Open menu"
           aria-expanded={isDrawerOpen}
           aria-controls="drawer-sidebar"
           type="button"
         >
-          <FaBars className="text-2xl" />
+          <FaBars className="text-xl" />
         </button>
         <h1 className="text-lg font-bold text-gray-900 dark:text-white select-none">
-          My App
+          <Link href="/">Home</Link>
         </h1>
       </div>
 
@@ -107,22 +106,19 @@ const DrawerNavbar = () => {
               tabIndex={-1}
             >
               {/* Drawer Header */}
-              <div className="flex justify-between items-center p-4 border-b border-gray-200 dark:border-gray-700">
-                <h2 className="text-lg font-semibold text-gray-800 dark:text-gray-200">
-                  Menu
-                </h2>
+              <div className="flex justify-end items-center p-3 border-b border-gray-200 dark:border-gray-700">
                 <button
-                  className="p-2 text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 rounded transition"
+                  className="p-1.5 text-gray-600 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-700 rounded-full transition"
                   onClick={() => setIsDrawerOpen(false)}
                   aria-label="Close menu"
                   type="button"
                 >
-                  <FaTimes className="text-2xl" />
+                  <FaTimes className="text-lg" />
                 </button>
               </div>
 
               {/* Sidebar Content */}
-              <div className="p-2 overflow-y-auto h-[calc(100%-4rem)]">
+              <div className="p-2 overflow-y-auto h-[calc(100%-3.2rem)]">
                 <FeaturesSidebar showAllText={true} />
               </div>
             </motion.aside>

@@ -23,6 +23,7 @@ import { ThemeSwitch } from "../theme-switch";
 
 import { logout } from "@/src/redux/features/authentication/authSlice";
 import { useAppDispatch, useAppSelector } from "@/src/redux/hooks";
+import Logo from "./Logo";
 
 interface FeaturesSidebarProps {
   showAllText?: boolean;
@@ -55,18 +56,9 @@ const FeaturesSidebar = ({ showAllText = false }: FeaturesSidebarProps) => {
       className="w-full h-full p-3 lg:p-4 space-y-6 bg-white dark:bg-gray-900 text-gray-900 dark:text-gray-100"
       aria-label="Sidebar navigation"
     >
-      {/* ---- LOGO ---- */}
-      <div className="flex justify-start ml-3 mb-6">
-        <Link href="/" className="flex items-center space-x-2">
-          <Image
-            src="/logo.png"
-            alt="Logo"
-            width={40}
-            height={40}
-            className="rounded-full"
-          />
-          {showAllText}
-        </Link>
+     {/* ---- LOGO ---- */}
+      <div className="ml-1">
+        <Logo/>
       </div>
 
       {/* ---- NEW FEEDS ---- */}
