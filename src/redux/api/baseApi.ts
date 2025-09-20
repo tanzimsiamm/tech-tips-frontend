@@ -7,7 +7,7 @@ const baseApi = createApi({
   reducerPath: "baseApi",
   baseQuery: fetchBaseQuery({
     // baseUrl: envConfig.baseApi,
-    baseUrl: 'https://tech-tips-tricks-backend.vercel.app/api',
+    baseUrl: 'https://tech-tips-backend-render-deploy.onrender.com/api',
 
     prepareHeaders: (headers, { getState }) => {
       const token = (getState() as RootState).auth.token;
