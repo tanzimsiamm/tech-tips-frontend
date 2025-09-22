@@ -62,7 +62,7 @@ const RightSidebar = () => {
         userId: loggedUser?._id as string,
         targetedUserId: targetedId,
       });
-      if (response && 'data' in response && response.data?.success) {
+      if (response && "data" in response && response.data?.success) {
         toast.success("You followed the user");
 
         //   await sendNotification({
@@ -86,7 +86,7 @@ const RightSidebar = () => {
         userId: loggedUser?._id as string,
         targetedUserId: targetedId,
       });
-      if (response && 'data' in response && response.data?.success) {
+      if (response && "data" in response && response.data?.success) {
         toast.success("You unfollowed the user");
       }
     } catch (error) {

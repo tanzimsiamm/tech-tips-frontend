@@ -15,7 +15,7 @@ export async function middleware(request: NextRequest) {
 
   if (!accessToken) {
     return NextResponse.redirect(
-      new URL(pathname ? `/login?redirect=${pathname}` : "/login", request.url),
+      new URL(pathname ? `/login?redirect=${pathname}` : "/login", request.url)
     );
   }
 

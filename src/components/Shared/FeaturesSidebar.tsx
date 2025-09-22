@@ -24,6 +24,8 @@ import { ThemeSwitch } from "../theme-switch";
 import { logout } from "@/src/redux/features/authentication/authSlice";
 import { useAppDispatch, useAppSelector } from "@/src/redux/hooks";
 import Logo from "./Logo";
+import { FaUserPlus } from "react-icons/fa6";
+import { useEffect, useState } from "react";
 
 interface FeaturesSidebarProps {
   showAllText?: boolean;
@@ -33,6 +35,22 @@ const FeaturesSidebar = ({ showAllText = false }: FeaturesSidebarProps) => {
   const user = useAppSelector((state) => state.auth.user);
   const dispatch = useAppDispatch();
   const router = useRouter();
+  const [isMobile, setIsMobile] = useState(false);
+
+  useEffect(() => {
+    const checkIfMobile = () => {
+      setIsMobile(window.innerWidth < 1024);
+    };
+
+    // Check initially
+    checkIfMobile();
+
+    // Add event listener for window resize
+    window.addEventListener("resize", checkIfMobile);
+
+    // Cleanup
+    return () => window.removeEventListener("resize", checkIfMobile);
+  }, []);
 
   const logoutUser = () => {
     dispatch(logout());
@@ -56,9 +74,9 @@ const FeaturesSidebar = ({ showAllText = false }: FeaturesSidebarProps) => {
       className="w-full h-full p-3 lg:p-4 space-y-6 bg-white dark:bg-gray-900 text-gray-900 dark:text-gray-100"
       aria-label="Sidebar navigation"
     >
-     {/* ---- LOGO ---- */}
+      {/* ---- LOGO ---- */}
       <div className="ml-1">
-        <Logo/>
+        <Logo />
       </div>
 
       {/* ---- NEW FEEDS ---- */}
@@ -121,23 +139,33 @@ const FeaturesSidebar = ({ showAllText = false }: FeaturesSidebarProps) => {
             </li>
           )}
 
+          {isMobile && user && (
+            <li>
+              <Link href="/mobile-follow" className={menuItemClasses}>
+                <div className={iconBg("bg-green-600")}>
+                  <FaUserPlus className="text-white" />
+                </div>
+                <span className={textClass}>Followers & Following</span>
+              </Link>
+            </li>
+          )}
+
           {/* Theme Switch */}
           <li>
-  <div className={`${menuItemClasses} justify-between select-none`}>
-    <div className="flex items-center gap-3">
-      <div
-        className={`${iconBg("bg-purple-600")} cursor-pointer hover:bg-purple-700 transition`}
-      >
-        <FaMoon className="text-white" />
-      </div>
-      <span className={textClass}>Theme</span>
-    </div>
-    <div className="ml-2 pt-1">
-      <ThemeSwitch />
-    </div>
-  </div>
-</li>
-
+            <div className={`${menuItemClasses} justify-between select-none`}>
+              <div className="flex items-center gap-3">
+                <div
+                  className={`${iconBg("bg-purple-600")} cursor-pointer hover:bg-purple-700 transition`}
+                >
+                  <FaMoon className="text-white" />
+                </div>
+                <span className={textClass}>Theme</span>
+              </div>
+              <div className="ml-2 pt-1">
+                <ThemeSwitch />
+              </div>
+            </div>
+          </li>
         </ul>
       </section>
 

@@ -19,6 +19,7 @@ const CommonLayout = ({ children }: { children: ReactNode }) => {
     "/about",
     "/contact",
     "/latest-event",
+    "/mobile-follow",
   ];
 
   // Show right sidebar only if user exists and current route is not hidden
