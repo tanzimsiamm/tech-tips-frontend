@@ -76,8 +76,8 @@ const FeaturesSidebar = ({ showAllText = false }: FeaturesSidebarProps) => {
     >
       {/* ---- LOGO ---- */}
       <div className="ml-1">
-        <Logo />
-      </div>
+  <Logo showAllText />
+</div>
 
       {/* ---- NEW FEEDS ---- */}
       <section className="space-y-4">

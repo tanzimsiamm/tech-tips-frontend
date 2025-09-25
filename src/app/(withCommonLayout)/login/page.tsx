@@ -15,6 +15,8 @@ import { useLoginMutation } from "@/src/redux/features/authentication/authApi";
 import { useAppDispatch } from "@/src/redux/hooks";
 import { TJwtDecoded } from "@/src/types";
 import { setUser } from "@/src/redux/features/authentication/authSlice";
+import { FcGoogle } from "react-icons/fc";
+import { FaGithub } from "react-icons/fa";
 
 type TProps = {
   setOpen: React.Dispatch<React.SetStateAction<boolean>>;
@@ -171,19 +173,54 @@ export default function Login({ setOpen }: TProps) {
                 )}
               </Button>
             </div>
-
-            <div className="mt-6 text-center">
-              <h4 className="text-sm font-medium text-gray-600 dark:text-gray-400">
-                Don&apos;t have an account?{" "}
-                <Link
-                  className="text-blue-500 hover:text-blue-600 dark:text-blue-400 dark:hover:text-blue-500 transition-colors duration-200"
-                  href="/register"
-                >
-                  Register
-                </Link>
-              </h4>
-            </div>
           </form>
+
+          {/* ===== Added Social Login Buttons ===== */}
+
+<div className="mt-6 flex flex-col gap-4">
+  {/* Google */}
+  <Button
+    onClick={() =>
+      (window.location.href = "http://localhost:5000/api/auth/google")
+    }
+    className="w-full justify-center py-3 px-4 text-base font-medium rounded-full 
+               bg-white text-gray-700 dark:text-gray-900 
+               border border-gray-300 dark:border-gray-600 
+               hover:bg-gray-50 dark:hover:bg-gray-200 
+               flex items-center gap-2 transition-colors duration-200"
+  >
+    <FcGoogle className="text-xl" />
+    Continue with Google
+  </Button>
+
+  {/* GitHub */}
+  <Button
+    onClick={() =>
+      (window.location.href = "http://localhost:5000/api/auth/github")
+    }
+    className="w-full justify-center py-3 px-4 text-base font-medium rounded-full 
+               bg-gray-900 text-white hover:bg-gray-800 
+               flex items-center gap-2 transition-colors duration-200"
+  >
+    <FaGithub className="text-xl" />
+    Continue with GitHub
+  </Button>
+</div>
+
+
+          {/* ===== End Social Login Buttons ===== */}
+
+          <div className="mt-6 text-center">
+            <h4 className="text-sm font-medium text-gray-600 dark:text-gray-400">
+              Don&apos;t have an account?{" "}
+              <Link
+                className="text-blue-500 hover:text-blue-600 dark:text-blue-400 dark:hover:text-blue-500 transition-colors duration-200"
+                href="/register"
+              >
+                Register
+              </Link>
+            </h4>
+          </div>
         </div>
       </div>
     </div>
