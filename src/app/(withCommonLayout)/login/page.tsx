@@ -17,6 +17,7 @@ import { TJwtDecoded } from "@/src/types";
 import { setUser } from "@/src/redux/features/authentication/authSlice";
 import { FcGoogle } from "react-icons/fc";
 import { FaGithub } from "react-icons/fa";
+import { AiOutlineEye, AiOutlineEyeInvisible } from "react-icons/ai";
 
 type TProps = {
   setOpen: React.Dispatch<React.SetStateAction<boolean>>;
@@ -29,6 +30,7 @@ export default function Login({ setOpen }: TProps) {
   const router = useRouter();
   const [loading, setLoading] = useState(false);
   const [demoUser, setDemoUser] = useState<any>({});
+  const [showPassword, setShowPassword] = useState(false);
 
   const handleLogin = async (e: any) => {
     e.preventDefault();
@@ -134,18 +136,30 @@ export default function Login({ setOpen }: TProps) {
             <div className="mb-6">
               <div className="relative flex items-center">
                 <input
-                  className="w-full py-3 pl-12 pr-4 outline-none border border-gray-300 dark:border-gray-600 rounded-xl bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors duration-200 placeholder-gray-400 dark:placeholder-gray-300"
+                  className="w-full py-3 pl-12 pr-12 outline-none border border-gray-300 dark:border-gray-600 
+                 rounded-xl bg-white dark:bg-gray-700 text-gray-900 dark:text-white 
+                 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors duration-200 
+                 placeholder-gray-400 dark:placeholder-gray-300"
                   defaultValue={demoUser?.password || ""}
                   name="password"
                   placeholder="Password"
-                  type="password"
+                  type={showPassword ? "text" : "password"}
                   onChange={() =>
                     setErrors({ emailError: "", passwordError: "" })
                   }
                 />
+                {/* Left Icon */}
                 <span className="text-xl absolute left-4 text-gray-500 dark:text-gray-400">
                   <GoUnlock />
                 </span>
+                {/* Toggle Eye Button */}
+                <button
+                  type="button"
+                  onClick={() => setShowPassword(!showPassword)}
+                  className="absolute right-4 text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-200"
+                >
+                  {showPassword ? <AiOutlineEyeInvisible /> : <AiOutlineEye />}
+                </button>
               </div>
               {errors?.passwordError && (
                 <span className="text-red-500 text-sm mt-1 block">
@@ -177,36 +191,37 @@ export default function Login({ setOpen }: TProps) {
 
           {/* ===== Added Social Login Buttons ===== */}
 
-<div className="mt-6 flex flex-col gap-4">
-  {/* Google */}
-  <Button
-    onClick={() =>
-      (window.location.href = "https://tech-tips-tricks-backend.vercel.app/api/auth/google")
-    }
-    className="w-full justify-center py-3 px-4 text-base font-medium rounded-full 
+          <div className="mt-6 flex flex-col gap-4">
+            {/* Google */}
+            <Button
+              onClick={() =>
+                (window.location.href =
+                  "https://tech-tips-tricks-backend.vercel.app/api/auth/google")
+              }
+              className="w-full justify-center py-3 px-4 text-base font-medium rounded-full 
                bg-white text-gray-700 dark:text-gray-900 
                border border-gray-300 dark:border-gray-600 
                hover:bg-gray-50 dark:hover:bg-gray-200 
                flex items-center gap-2 transition-colors duration-200"
-  >
-    <FcGoogle className="text-xl" />
-    Continue with Google
-  </Button>
+            >
+              <FcGoogle className="text-xl" />
+              Continue with Google
+            </Button>
 
-  {/* GitHub */}
-  <Button
-    onClick={() =>
-      (window.location.href = "https://tech-tips-tricks-backend.vercel.app/api/auth/github")
-    }
-    className="w-full justify-center py-3 px-4 text-base font-medium rounded-full 
+            {/* GitHub */}
+            <Button
+              onClick={() =>
+                (window.location.href =
+                  "https://tech-tips-tricks-backend.vercel.app/api/auth/github")
+              }
+              className="w-full justify-center py-3 px-4 text-base font-medium rounded-full 
                bg-gray-900 text-white hover:bg-gray-800 
                flex items-center gap-2 transition-colors duration-200"
-  >
-    <FaGithub className="text-xl" />
-    Continue with GitHub
-  </Button>
-</div>
-
+            >
+              <FaGithub className="text-xl" />
+              Continue with GitHub
+            </Button>
+          </div>
 
           {/* ===== End Social Login Buttons ===== */}
 

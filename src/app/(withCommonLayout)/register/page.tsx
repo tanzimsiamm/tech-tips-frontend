@@ -11,6 +11,7 @@ import { PiImage } from "react-icons/pi";
 import { toast } from "sonner";
 import { useRouter } from "next/navigation";
 import Image from "next/image";
+import { AiOutlineEye, AiOutlineEyeInvisible } from "react-icons/ai";
 
 import { useSignUpMutation } from "@/src/redux/features/authentication/authApi";
 import uploadImage from "@/src/utils/uploadImage";
@@ -25,6 +26,7 @@ export default function Register() {
   const [signUp] = useSignUpMutation();
   const router = useRouter();
   const [imagePreview, setImagePreview] = useState("");
+  const [showPassword, setShowPassword] = useState(false);
 
   const onSubmit = async (data: FieldValues) => {
     setLoading(true);
@@ -165,17 +167,29 @@ export default function Register() {
             <div>
               <div className="relative flex items-center">
                 <input
-                  className="w-full py-3 pl-12 pr-4 outline-none border border-gray-300 dark:border-gray-600 rounded-xl bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors duration-200 placeholder-gray-400 dark:placeholder-gray-300"
+                  className="w-full py-3 pl-12 pr-12 outline-none border border-gray-300 dark:border-gray-600 
+                 rounded-xl bg-white dark:bg-gray-700 text-gray-900 dark:text-white 
+                 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors duration-200 
+                 placeholder-gray-400 dark:placeholder-gray-300"
                   placeholder="Password"
-                  type="password"
+                  type={showPassword ? "text" : "password"}
                   {...register("password", {
                     required: true,
                     minLength: 6,
                   })}
                 />
+                {/* Left Icon */}
                 <span className="text-xl absolute left-4 text-gray-500 dark:text-gray-400">
                   <GoUnlock />
                 </span>
+                {/* Toggle Eye Button */}
+                <button
+                  type="button"
+                  onClick={() => setShowPassword(!showPassword)}
+                  className="absolute right-4 text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-200"
+                >
+                  {showPassword ? <AiOutlineEyeInvisible /> : <AiOutlineEye />}
+                </button>
               </div>
               {errors.password && (
                 <span className="text-red-500 text-sm mt-1 block">
