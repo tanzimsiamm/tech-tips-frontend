@@ -181,7 +181,7 @@ export default function Login({ setOpen }: TProps) {
   {/* Google */}
   <Button
     onClick={() =>
-      (window.location.href = "http://localhost:5000/api/auth/google")
+      (window.location.href = "https://tech-tips-tricks-backend.vercel.app/api/auth/google")
     }
     className="w-full justify-center py-3 px-4 text-base font-medium rounded-full 
                bg-white text-gray-700 dark:text-gray-900 
@@ -196,7 +196,7 @@ export default function Login({ setOpen }: TProps) {
   {/* GitHub */}
   <Button
     onClick={() =>
-      (window.location.href = "http://localhost:5000/api/auth/github")
+      (window.location.href = "https://tech-tips-tricks-backend.vercel.app/api/auth/github")
     }
     className="w-full justify-center py-3 px-4 text-base font-medium rounded-full 
                bg-gray-900 text-white hover:bg-gray-800 
