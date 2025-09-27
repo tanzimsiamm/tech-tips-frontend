@@ -33,6 +33,7 @@ import {
 import { TComment, TPost } from "@/src/types";
 import { useSendNotificationMutation } from "@/src/redux/features/notification/notificationApi";
 import { useAppSelector } from "@/src/redux/hooks";
+import ShareModal from "./ShareModal";
 
 export default function PostCard({ post }: { post: TPost }) {
   const { register, handleSubmit, reset, watch } = useForm();
@@ -42,6 +43,7 @@ export default function PostCard({ post }: { post: TPost }) {
     useDeleteCommentMutation();
   const [openEditCommentModal, setEditCommentModal] = useState(false);
   const [commentForEdit, setCommentForEdit] = useState<any>({});
+  const [showShareOptions, setShowShareOptions] = useState(false);
 
   const [sendNotification] = useSendNotificationMutation();
   const router = useRouter();
@@ -67,39 +69,90 @@ export default function PostCard({ post }: { post: TPost }) {
   const { data: commentsData } = useGetCommentsQuery({ postId: _id });
   const comments: TComment[] = commentsData?.data || [];
 
-  const handleShare = async () => {
+  const handleShare = async (e: React.MouseEvent) => {
+    e.stopPropagation();
+
     const shareUrl = `${window.location.origin}/details/${_id}`;
-    const shareTitle = post.title || "Check out this post!";
+    const shareTitle = title || "Check out this post!";
     const shareText = description
-      ? description.slice(0, 100) + "..."
+      ? description.replace(/<[^>]*>/g, "").slice(0, 100) + "..."
       : "Find out more!";
 
-    const shareData = {
-      title: shareTitle,
-      text: shareText,
-      url: shareUrl,
-    };
+    // For mobile devices, show custom share options
+    if (window.innerWidth <= 768) {
+      setShowShareOptions(true);
+      return;
+    }
 
+    // For desktop, use the existing logic
     if (navigator.share) {
       try {
-        await navigator.share(shareData);
+        await navigator.share({
+          title: shareTitle,
+          text: shareText,
+          url: shareUrl,
+        });
       } catch (error: any) {
-        if (error.name === "AbortError") {
-          toast.info("Sharing cancelled.");
-        } else {
-          toast.error("Failed to share post.");
-          console.error("Error sharing:", error);
+        if (error.name !== "AbortError") {
+          // Fallback to custom share options if Web Share fails
+          setShowShareOptions(true);
         }
       }
     } else {
-      try {
-        await navigator.clipboard.writeText(shareUrl);
-        toast.success("Post link copied to clipboard!");
-      } catch (error) {
-        toast.error("Could not copy link to clipboard.");
-        console.error("Failed to copy link:", error);
-      }
+      setShowShareOptions(true);
     }
+  };
+
+  // Add this function to handle specific share actions
+  const handleShareAction = async (platform?: string) => {
+    const shareUrl = `${window.location.origin}/details/${_id}`;
+    const shareText = `${title} - ${description?.replace(/<[^>]*>/g, "").slice(0, 100)}...`;
+
+    try {
+      switch (platform) {
+        case "clipboard":
+          await navigator.clipboard.writeText(shareUrl);
+          toast.success("Link copied to clipboard!");
+          break;
+
+        case "twitter":
+          window.open(
+            `https://twitter.com/intent/tweet?text=${encodeURIComponent(shareText)}&url=${encodeURIComponent(shareUrl)}`,
+            "_blank"
+          );
+          break;
+
+        case "facebook":
+          window.open(
+            `https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(shareUrl)}`,
+            "_blank"
+          );
+          break;
+
+        case "whatsapp":
+          window.open(
+            `https://wa.me/?text=${encodeURIComponent(shareText + " " + shareUrl)}`,
+            "_blank"
+          );
+          break;
+
+        default:
+          // Native share
+          if (navigator.share) {
+            await navigator.share({
+              title: title,
+              text: shareText,
+              url: shareUrl,
+            });
+          }
+          break;
+      }
+    } catch (error) {
+      console.error("Sharing failed:", error);
+      toast.error("Failed to share post.");
+    }
+
+    setShowShareOptions(false);
   };
 
   const onSubmit = async (data: any) => {
@@ -161,6 +214,13 @@ export default function PostCard({ post }: { post: TPost }) {
       ref={contentRef}
       className="bg-white dark:bg-gray-900 rounded-2xl shadow-lg p-6 sm:p-8 w-full mx-auto mb-6 border border-gray-300 dark:border-gray-700"
     >
+      <ShareModal
+        isOpen={showShareOptions}
+        onClose={() => setShowShareOptions(false)}
+        onShare={handleShareAction}
+        title={title}
+        url={`${window.location.origin}/details/${_id}`}
+      />
       {openEditCommentModal && (
         <EditCommentModal
           comment={commentForEdit}
@@ -260,7 +320,7 @@ export default function PostCard({ post }: { post: TPost }) {
         </div>
         <button
           className="flex items-center space-x-2 text-gray-600 dark:text-gray-400 hover:text-blue-600 dark:hover:text-blue-500 transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-1 rounded-md px-2 py-1"
-          onClick={handleShare}
+          onClick={handleShare} // Use the updated function
           aria-label="Share Post"
           type="button"
         >
