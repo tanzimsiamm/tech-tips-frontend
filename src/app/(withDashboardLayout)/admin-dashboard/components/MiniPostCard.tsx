@@ -18,6 +18,7 @@ import { useGetCommentsQuery } from "@/src/redux/features/comments/commetApi";
 import UpdatePostModal from "@/src/app/(withCommonLayout)/(home)/components/CreatePost/UpdatePostModal";
 import MiniUserProfile from "@/src/app/(withCommonLayout)/(home)/components/Posts/MiniUserProfile";
 import VoteSection from "@/src/app/(withCommonLayout)/(home)/components/Posts/VoteSection";
+import ShareModal from "@/src/app/(withCommonLayout)/(home)/components/Posts/ShareModal";
 
 export default function MiniPostCard({ post }: { post: TPost }) {
   const user = useAppSelector((state) => state.auth.user);
@@ -27,6 +28,7 @@ export default function MiniPostCard({ post }: { post: TPost }) {
   const {
     _id,
     title,
+    description,
     category,
     images,
     authorInfo,
@@ -38,6 +40,8 @@ export default function MiniPostCard({ post }: { post: TPost }) {
 
   const { data } = useGetCommentsQuery({ postId: _id as string });
   const comments: TComment[] = data?.data || [];
+  const [isSharing, setIsSharing] = useState(false);
+  const [showShareOptions, setShowShareOptions] = useState(false);
 
   const handleDelete = async (postId: string) => {
     try {
@@ -52,8 +56,101 @@ export default function MiniPostCard({ post }: { post: TPost }) {
     }
   };
 
+  const handleShare = async (e: React.MouseEvent) => {
+    e.stopPropagation();
+
+    const shareUrl = `${window.location.origin}/details/${_id}`;
+    const shareTitle = title || "Check out this post!";
+    const shareText = description
+      ? description.replace(/<[^>]*>/g, "").slice(0, 100) + "..."
+      : "Find out more!";
+
+    // For mobile devices, show custom share options
+    if (window.innerWidth <= 768) {
+      setShowShareOptions(true);
+      return;
+    }
+
+    // For desktop, use the existing logic
+    if (navigator.share) {
+      try {
+        await navigator.share({
+          title: shareTitle,
+          text: shareText,
+          url: shareUrl,
+        });
+      } catch (error: any) {
+        if (error.name !== "AbortError") {
+          // Fallback to custom share options if Web Share fails
+          setShowShareOptions(true);
+        }
+      }
+    } else {
+      setShowShareOptions(true);
+    }
+  };
+
+  // Add this function to handle specific share actions
+  const handleShareAction = async (platform?: string) => {
+    const shareUrl = `${window.location.origin}/details/${_id}`;
+    const shareText = `${title} - ${description?.replace(/<[^>]*>/g, "").slice(0, 100)}...`;
+
+    try {
+      switch (platform) {
+        case "clipboard":
+          await navigator.clipboard.writeText(shareUrl);
+          toast.success("Link copied to clipboard!");
+          break;
+
+        case "twitter":
+          window.open(
+            `https://twitter.com/intent/tweet?text=${encodeURIComponent(shareText)}&url=${encodeURIComponent(shareUrl)}`,
+            "_blank"
+          );
+          break;
+
+        case "facebook":
+          window.open(
+            `https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(shareUrl)}`,
+            "_blank"
+          );
+          break;
+
+        case "whatsapp":
+          window.open(
+            `https://wa.me/?text=${encodeURIComponent(shareText + " " + shareUrl)}`,
+            "_blank"
+          );
+          break;
+
+        default:
+          // Native share
+          if (navigator.share) {
+            await navigator.share({
+              title: title,
+              text: shareText,
+              url: shareUrl,
+            });
+          }
+          break;
+      }
+    } catch (error) {
+      console.error("Sharing failed:", error);
+      toast.error("Failed to share post.");
+    }
+
+    setShowShareOptions(false);
+  };
+
   return (
     <div className="bg-white dark:bg-gray-900 rounded-xl shadow-sm p-4 sm:p-6 w-full mx-auto mb-4 border border-gray-200 dark:border-gray-700">
+      <ShareModal
+        isOpen={showShareOptions}
+        onClose={() => setShowShareOptions(false)}
+        onShare={handleShareAction}
+        title={title}
+        url={`${window.location.origin}/details/${_id}`}
+      />
       {updateModal && (
         <UpdatePostModal
           open={updateModal}
@@ -168,7 +265,12 @@ export default function MiniPostCard({ post }: { post: TPost }) {
             <span className="font-semibold">{comments?.length}</span>
           </Link>
         </div>
-        <button className="flex items-center space-x-2 text-gray-600 dark:text-gray-400 hover:text-blue-500 dark:hover:text-blue-400 transition-colors duration-200">
+        <button
+          className="flex items-center space-x-2 text-gray-600 dark:text-gray-400 hover:text-blue-600 dark:hover:text-blue-500 transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-1 rounded-md px-2 py-1"
+          onClick={handleShare} // Use the updated function
+          aria-label="Share Post"
+          type="button"
+        >
           <FaShare className="text-lg" />
           <span className="text-sm font-medium">Share</span>
         </button>
