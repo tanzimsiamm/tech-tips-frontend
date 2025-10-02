@@ -14,6 +14,11 @@ import LoginModal from "./LoginModal";
 import { useAppSelector } from "@/src/redux/hooks";
 import { useVotePostMutation } from "@/src/redux/features/posts/postApi";
 
+interface Voter {
+  userId: string;
+  voteType: string;
+}
+
 const VoteSection = ({
   postId,
   userId,
@@ -23,7 +28,7 @@ const VoteSection = ({
   postId: string;
   userId: string;
   votes: number;
-  voters: { userId: string; voteType: string }[];
+  voters: Voter[];
 }) => {
   const [votePost, { isLoading }] = useVotePostMutation();
   const currentUser = useAppSelector((state) => state.auth.user);
@@ -39,16 +44,17 @@ const VoteSection = ({
     setGivenVote(isExistVote);
   }, [voters, currentUser]);
 
-  const handleVote = async (voteType: string) => {
-    if (!currentUser) {
-      return setLoginModal(true);
-    }
-    try {
-      await votePost({ postId, userId, voteType }).unwrap();
-    } catch (err) {
-      console.error("Error voting:", err);
-    }
-  };
+const handleVote = async (voteType: string) => {
+  if (!currentUser) {
+    return setLoginModal(true);
+  }
+  try {
+    const updatedPost = await votePost({ postId, userId: currentUser._id, voteType }).unwrap();
+    setGivenVote(updatedPost.voters?.find((v: Voter) => v.userId === currentUser._id));
+  } catch (err) {
+    console.error(err);
+  }
+};
 
   const upvoteActive = givenVote?.voteType === "upvote";
   const downvoteActive = givenVote?.voteType === "downvote";

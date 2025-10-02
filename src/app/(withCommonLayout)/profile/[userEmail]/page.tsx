@@ -147,9 +147,9 @@ const Profile = ({ params }: { params: { userEmail: string } }) => {
               <MdModeEdit className="mr-2" />
               Edit Profile
             </button>
-            <button className="bg-gray-100 hover:bg-gray-200 dark:bg-gray-700 dark:hover:bg-gray-600 dark:text-gray-300 p-2 rounded-lg hidden md:block">
+            {/* <button className="bg-gray-100 hover:bg-gray-200 dark:bg-gray-700 dark:hover:bg-gray-600 dark:text-gray-300 p-2 rounded-lg hidden md:block">
               <BsThreeDots />
-            </button>
+            </button> */}
           </div>
         )}
       </div>
