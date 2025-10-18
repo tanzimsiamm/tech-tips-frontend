@@ -4,7 +4,7 @@ import { jwtDecode } from "jwt-decode";
 import Cookies from "js-cookie";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { AiOutlineMail } from "react-icons/ai";
 import { GoUnlock } from "react-icons/go";
 import { ClipLoader } from "react-spinners";
@@ -54,17 +54,30 @@ export default function Login({ setOpen }: TProps) {
 
       const decoded: TJwtDecoded = jwtDecode(res.data.token);
 
+      // Set cookie first
+      Cookies.set("accessToken", res?.data?.token, { expires: 1 });
+
+      // Dispatch Redux action
       dispatch(
         setUser({
           user: { ...decoded, image: userImage, name },
           token: res.data.token,
         })
       );
-      Cookies.set("accessToken", res?.data?.token, { expires: 1 });
 
       toast.success("Logged In Successfully");
-      setLoading(false);
+      
+      // Close modal
       if (typeof setOpen === "function") setOpen(false);
+
+      // CRITICAL FIX: Wait a moment for Redux persist to complete
+      // before navigating to ensure state is saved to localStorage
+      await new Promise(resolve => setTimeout(resolve, 100));
+      
+      setLoading(false);
+      
+      // Use router.refresh() before navigation to ensure fresh server state
+      router.refresh();
       router.push("/");
     }
   };
@@ -148,11 +161,9 @@ export default function Login({ setOpen }: TProps) {
                     setErrors({ emailError: "", passwordError: "" })
                   }
                 />
-                {/* Left Icon */}
                 <span className="text-xl absolute left-4 text-gray-500 dark:text-gray-400">
                   <GoUnlock />
                 </span>
-                {/* Toggle Eye Button */}
                 <button
                   type="button"
                   onClick={() => setShowPassword(!showPassword)}
@@ -189,10 +200,7 @@ export default function Login({ setOpen }: TProps) {
             </div>
           </form>
 
-          {/* ===== Added Social Login Buttons ===== */}
-
           <div className="mt-6 flex flex-col gap-4">
-            {/* Google */}
             <Button
               onClick={() =>
                 (window.location.href =
@@ -208,7 +216,6 @@ export default function Login({ setOpen }: TProps) {
               Continue with Google
             </Button>
 
-            {/* GitHub */}
             <Button
               onClick={() =>
                 (window.location.href =
@@ -222,8 +229,6 @@ export default function Login({ setOpen }: TProps) {
               Continue with GitHub
             </Button>
           </div>
-
-          {/* ===== End Social Login Buttons ===== */}
 
           <div className="mt-6 text-center">
             <h4 className="text-sm font-medium text-gray-600 dark:text-gray-400">

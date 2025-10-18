@@ -1,7 +1,7 @@
 'use client'
 
 import { FaCheckCircle } from 'react-icons/fa';
-import { BsEnvelopeFill, BsThreeDots } from 'react-icons/bs';
+import { BsEnvelopeFill } from 'react-icons/bs';
 import { useFollowUserMutation, useGetSingleUserQuery, useUnFollowUserMutation } from '@/src/redux/features/user/userApi';
 import { useAppSelector } from '@/src/redux/hooks';
 import Image from 'next/image';
@@ -10,7 +10,7 @@ import MyPosts from '../components/MyPosts';
 import { ClipLoader } from 'react-spinners';
 import { toast } from 'sonner';
 import { RiUserUnfollowLine } from "react-icons/ri";
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import EditProfileModal from '../components/EditProfileModal';
 import Followers from '../components/Followers';
 import { TUser } from '@/src/types';
@@ -20,13 +20,26 @@ const Profile = ({ params }: { params: { userEmail: string } }) => {
   const { userEmail } = params;
   const loggedUser = useAppSelector(state => state.auth.user);
   const [editModal, setEditModal] = useState(false);
+  const [isRehydrated, setIsRehydrated] = useState(false);
 
-  const { data } = useGetSingleUserQuery(userEmail);
+  // Wait for Redux to rehydrate
+  useEffect(() => {
+    // Small delay to ensure persistence has loaded
+    const timer = setTimeout(() => {
+      setIsRehydrated(true);
+    }, 100);
+    
+    return () => clearTimeout(timer);
+  }, []);
+
+  const { data, isLoading: userLoading } = useGetSingleUserQuery(userEmail, {
+    skip: !isRehydrated, // Don't fetch until rehydrated
+  });
+  
   const userDetails: TUser = data?.data || {};
 
   const { email, image, memberShip, name, coverImg, followers, following } = userDetails;
 
-  // follow and unfollow 
   const [followUser, { isLoading: followLoading }] = useFollowUserMutation();
   const [unfollowUser, { isLoading: unFollowLoading }] = useUnFollowUserMutation();
 
@@ -59,6 +72,15 @@ const Profile = ({ params }: { params: { userEmail: string } }) => {
       console.log(error);
     }
   };
+
+  // Show loading state while rehydrating
+  if (!isRehydrated || userLoading) {
+    return (
+      <div className="flex items-center justify-center min-h-screen bg-gray-50 dark:bg-gray-900">
+        <ClipLoader color="#3b82f6" size={50} />
+      </div>
+    );
+  }
 
   return (
     <div className="md:bg-white dark:bg-gray-900 p-4 rounded-lg shadow-sm max-w-4xl mx-auto">
@@ -93,10 +115,8 @@ const Profile = ({ params }: { params: { userEmail: string } }) => {
         </div>
       </div>
 
-      {/* Open Edit Modal */}
       {editModal && <EditProfileModal open={editModal} setOpen={setEditModal} />}
 
-      {/* Profile Actions */}
       <div className="flex justify-between items-center mt-4 px-2">
         {loggedUser?.email !== userDetails.email ? (
           <div className="flex items-center gap-3">
@@ -147,17 +167,12 @@ const Profile = ({ params }: { params: { userEmail: string } }) => {
               <MdModeEdit className="mr-2" />
               Edit Profile
             </button>
-            {/* <button className="bg-gray-100 hover:bg-gray-200 dark:bg-gray-700 dark:hover:bg-gray-600 dark:text-gray-300 p-2 rounded-lg hidden md:block">
-              <BsThreeDots />
-            </button> */}
           </div>
         )}
       </div>
 
-      {/* Followers/Following Section */}
       <Followers followers={followers} following={following} ranDomUserEmail={userDetails?.email} />
 
-      {/* Membership Section */}
       {memberShip && (
         <div className="mt-6 mb-6 p-4 bg-gradient-to-r from-orange-50 to-orange-100 dark:from-orange-900/50 dark:to-orange-800/50 rounded-lg shadow-inner">
           <div className="flex items-center justify-between">
@@ -183,10 +198,8 @@ const Profile = ({ params }: { params: { userEmail: string } }) => {
         </div>
       )}
 
-      {/* Create Post Section */}
       {loggedUser?.email === userDetails?.email && <CreatePost />}
 
-      {/* User Posts */}
       <div className="mt-8">
         <MyPosts userEmail={userDetails?.email} />
       </div>
