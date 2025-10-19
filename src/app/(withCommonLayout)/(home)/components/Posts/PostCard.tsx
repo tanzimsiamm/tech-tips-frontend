@@ -44,6 +44,7 @@ export default function PostCard({ post }: { post: TPost }) {
   const [openEditCommentModal, setEditCommentModal] = useState(false);
   const [commentForEdit, setCommentForEdit] = useState<any>({});
   const [showShareOptions, setShowShareOptions] = useState(false);
+  const [showFullDescription, setShowFullDescription] = useState(false);
 
   const [sendNotification] = useSendNotificationMutation();
   const router = useRouter();
@@ -69,13 +70,24 @@ export default function PostCard({ post }: { post: TPost }) {
   const { data: commentsData } = useGetCommentsQuery({ postId: _id });
   const comments: TComment[] = commentsData?.data || [];
 
+  // Function to strip HTML tags and truncate text
+  const stripHtmlTags = (html: string) => {
+    return html.replace(/<[^>]*>/g, "");
+  };
+
+  const getTruncatedDescription = (text: string, maxLength: number = 150) => {
+    const plainText = stripHtmlTags(text);
+    if (plainText.length <= maxLength) return plainText;
+    return plainText.substring(0, maxLength) + "...";
+  };
+
   const handleShare = async (e: React.MouseEvent) => {
     e.stopPropagation();
 
     const shareUrl = `${window.location.origin}/details/${_id}`;
     const shareTitle = title || "Check out this post!";
     const shareText = description
-      ? description.replace(/<[^>]*>/g, "").slice(0, 100) + "..."
+      ? stripHtmlTags(description).slice(0, 100) + "..."
       : "Find out more!";
 
     // For mobile devices, show custom share options
@@ -106,7 +118,7 @@ export default function PostCard({ post }: { post: TPost }) {
   // Add this function to handle specific share actions
   const handleShareAction = async (platform?: string) => {
     const shareUrl = `${window.location.origin}/details/${_id}`;
-    const shareText = `${title} - ${description?.replace(/<[^>]*>/g, "").slice(0, 100)}...`;
+    const shareText = `${title} - ${stripHtmlTags(description).slice(0, 100)}...`;
 
     try {
       switch (platform) {
@@ -209,6 +221,11 @@ export default function PostCard({ post }: { post: TPost }) {
     e.stopPropagation();
   };
 
+  const toggleDescription = (e: React.MouseEvent) => {
+    e.stopPropagation();
+    setShowFullDescription(!showFullDescription);
+  };
+
   return (
     <div
       ref={contentRef}
@@ -289,10 +306,45 @@ export default function PostCard({ post }: { post: TPost }) {
         </div>
       </div>
 
-      <div
-        dangerouslySetInnerHTML={{ __html: description || "" }}
-        className="text-gray-900 dark:text-gray-100 text-base leading-relaxed mb-5"
-      />
+      {/* Add Title Section - Similar to PostDetails */}
+      <h2 
+        className="text-gray-900 dark:text-white mb-4 font-bold text-xl sm:text-2xl leading-tight cursor-pointer hover:text-blue-600 dark:hover:text-blue-400 transition-colors"
+        onClick={() => router.push(`/details/${_id}`)}
+      >
+        {title}
+      </h2>
+
+      {/* Description with See More/Less functionality */}
+      <div className="text-gray-900 dark:text-gray-100 text-base leading-relaxed mb-5">
+        {description && (
+          <>
+            {showFullDescription ? (
+              <div 
+                dangerouslySetInnerHTML={{ __html: description }} 
+                className="whitespace-pre-wrap"
+              />
+            ) : (
+              <div 
+                dangerouslySetInnerHTML={{ 
+                  __html: getTruncatedDescription(description) 
+                }} 
+                className="whitespace-pre-wrap"
+              />
+            )}
+            
+            {/* Show See More/Less button only if description is long enough */}
+            {stripHtmlTags(description).length > 150 && (
+              <button
+                onClick={toggleDescription}
+                className="text-blue-600 dark:text-blue-400 hover:underline font-medium mt-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 rounded"
+                type="button"
+              >
+                {showFullDescription ? "See Less" : "See More"}
+              </button>
+            )}
+          </>
+        )}
+      </div>
 
       {images && images.length > 0 && (
         <div>
@@ -320,7 +372,7 @@ export default function PostCard({ post }: { post: TPost }) {
         </div>
         <button
           className="flex items-center space-x-2 text-gray-600 dark:text-gray-400 hover:text-blue-600 dark:hover:text-blue-500 transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-1 rounded-md px-2 py-1"
-          onClick={handleShare} // Use the updated function
+          onClick={handleShare}
           aria-label="Share Post"
           type="button"
         >
