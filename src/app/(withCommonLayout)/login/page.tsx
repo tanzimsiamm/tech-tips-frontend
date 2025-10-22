@@ -3,7 +3,7 @@
 import { jwtDecode } from "jwt-decode";
 import Cookies from "js-cookie";
 import Link from "next/link";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import { useState, useEffect } from "react";
 import { AiOutlineMail } from "react-icons/ai";
 import { GoUnlock } from "react-icons/go";
@@ -28,11 +28,12 @@ export default function Login({ setOpen }: TProps) {
   const [login] = useLoginMutation();
   const dispatch = useAppDispatch();
   const router = useRouter();
+    const searchParams = useSearchParams();
   const [loading, setLoading] = useState(false);
   const [demoUser, setDemoUser] = useState<any>({});
   const [showPassword, setShowPassword] = useState(false);
 
-  const handleLogin = async (e: any) => {
+ const handleLogin = async (e: any) => {
     e.preventDefault();
     setLoading(true);
 
@@ -45,17 +46,24 @@ export default function Login({ setOpen }: TProps) {
     if (res?.error?.data?.message === "user not exist") {
       setErrors({ ...errors, emailError: "Incorrect Email" });
       setLoading(false);
+      return;
     } else if (res?.error?.data?.message === "Password incorrect") {
       setErrors({ ...errors, passwordError: "Incorrect Password" });
       setLoading(false);
+      return;
     } else if (res?.data?.success) {
       const userImage = res?.data?.data?.image;
       const name = res?.data?.data?.name;
 
       const decoded: TJwtDecoded = jwtDecode(res.data.token);
 
-      // Set cookie first
-      Cookies.set("accessToken", res?.data?.token, { expires: 1 });
+      // Set cookie with explicit options
+      Cookies.set("accessToken", res.data.token, {
+        expires: 1, // 1 day
+        path: '/',
+        sameSite: 'lax', // Adjust based on your needs ('strict' or 'none' for cross-domain)
+        secure: process.env.NODE_ENV === 'production', // Secure in production
+      });
 
       // Dispatch Redux action
       dispatch(
@@ -66,22 +74,17 @@ export default function Login({ setOpen }: TProps) {
       );
 
       toast.success("Logged In Successfully");
-      
+
       // Close modal
       if (typeof setOpen === "function") setOpen(false);
 
-      // CRITICAL FIX: Wait a moment for Redux persist to complete
-      // before navigating to ensure state is saved to localStorage
-      await new Promise(resolve => setTimeout(resolve, 100));
-      
       setLoading(false);
-      
-      // Use router.refresh() before navigation to ensure fresh server state
-      router.refresh();
-      router.push("/");
+
+      // Navigate to redirect path or home using hard navigation
+      const redirectPath = searchParams.get("redirect") || "/";
+      window.location.href = redirectPath;
     }
   };
-
   return (
     <div className="flex flex-col items-center justify-center p-6 h-full bg-gray-50 dark:bg-gray-900 shadow-2xl border border-gray-700">
       <div className="w-full max-w-md p-8 bg-white dark:bg-gray-800 rounded-lg shadow-lg">
