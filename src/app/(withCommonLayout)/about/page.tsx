@@ -125,7 +125,7 @@ const AboutUsPage = () => {
                 Tech Tips & Tricks
               </span>
               <br />
-              <span className="text-gray-900 dark:text-white">Hub</span>
+              <span className="text-gray-900 dark:text-white"></span>
             </h1>
             
             <p className="text-xl sm:text-2xl text-gray-600 dark:text-gray-300 max-w-4xl mx-auto leading-relaxed">

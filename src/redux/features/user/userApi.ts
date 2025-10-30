@@ -37,6 +37,7 @@ const userApi = baseApi.injectEndpoints({
       }),
       invalidatesTags: ["User", "Users"],
     }),
+    
     unFollowUser: builder.mutation({
       query: (payload: { userId: string; targetedUserId: string }) => ({
         url: `/users/unfollow`,
@@ -58,7 +59,7 @@ const userApi = baseApi.injectEndpoints({
         method: "PUT",
         body: payload,
       }),
-      invalidatesTags: ["User", "Users"],
+      invalidatesTags: ["User", "Users", "Posts"],
     }),
   }),
 });
