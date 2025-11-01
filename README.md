@@ -1,128 +1,184 @@
 # 💡 Tech Tips & Tricks
 
 **Tech Tips & Tricks** is a dynamic **full-stack web application** designed for tech enthusiasts who love learning, teaching, and sharing their technical knowledge.  
-This platform offers expert insights, user-generated content, and real-world tech experiences covering everything from **software troubleshooting** to **AI tools, programming, gadgets, and digital productivity.**
+This platform offers expert insights, user-generated content, and real-world experiences covering everything from **software troubleshooting** to **AI tools, programming, gadgets, and digital productivity.**
 
 ---
 
 ## 🚀 Project Overview
 
-The platform empowers users to **create, share, and explore tech tutorials, reviews, and tips** — with a blend of community interaction and premium content.  
-It includes features like **authentication, content management, payments, analytics dashboards, commenting, and social features** — all built with **Next.js 15, Redux, and MongoDB**.
+Empowering users to **create, share, and explore tech tutorials, reviews, and tips** — with community interaction and premium content.  
+Built with **Next.js 15, Redux, Node.js, and MongoDB** for performance, scalability, and modern UX.
 
 ---
 
-## 🧭 Features at a Glance
+## 🧭 Key Features
 
-### 🧑‍💻 User Authentication & Profile Management
-- JWT-based secure **login, registration, and logout**
-- **Two roles**: User & Admin
-- Profile editing (name, bio, image, and other details)
-- View followers, following, and own posts
-- Verified badge for subscribed users
-
----
-
-### 📝 Post Creation & Management
-- Create posts 
-- Upload and attach images or screenshots
-- Categorize posts (e.g., “Web Development”, “AI”, “Software Engineering”)
-- CRUD operations for posts (Create, Update, Delete)
-- Draft mode (optional but recommended)
+### 🧑‍💻 Authentication & Profiles
+- Secure JWT-based login, registration, and logout
+- **Two roles:** User & Admin
+- Editable profiles (name, bio, image, etc.)
+- Follow/Unfollow system with live updates
+- Verified badges for premium users
 
 ---
 
-### 💬 Interactions
-- **Upvote/Downvote** system for quality control
-- **Comment system** with edit & delete options
-- Replies to comments for threaded conversations
-- Share posts directly to social media platforms
+### 📝 Post Management
+- Create, edit, and delete posts with image uploads
+- Categorization (AI, Web Dev, Software, etc.)
+- Draft mode for posts
+- Image preview and responsive content editor
 
 ---
 
-### 💸 Payment Integration
+### 💬 Social Interaction
+- Upvote/downvote system
+- Comment threads with edit & delete options
+- Replies and real-time updates
+- Share posts to social media directly
+
+---
+
+### 💸 Payments & Membership
 - Integrated with **Aamarpay / Stripe**
-- premium subscription for exclusive access
-- Payment triggers verified badge and unlocks premium content
-- Admin dashboard shows monthly revenue analytics
+- Premium membership for exclusive content
+- Verified badge for paid users
+- Admin dashboard for payment analytics
 
 ---
 
-### 📈 Analytics & Reporting
-- Personalized **User Dashboard**:
-  - My Posts analytics (views, comments, reactions, shares)
-  - Payment status & history
-- **Admin Dashboard**:
-  - Monthly revenue graph
-  - Total posts, active users, and premium subscriptions
-  - User control (block/unblock, delete)
-  - Post management and content moderation
+### 📈 Dashboards
+- **User Dashboard:**
+  - View post analytics (views, likes, comments)
+  - Payment history and subscription status
+- **Admin Dashboard:**
+  - Revenue charts
+  - Manage users and posts
+  - Content moderation tools
 
 ---
 
-### 🔍 Search, Filter & News Feed
-- Infinite scroll feed displaying latest posts
-- Search bar with **debounced** keyword search
-- Filter posts by categories, author, or premium status
-- Sort by most upvoted, trending, or recent posts
+### 🔍 Smart Feed & Search
+- Infinite scroll newsfeed
+- Debounced keyword search
+- Filters by category, author, or premium
+- Sort by most upvoted or trending
 
 ---
 
-### 👥 Following System
-- Follow other users and get updates on their latest content
-- Personalized feed based on followed authors
-
----
-
-### 🎨 User Interface & Experience
+### 🎨 Design & UX
 - Built with **HeroUI**, **TailwindCSS**, and **Framer Motion**
-- Fully **responsive and accessible**
-- **Dark/Light themes** with Next-Themes
-- Micro-animations for smoother interactions
-- Clean, modern, and consistent design system
+- Fully **responsive** across all devices
+- **Dark/Light mode** with smooth transitions
+- Modern animations and clean layouts
 
 ---
 
-### 🔒 Security Features
-- JWT-based authentication and refresh tokens
-- Password reset & change via secure endpoints
-- Admin-level **activity logs** tracking logins, roles, and timestamps
-- Secure file uploads via Formidable
+### 🔒 Security
+- JWT auth with refresh tokens
+- Encrypted password reset
+- Admin activity logs
+- Safe file uploads via Formidable
 
 ---
 
-## 🧠 Bonus Features
+## 🧠 Bonus Highlights
 
 | Feature | Description |
 |----------|-------------|
-| 📊 Analytics | User & Admin dashboards with interactive charts (using `react-chartjs-2` & `recharts`) |
-| 🔁 Share System | Social media sharing integration |
-| 🕵️‍♂️ Activity Logs | Admins can monitor user activity
+| 📊 Analytics | Interactive charts using `recharts` & `react-chartjs-2` |
+| 🔁 Sharing | Built-in post share system |
+| 🕵️‍♂️ Logs | Admin user activity monitoring |
 
 ---
 
 ## ⚙️ Tech Stack
 
-### **Frontend**
+### Frontend
 - **Next.js 15 (App Router + Turbopack)**
-- **React**
-- **Redux Toolkit + Redux Persist**
+- **React + Redux Toolkit + Redux Persist**
 - **TailwindCSS + HeroUI + Framer Motion**
 - **React Hook Form + Zod Validation**
-- **React Quill / TinyMCE** for Rich Text Editing
+- **React Quill / TinyMCE** (Rich Text Editor)
 
-### **Backend**
+### Backend
 - **Node.js + Express.js**
 - **MongoDB + Mongoose**
 - **JWT Authentication**
-- **Stripe / Aamarpay Payment Integration**
-- **Cloud Storage** for user uploads
+- **Stripe / Aamarpay Integration**
+- **Cloud Storage** for uploads
 
-### **Utilities**
-- **Axios** for uploadin image  
-- **SweetAlert2 + Sonner** for toast notifications  
+### Utilities
+- **Axios** for API & image upload  
+- **SweetAlert2**, **Sonner** for alerts  
 - **React Spinners** for loaders  
-- **React Timeago**, **LightGallery**, **React Photo View** for UX
+- **React Timeago**, **LightGallery**, **Photo View** for UX  
+
+---
+
+## 🖼️ Project Screenshots
+
+### 🏠 Main Pages
+
+<p align="center">
+  <img src="public/newsfeed.png" alt="Newsfeed" width="700"/>
+</p>
+
+<p align="center">
+  <img src="public/membership.png" alt="Membership" width="700"/>
+</p>
+
+<p align="center">
+  <img src="public/profile.png" alt="Profile" width="700"/>
+</p>
+
+<p align="center">
+  <img src="public/about page.png" alt="About Page" width="700"/>
+</p>
+
+<p align="center">
+  <img src="public/contact us.png" alt="Contact Us" width="700"/>
+</p>
+
+---
+
+### 🧑‍💻 User Dashboard
+
+<p align="center">
+  <img src="public/user dashboard.png" alt="User Dashboard" width="700"/>
+</p>
+
+<p align="center">
+  <img src="public/user's followers and following.png" alt="Followers & Following" width="700"/>
+</p>
+
+<p align="center">
+  <img src="public/user's membership.png" alt="User Membership" width="700"/>
+</p>
+
+<p align="center">
+  <img src="public/payment history.png" alt="Payment History" width="700"/>
+</p>
+
+---
+
+### 🛠️ Admin Dashboard
+
+<p align="center">
+  <img src="public/manage posts.png" alt="Manage Posts" width="700"/>
+</p>
+
+<p align="center">
+  <img src="public/manage users.png" alt="Manage Users" width="700"/>
+</p>
+
+<p align="center">
+  <img src="public/admins.png" alt="Admins List" width="700"/>
+</p>
+
+<p align="center">
+  <img src="public/payment history (2).png" alt="Admin Payment History" width="700"/>
+</p>
 
 ---
 
@@ -132,7 +188,3 @@ It includes features like **authentication, content management, payments, analyt
 ```bash
 git clone https://github.com/tanzimsiamm/tech-tips-frontend.git
 cd tech-tips-frontend
-
-2️⃣ Install Dependencies
-npm install
-
